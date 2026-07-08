@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+
+    /* Vite/esbuild transpile per-file and own the build, so tsc only type-checks. */
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    /* Node's native test runner needs `node:` types alongside the DOM ones. */
+    "types": ["node"],
+
+    /* Mirror the package.json subpath import aliases for the type checker. */
+    "paths": {
+      "#components/*": ["./src/ui/components/*"],
+      "#modals/*": ["./src/ui/modals/*"],
+      "#screens/*": ["./src/ui/screens/*"],
+      "#hooks/*": ["./src/hooks/*"],
+      "#data/*": ["./src/data/*"],
+      "#audio/*": ["./src/audio/*"]
+    },
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src", "vite.config.ts"]
+}

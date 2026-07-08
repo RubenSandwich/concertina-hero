@@ -1,0 +1,114 @@
+/* ---------- Results screen ---------- */
+.results {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 96vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.results__rank {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-14) var(--sp-40);
+  margin: var(--sp-8) 0 var(--sp-20);
+  transform: rotate(-2deg);
+}
+.rank {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-7xl);
+  line-height: 1;
+}
+.rank__label {
+  font-weight: 700;
+  font-size: var(--fs-lg);
+}
+.rank--s {
+  background: var(--yellow);
+}
+.rank--a {
+  background: var(--green);
+}
+.rank--b {
+  background: var(--sky);
+}
+.rank--c {
+  background: var(--orange);
+}
+.rank--d {
+  background: var(--paper);
+}
+
+.results__panel {
+  width: 100%;
+  padding: var(--sp-20);
+  margin-bottom: var(--sp-22);
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-12);
+  margin-bottom: var(--sp-18);
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-10);
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+}
+.stat--score {
+  background: var(--yellow);
+}
+.stat__label {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.stat__value {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-5xl);
+}
+.judge-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-10);
+}
+.judge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-8) var(--sp-4);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+.judge strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+}
+.judge--perfect {
+  background: var(--green);
+}
+.judge--good {
+  background: var(--sky);
+}
+.judge--ok {
+  background: var(--yellow);
+}
+.judge--miss {
+  background: var(--red);
+}
+.results__actions {
+  display: flex;
+  gap: var(--sp-16);
+  flex-wrap: wrap;
+  justify-content: center;
+}

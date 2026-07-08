@@ -1,0 +1,55 @@
+/* OFF/ON toggle styled to match the segmented control: two joined OFF/ON
+   segments with the active side filled. Kept separate from SegmentedControl on
+   purpose — a switch and a radiogroup differ semantically. */
+.switch {
+  flex: 0 0 auto;
+  margin-left: auto;
+  display: inline-flex;
+  padding: 0;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 13px 15px 12px 14px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  cursor: pointer;
+  font-family: var(--font-display);
+}
+.switch:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.switch__option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3em;
+  padding: var(--sp-6) var(--sp-12);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: transparent;
+  transition:
+    background 0.1s ease,
+    color 0.1s ease;
+}
+.switch__option + .switch__option {
+  border-left: 3px solid var(--ink);
+}
+/* the active side is filled, like the segmented control's selection */
+.switch.is-on .switch__option--on,
+.switch:not(.is-on) .switch__option--off {
+  background: var(--yellow);
+  color: var(--ink);
+}
+/* hover cue on the inactive side */
+.switch:not(.is-on):hover:not(:disabled) .switch__option--on,
+.switch.is-on:hover:not(:disabled) .switch__option--off {
+  background: var(--cream);
+}
+.switch:focus-visible {
+  outline: none;
+  box-shadow:
+    var(--shadow-sm),
+    inset 0 0 0 3px var(--ink);
+}

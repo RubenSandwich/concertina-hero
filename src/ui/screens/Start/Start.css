@@ -1,0 +1,330 @@
+/* ---------- Start screen ---------- */
+/* The scroller spans the whole viewport so wheel/trackpad scrolling works
+   anywhere on the screen, not just over the (narrower) content column. The
+   column itself is kept centered by constraining each card's width. */
+.start-screen {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-24) var(--sp-28) var(--sp-44);
+}
+
+/* Per-card paper-cutout tilt. */
+.howto {
+  transform: rotate(-0.6deg);
+}
+.songs {
+  transform: rotate(-0.4deg);
+}
+.settings {
+  transform: rotate(0.4deg);
+}
+.howto__keys {
+  display: flex;
+  gap: var(--sp-10);
+  justify-content: center;
+  margin-bottom: var(--sp-16);
+  flex-wrap: wrap;
+}
+.howto__row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-12);
+  margin-bottom: var(--sp-10);
+  font-size: var(--fs-base);
+  font-weight: 500;
+}
+.howto__hint {
+  margin: var(--sp-12) 0 0;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* Button -> note reference (push note over pull note for each of the 7 buttons). */
+.note-map {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--sp-8);
+  margin-top: var(--sp-16);
+}
+.note-map__btn {
+  --lane: var(--yellow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-6) var(--sp-2);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-top: 8px solid var(--lane);
+  border-radius: 10px 12px 9px 12px;
+  box-shadow: var(--shadow-xs);
+}
+.note-map__num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-lg);
+  line-height: 1;
+}
+.note-map__notes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+}
+.nm {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-xs);
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.nm--push {
+  color: #b5560f;
+}
+.nm--pull {
+  color: #1f6f9c;
+}
+
+@media (max-width: 560px) {
+  .note-map {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.key-cap {
+  --lane: var(--yellow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 42px;
+  padding: 0 var(--sp-8);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xl);
+  color: var(--ink);
+  background: var(--lane);
+  border: 3px solid var(--ink);
+  border-radius: 10px 12px 9px 12px;
+  box-shadow: 3px 4px 0 color-mix(in srgb, var(--ink) 25%, transparent);
+}
+.key-cap--shift {
+  min-width: auto;
+  font-size: var(--fs-md);
+  background: var(--sky);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-6);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-md);
+  padding: 5px var(--sp-12);
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: var(--shadow-xs);
+  white-space: nowrap;
+}
+.badge--push {
+  background: var(--orange);
+}
+.badge--pull {
+  background: var(--sky);
+}
+
+/* ---------- Song list ---------- */
+.song-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--sp-16);
+  width: 100%;
+}
+/* Uses `.paper.song-card` (not just `.song-card`) so the coloured 14px left
+   edge wins over the shared `.paper` border regardless of stylesheet order —
+   component CSS loads before the global index.css. */
+.paper.song-card {
+  --card: var(--yellow);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  padding: var(--sp-16) var(--sp-18);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  border-left: 14px solid var(--card);
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease;
+}
+.song-card:nth-child(odd) {
+  transform: rotate(-1deg);
+}
+.song-card:nth-child(even) {
+  transform: rotate(1deg);
+}
+.song-card:hover {
+  transform: translate(-2px, -3px) rotate(0deg);
+  box-shadow: var(--shadow-lg);
+}
+.song-card.is-selected {
+  transform: translate(-2px, -4px) rotate(0deg);
+  box-shadow:
+    0 0 0 4px var(--card),
+    0 0 0 8px #fff,
+    0 0 0 11px var(--ink),
+    var(--shadow-lg);
+}
+.song-card__name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-2xl);
+}
+.song-card__blurb {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--muted);
+}
+.song-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-10);
+  margin-top: var(--sp-4);
+}
+.song-card__bpm {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* Big "manage songs" button that opens the song library (replaces the old drop
+   zone). Styled as a full-width dashed "add" tile. */
+.song-manage-btn {
+  width: 100%;
+  margin-top: var(--sp-16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-10);
+  min-height: 58px;
+  padding: var(--sp-14) var(--sp-18);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xl);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--paper) 65%, transparent);
+  border: 3px dashed var(--ink);
+  border-radius: 14px 18px 13px 17px / 18px 13px 17px 14px;
+  cursor: pointer;
+  transition:
+    transform 0.1s ease,
+    background 0.1s ease,
+    box-shadow 0.1s ease;
+}
+.song-manage-btn:hover,
+.song-manage-btn:focus-visible {
+  transform: translate(-2px, -3px);
+  background: var(--cream);
+  outline: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Practice settings ---------- */
+.practice-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-16);
+  flex-wrap: wrap;
+  padding: var(--sp-14) 0;
+}
+.practice-row--divider {
+  border-top: 3px dashed color-mix(in srgb, var(--ink) 25%, transparent);
+}
+/* Stacked label + description that fills the left side of a row. */
+.practice-row__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.practice-row__label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-lg);
+  color: var(--teal-ink);
+}
+.practice-row--wait .practice-row__label {
+  color: var(--green-ink);
+}
+.practice-row__desc {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+.practice-row__err {
+  margin-top: var(--sp-2);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: var(--red-ink);
+}
+
+/* ---------- Note-frequency Settings buttons ---------- */
+.note-freq-row .practice-row__info {
+  flex-basis: 200px;
+}
+.note-freq-current {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-8);
+  padding: var(--sp-6) var(--sp-12);
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 10px 12px 9px 12px;
+}
+.note-freq-current__caption {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+.note-freq-current__name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+.note-btn {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 10px 12px 9px 12px;
+  padding: var(--sp-6) var(--sp-12);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+}
+.note-btn:hover {
+  transform: translate(-1px, -2px);
+}
+.note-btn:active {
+  transform: translate(1px, 2px);
+  box-shadow: var(--shadow-xs);
+}

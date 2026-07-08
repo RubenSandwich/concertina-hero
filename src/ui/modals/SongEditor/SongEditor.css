@@ -1,0 +1,67 @@
+/* ---------- Song editor ----------
+   Note: the .diff badge base lives in index.css; .diff-choice adds the
+   selectable-chip behaviour on top of it. */
+.song-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-12);
+}
+.song-form-row {
+  display: flex;
+  gap: var(--sp-12);
+  flex-wrap: wrap;
+}
+.song-form-row__bpm {
+  flex: 1 1 120px;
+}
+.song-form-row__color {
+  flex: 1 1 160px;
+}
+.song-color {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+}
+.song-color__input {
+  width: 54px;
+  height: 46px;
+  padding: 2px;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 10px 12px 9px 12px;
+  cursor: pointer;
+}
+.song-color__random {
+  font-size: var(--fs-lg);
+  line-height: 1;
+  padding: var(--sp-8) var(--sp-10);
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 10px 12px 9px 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+}
+.song-color__random:hover {
+  transform: translate(-1px, -2px);
+}
+.diff-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-8);
+}
+.diff-choice {
+  font-family: var(--font-display);
+  cursor: pointer;
+  opacity: 0.5;
+  transition:
+    transform 0.08s ease,
+    opacity 0.08s ease;
+}
+.diff-choice:hover {
+  transform: translateY(-1px);
+  opacity: 0.85;
+}
+.diff-choice.is-selected {
+  opacity: 1;
+  box-shadow: 0 0 0 3px var(--ink);
+}

@@ -1,0 +1,80 @@
+/* Collapsible "accordion" card (a disclosure widget). */
+.accordion {
+  width: min(760px, 100%);
+  padding: var(--sp-16) var(--sp-22);
+  margin-bottom: var(--sp-20);
+}
+/* Heading wrapper around the toggle (for document structure) — visually inert. */
+.accordion__title {
+  margin: 0;
+  font: inherit;
+}
+.accordion__toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-12);
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.accordion__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-10);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  color: var(--purple);
+}
+.accordion__chevron {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-5xl);
+  line-height: 1;
+  color: var(--purple);
+  transition: transform 0.3s ease;
+}
+.accordion__toggle[aria-expanded='true'] .accordion__chevron {
+  transform: rotate(180deg);
+}
+/* Selected-song label shown in the header while a list is collapsed — styled as
+   a mini card with a coloured left edge (set by the consumer via --card). */
+.accordion__current {
+  padding: var(--sp-2) var(--sp-10);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-md);
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-left: 6px solid var(--card, var(--yellow));
+  border-radius: 8px 11px 7px 10px;
+  box-shadow: var(--shadow-xs);
+}
+/* Animated collapse/expand wrapper (grid rows 0fr -> 1fr). */
+.accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+.accordion__panel.is-open {
+  grid-template-rows: 1fr;
+}
+.accordion__body {
+  overflow: hidden;
+  min-height: 0;
+  /* Horizontal room so card shadows and selection rings aren't clipped. */
+  padding: 0 var(--sp-16);
+}
+/* Vertical room lives on the inner content's padding (inside the clipped body)
+   so it collapses cleanly to 0 when closed — unlike a margin, which would leak. */
+.accordion__body > :first-child {
+  padding-top: var(--sp-16);
+}
+.accordion__body > :last-child {
+  padding-bottom: var(--sp-16);
+}

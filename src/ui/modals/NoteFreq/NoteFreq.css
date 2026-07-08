@@ -1,0 +1,82 @@
+/* ---------- Note-frequency editor cells (NoteFreq modal) ---------- */
+.freq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+.freq-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+  flex-wrap: wrap;
+}
+.freq-row__btn {
+  --lane: var(--yellow);
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-lg);
+  color: var(--ink);
+  background: var(--lane);
+  border: 3px solid var(--ink);
+  border-radius: 9px 11px 8px 11px;
+}
+.freq-cell {
+  flex: 1 1 170px;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+  padding: var(--sp-6) var(--sp-8);
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 10px 12px 9px 12px;
+}
+.freq-cell.is-listening {
+  background: var(--paper);
+  box-shadow: 0 0 0 3px var(--teal);
+}
+.freq-cell__name {
+  flex: 0 0 auto;
+  min-width: 2.6em;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+}
+.freq-cell__input {
+  flex: 1 1 56px;
+  width: 56px;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 7px;
+  padding: var(--sp-4) var(--sp-6);
+}
+.freq-cell__unit {
+  flex: 0 0 auto;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--muted);
+}
+.freq-cell__mic {
+  flex: 0 0 auto;
+  font-size: var(--fs-md);
+  line-height: 1;
+  padding: var(--sp-4) var(--sp-6);
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.freq-cell__mic.is-on {
+  background: var(--teal);
+}
