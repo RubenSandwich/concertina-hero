@@ -200,7 +200,7 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
             />
             <span className="modal__field-hint">
               One token per beat: <b>+N</b> push, <b>−N</b> pull (button 1–7). <b>X</b> is a rest,
-              and <b>(−4 −3)</b> plays a chord. A line break adds a breath.
+              and <b>(−4 −3)</b> plays a chord. Line breaks are just for readability.
             </span>
           </label>
         </div>

@@ -60,9 +60,10 @@ export const DIFF_CLASS: Record<Difficulty, string> = {
 //   - "X" (or "x") is a REST: a silent beat where nothing is played.
 //   - a CHORD is several buttons in parentheses that sound on the same beat,
 //     e.g. "(-4 -3)" plays buttons 4 and 3 together (draw). One beat is used.
-//   - every token is one beat; a line break adds a short breath between phrases.
+//   - every token is one beat. Whitespace and line breaks only separate tokens;
+//     to pause between phrases, end the phrase with an "X" rest.
 //
-// Example ("Row, Row, Row Your Boat"):  +3 +3 +3 -3 -4  ...
+// Example ("Row, Row, Row Your Boat"):  +3 +3 +3 -3 -4 X  ...
 
 const NOTE_RE = /^([+-]?)([1-7])$/
 // A token is either a "(...)" chord group or a run of non-space characters.
@@ -71,18 +72,16 @@ const TOKEN_RE = /\([^)]*\)|\S+/g
 interface ParseOptions {
   bpm: number
   subdivision?: number
-  breath?: boolean
 }
 
 function parseChart(
   chart: string,
-  { bpm, subdivision = 1, breath = true }: ParseOptions,
+  { bpm, subdivision = 1 }: ParseOptions,
 ): { notes: Note[]; duration: number } {
   const step = 60000 / bpm / subdivision // ms between beats
   const notes: Note[] = []
   let noteId = 0
   let cursor = 0
-  const lines = chart.trim().split('\n')
 
   const addNote = (tok: string, time: number) => {
     const m = NOTE_RE.exec(tok)
@@ -92,26 +91,23 @@ function parseChart(
     notes.push({ id: noteId++, lane, time, type })
   }
 
-  lines.forEach((line, li) => {
-    const tokens = line.trim().match(TOKEN_RE) || []
-    tokens.forEach((tok) => {
-      if (tok === 'X' || tok === 'x') {
-        cursor += 1 // rest: a silent beat
-        return
-      }
-      const time = Math.round(cursor * step)
-      if (tok[0] === '(') {
-        // Chord: every button inside sounds on this beat.
-        const inner = tok.slice(1, -1).trim().split(/\s+/).filter(Boolean)
-        inner.forEach((t) => addNote(t, time))
-        cursor += 1
-        return
-      }
-      const before = notes.length
-      addNote(tok, time)
-      if (notes.length > before) cursor += 1 // only a valid note uses a beat
-    })
-    if (breath && tokens.length && li < lines.length - 1) cursor += 1
+  const tokens = chart.match(TOKEN_RE) || []
+  tokens.forEach((tok) => {
+    if (tok === 'X' || tok === 'x') {
+      cursor += 1 // rest: a silent beat
+      return
+    }
+    const time = Math.round(cursor * step)
+    if (tok[0] === '(') {
+      // Chord: every button inside sounds on this beat.
+      const inner = tok.slice(1, -1).trim().split(/\s+/).filter(Boolean)
+      inner.forEach((t) => addNote(t, time))
+      cursor += 1
+      return
+    }
+    const before = notes.length
+    addNote(tok, time)
+    if (notes.length > before) cursor += 1 // only a valid note uses a beat
   })
 
   return { notes, duration: Math.round(cursor * step) }

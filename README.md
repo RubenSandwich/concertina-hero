@@ -84,7 +84,8 @@ string written in a simple tab-style notation:
 
 - a token is `+N` (push button _N_) or `-N` (pull button _N_), where _N_ is 1–7;
   a bare number defaults to push.
-- every token is one beat; a line break adds a short breath between phrases.
+- every token is one beat; `X` is a rest. Line breaks are only for readability —
+  to pause between phrases, end the phrase with an `X`.
 
 For example, "Row, Row, Row Your Boat":
 

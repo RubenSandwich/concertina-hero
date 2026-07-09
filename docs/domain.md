@@ -16,7 +16,7 @@ A song's `chart` is a whitespace/newline list of one-beat tokens:
 - `+N` push button _N_, `-N` pull button _N_ (N = 1–7); a bare `N` defaults to push.
 - `X` (or `x`) is a rest — a silent beat.
 - `(+1 +3)` is a chord — several buttons on the same beat (still one beat).
-- A line break adds a one-beat breath between phrases.
+- Line breaks carry no timing; they only separate tokens. End a phrase with `X` to pause.
 
 `parseChart` turns this into timed notes; consecutive same-direction notes are
 grouped into **sections** that drive the look-ahead ribbon.
