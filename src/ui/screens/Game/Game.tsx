@@ -101,7 +101,9 @@ export default function Game({
         {micEnabled && (
           <div className="mic-chip">
             <span className="mic-chip__dot" />
-            <span className="mic-chip__note">{g.micNote ? g.micNote.name : '…'}</span>
+            <span className="mic-chip__note">
+              {g.micNotes.length ? g.micNotes.map((n) => n.name).join(' ') : '…'}
+            </span>
           </div>
         )}
 
@@ -161,7 +163,7 @@ export default function Game({
 
           {LANE_LABELS.map((label, i) => {
             const activeType = g.activeKeys[i]
-            const micHere = g.micNote && g.micNote.lane === i
+            const micHere = g.micNotes.some((n) => n.lane === i)
             const laneNotes: { n: GameNote; left: number }[] = []
             for (const n of g.notes) {
               if (n.lane !== i) continue

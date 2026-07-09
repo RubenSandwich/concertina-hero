@@ -2,10 +2,21 @@
 // and the final rank shown on the results screen.
 
 import type { Direction } from './instrument'
+import { PERFECT_WINDOW, GOOD_WINDOW } from './timing.ts'
 
 // The three hit ratings that score; a whiffed note is a 'miss'.
 export type Rating = 'perfect' | 'good' | 'ok'
 export type Judgement = Rating | 'miss'
+
+// Grade a press by how far it landed from the note's beat. `scale` widens the
+// windows for the microphone, whose onsets are inherently less precise than a
+// key going down.
+export function gradeFor(offsetMs: number, scale = 1): Rating {
+  const offset = Math.abs(offsetMs)
+  if (offset <= PERFECT_WINDOW * scale) return 'perfect'
+  if (offset <= GOOD_WINDOW * scale) return 'good'
+  return 'ok'
+}
 
 // Points a note is worth at each rating, before the hold scaling and combo bonus.
 export const POINTS: Record<Rating, number> = { perfect: 100, good: 60, ok: 30 }
@@ -26,15 +37,16 @@ export function holdPoints(rating: Rating, fraction: number): number {
 }
 
 // Whether a lane is currently sounding the given bellows direction, from either
-// a held key or a sustained mic note.
+// a held key or a sustained mic note. The mic can hear a whole chord, so this
+// takes every note it currently reports.
 export function isSustaining(
   lane: number,
   type: Direction,
   keys: Record<number, Direction>,
-  micNote: { lane: number; type: Direction } | null,
+  micNotes: readonly { lane: number; type: Direction }[],
 ): boolean {
   if (keys[lane] === type) return true
-  return !!micNote && micNote.lane === lane && micNote.type === type
+  return micNotes.some((n) => n.lane === lane && n.type === type)
 }
 
 // The final rank shown on the results screen, derived from a run's accuracy.

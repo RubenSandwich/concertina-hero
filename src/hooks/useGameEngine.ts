@@ -1,14 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
 import { KEY_CODES, type Direction } from '#data/instrument'
-import { PERFECT_WINDOW, GOOD_WINDOW, isPlayable, missTime, noteX } from '#data/timing'
+import { MIC_LATENCY, MIC_WINDOW_SCALE, isPlayable, missTime, noteX } from '#data/timing'
 import type { Song, Note } from '#data/songs'
-import { holdFraction, holdPoints, isSustaining } from '#data/scoring'
+import { gradeFor, holdFraction, holdPoints, isSustaining } from '#data/scoring'
 import type { Rating, Judgement } from '#data/scoring'
 import { playNote, playMiss, resumeAudio } from '#audio/sound'
-import { detectNote } from '#audio/pitch'
+import { detectChord } from '#audio/pitch'
 
 const COUNTDOWN_MS = 3000 // "3, 2, 1" before the song starts
 const END_BUFFER = 1800 // grace time after the last note before results
+
+// Silent frames before the mic gives up a held note. It buys resilience against a
+// dropped frame, but it is also dead time before the same button can be struck
+// again: the capture window already takes ~85ms to flush, so each extra frame
+// pushes re-articulation further out of reach. At four frames the release took
+// ~167ms and every repeated note in Chord Parade was missed; two frames puts it
+// near ~120ms, inside the gap a player leaves between two strikes of a button.
+const MIC_SILENT_FRAMES = 2
 
 // A chart note plus the mutable per-run play state the loop tracks.
 //
@@ -90,9 +98,9 @@ export function useGameEngine(
   const feedbackRef = useRef<Feedback | null>(null)
   const feedbackIdRef = useRef(0)
   const activeKeysRef = useRef<Record<number, Direction>>({}) // lane index -> direction while held
-  const micNoteRef = useRef<MicNote | null>(null)
-  const micLastKeyRef = useRef<string | null>(null)
-  const micCandRef = useRef<{ key: string | null; frames: number }>({ key: null, frames: 0 })
+  const micNotesRef = useRef<MicNote[]>([]) // every note the mic hears right now
+  const micHeldRef = useRef<Set<string>>(new Set()) // "lane:type" already pressed, still sounding
+  const micCandRef = useRef<Map<string, number>>(new Map()) // "lane:type" -> frames heard (debounce)
   const micSilentRef = useRef(0)
   const micDebugAtRef = useRef(0)
   const finishedRef = useRef(false)
@@ -117,9 +125,9 @@ export function useGameEngine(
     countsRef.current = { perfect: 0, good: 0, ok: 0, miss: 0 }
     feedbackRef.current = null
     activeKeysRef.current = {}
-    micNoteRef.current = null
-    micLastKeyRef.current = null
-    micCandRef.current = { key: null, frames: 0 }
+    micNotesRef.current = []
+    micHeldRef.current = new Set()
+    micCandRef.current = new Map()
     micSilentRef.current = 0
     micDebugAtRef.current = 0
     finishedRef.current = false
@@ -157,7 +165,7 @@ export function useGameEngine(
         note.lane,
         note.type,
         activeKeysRef.current,
-        micEnabled ? micNoteRef.current : null,
+        micEnabled ? micNotesRef.current : [],
       )
       if (held) {
         const from = Math.max(note.creditedTo, note.time)
@@ -177,8 +185,13 @@ export function useGameEngine(
       note.judgeX = noteX(note.time - clock)
     }
 
-    const registerPress = (lane: number, wantPull: boolean) => {
-      const now = gameTime()
+    // `fromMic` presses are rewound by MIC_LATENCY: the note was already sounding
+    // that long before the detector could name it, so it is graded — and starts
+    // banking its hold — from when it was actually played, not when it was heard.
+    const registerPress = (lane: number, wantPull: boolean, fromMic = false) => {
+      const clock = gameTime()
+      const now = fromMic ? clock - MIC_LATENCY : clock
+      const windowScale = fromMic ? MIC_WINDOW_SCALE : 1
 
       // The oldest still-playable note in this lane. Notes are stored in time
       // order, so the first match is the one you owe — a note you're late on is
@@ -201,17 +214,14 @@ export function useGameEngine(
         setFeedback('Wrong Way!', 'miss')
         playMiss()
         if (!waitForNote) {
-          judge(best, now, 'miss')
+          judge(best, clock, 'miss') // the card pops where it is *now*, not where it was heard
           comboRef.current = 0
           countsRef.current.miss += 1
         }
         return
       }
 
-      const offset = Math.abs(best.time - now)
-      let rating: Rating = 'ok'
-      if (offset <= PERFECT_WINDOW) rating = 'perfect'
-      else if (offset <= GOOD_WINDOW) rating = 'good'
+      const rating: Rating = gradeFor(best.time - now, windowScale)
 
       // The press earns the grade and the combo right away; the note now sustains
       // and its points are settled when the hold window closes. Pressing late
@@ -316,54 +326,54 @@ export function useGameEngine(
         }
       }
 
-      // Microphone: detect the played note and treat its onset as a press.
+      // Microphone: every note the mic hears is a held button. A note that has
+      // just started sounding is an onset — a press — and one that keeps sounding
+      // sustains its note, exactly as a held key would. Chords work because the
+      // detector reports the whole set.
       if (micEnabled) {
-        const det = detectNote()
+        const heard = detectChord()
 
         // Throttled debug readout (~5x/sec) to help calibrate a real instrument.
         const rt = performance.now()
-        if (det && rt - micDebugAtRef.current > 200) {
+        if (heard.length && rt - micDebugAtRef.current > 200) {
           micDebugAtRef.current = rt
-          const cents = `${det.cents >= 0 ? '+' : ''}${det.cents.toFixed(0)}¢`
-          if (det.matched) {
-            console.log(
-              `[mic] ${det.freq.toFixed(1)} Hz → ${det.name} ${det.type} (button ${
-                det.lane + 1
-              }) ${cents}`,
-            )
-          } else {
-            console.log(
-              `[mic] ${det.freq.toFixed(1)} Hz → no match (closest ${det.name ?? '?'} ${cents})`,
-            )
-          }
+          const played = heard.map((n) => `${n.name} ${n.type} (button ${n.lane + 1})`).join(' + ')
+          console.log(`[mic] ${played}`)
         }
 
-        if (det && det.matched) {
+        if (heard.length) {
           micSilentRef.current = 0
-          const { lane, type } = det
-          micNoteRef.current = { lane, type, name: det.name }
-          const key = lane + ':' + type
-          if (key !== micLastKeyRef.current) {
-            const cand = micCandRef.current
-            if (cand.key === key) cand.frames += 1
-            else {
-              cand.key = key
-              cand.frames = 1
-            }
-            // Hold the note for a couple frames before it counts (debounce).
-            if (cand.frames >= 2) {
-              micLastKeyRef.current = key
-              cand.key = null
-              cand.frames = 0
-              registerPress(lane, type === 'pull')
-              console.log(`[mic] ✓ hit ${det.name} ${type} (button ${lane + 1})`)
-            }
+          micNotesRef.current = heard.map(({ lane, type, name }) => ({ lane, type, name }))
+          const sounding = new Set(heard.map((n) => n.lane + ':' + n.type))
+
+          // A note must be heard for a couple of frames before it counts, which
+          // rides out a stray frame of misdetection.
+          for (const key of sounding) {
+            if (micHeldRef.current.has(key)) continue
+            const frames = (micCandRef.current.get(key) ?? 0) + 1
+            micCandRef.current.set(key, frames)
+            if (frames < 2) continue
+            micCandRef.current.delete(key)
+            micHeldRef.current.add(key)
+            const [lane, type] = key.split(':')
+            registerPress(Number(lane), type === 'pull', true)
+            console.log(`[mic] ✓ hit button ${Number(lane) + 1} ${type}`)
+          }
+
+          // Notes that stopped sounding release, and may be struck again later.
+          for (const key of [...micCandRef.current.keys()]) {
+            if (!sounding.has(key)) micCandRef.current.delete(key)
+          }
+          for (const key of [...micHeldRef.current]) {
+            if (!sounding.has(key)) micHeldRef.current.delete(key)
           }
         } else {
+          // Ride out brief dropouts so a sustained note doesn't stutter.
           micSilentRef.current += 1
-          if (micSilentRef.current > 3) {
-            micLastKeyRef.current = null
-            micNoteRef.current = null
+          if (micSilentRef.current >= MIC_SILENT_FRAMES) {
+            micNotesRef.current = []
+            micHeldRef.current.clear()
+            micCandRef.current.clear()
           }
         }
       }
@@ -409,7 +419,7 @@ export function useGameEngine(
     elapsed,
     countdown: countdownRef.current,
     paused,
-    micNote: micNoteRef.current,
+    micNotes: micNotesRef.current,
     notes: notesRef.current,
     score: scoreRef.current,
     combo: comboRef.current,

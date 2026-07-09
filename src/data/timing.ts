@@ -18,6 +18,21 @@ export const PERFECT_WINDOW = 70
 export const GOOD_WINDOW = 125
 export const HIT_WINDOW = 185 // largest *early* offset that still counts as a hit
 
+// A mic press is always late: the note has to fill the capture window before it
+// can be recognised. Measured end to end, detection lands 83-91ms after the note
+// starts and the two-frame onset debounce adds one more frame, so a press arrives
+// about this far behind the sound that caused it.
+//
+// This is a *bias*, not jitter, so it is subtracted rather than tolerated —
+// widening alone would need a ~190ms "Perfect", a third of a beat, and every
+// mic hit would still grade late. Playing Chord Parade through a real mic before
+// this, all 24 notes graded Ok and none reached Good.
+export const MIC_LATENCY = 105
+
+// What is left after removing the bias is jitter: where the note's onset falls
+// inside a frame, and how fast a real reed speaks. Mic windows are widened for it.
+export const MIC_WINDOW_SCALE = 1.5
+
 // A note is only missed once it is this far through its one-beat hold window
 // with nothing played — by then its card has all but left the hit line. Until
 // that moment a late press still catches it, though so little of the beat is
