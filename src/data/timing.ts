@@ -12,11 +12,28 @@ export const LEAD_IN = LEAD_TIME + 200
 // Horizontal position of the hit line, as a percent from the left edge.
 export const HIT_LINE_PCT = 17
 
-// Timing windows (ms) measured from the ideal hit moment.
+// Timing windows (ms) measured from the ideal hit moment. They grade a press;
+// they no longer decide when a note is given up on (see MISS_AT).
 export const PERFECT_WINDOW = 70
 export const GOOD_WINDOW = 125
-export const HIT_WINDOW = 185 // largest offset that still counts as a hit
-export const MISS_WINDOW = 185 // after this the note is auto-missed
+export const HIT_WINDOW = 185 // largest *early* offset that still counts as a hit
+
+// A note is only missed once it is this far through its one-beat hold window
+// with nothing played — by then its card has all but left the hit line. Until
+// that moment a late press still catches it, though so little of the beat is
+// left that it scores next to nothing.
+export const MISS_AT = 0.9
+
+// The moment an untouched note becomes a miss.
+export function missTime(noteTime: number, holdMs: number): number {
+  return noteTime + holdMs * MISS_AT
+}
+
+// Whether a note can still be played at `now`: from HIT_WINDOW before its beat
+// right up until the instant it would be missed.
+export function isPlayable(now: number, noteTime: number, holdMs: number): boolean {
+  return now >= noteTime - HIT_WINDOW && now < missTime(noteTime, holdMs)
+}
 
 // Convert a note's time-until-hit into a horizontal percent position.
 // delta === LEAD_TIME  -> just entering from the right edge (~100%)

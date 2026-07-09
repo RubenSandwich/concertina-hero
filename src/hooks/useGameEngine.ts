@@ -1,23 +1,27 @@
 import { useEffect, useRef, useState } from 'react'
 import { KEY_CODES, type Direction } from '#data/instrument'
-import { HIT_WINDOW, PERFECT_WINDOW, GOOD_WINDOW, MISS_WINDOW, noteX } from '#data/timing'
+import { PERFECT_WINDOW, GOOD_WINDOW, isPlayable, missTime, noteX } from '#data/timing'
 import type { Song, Note } from '#data/songs'
+import { holdFraction, holdPoints, isSustaining } from '#data/scoring'
+import type { Rating, Judgement } from '#data/scoring'
 import { playNote, playMiss, resumeAudio } from '#audio/sound'
 import { detectNote } from '#audio/pitch'
 
 const COUNTDOWN_MS = 3000 // "3, 2, 1" before the song starts
 const END_BUFFER = 1800 // grace time after the last note before results
 
-// The three hit ratings that score; a whiffed note is a 'miss'.
-type Rating = 'perfect' | 'good' | 'ok'
-type Judgement = Rating | 'miss'
-
-const POINTS: Record<Rating, number> = { perfect: 100, good: 60, ok: 30 }
-
 // A chart note plus the mutable per-run play state the loop tracks.
+//
+// A pressed note becomes 'holding' and stays on the playfield for one beat,
+// banking held time for as long as its button is sustained. Releasing early just
+// stops the credit — pressing again resumes it. When the beat ends the note is
+// finalized into 'hit', scoring its onset grade scaled by the fraction held.
 export interface GameNote extends Note {
-  state: 'active' | 'hit' | 'miss'
+  state: 'active' | 'holding' | 'hit' | 'miss'
   rating: Judgement | null
+  heldMs: number // total time the button was sustained inside the hold window
+  creditedTo: number // clock up to which heldMs already accounts for
+  holdBonus: number // combo bonus banked at the onset, added when finalized
   judgeElapsed: number
   judgeX: number
 }
@@ -99,8 +103,11 @@ export function useGameEngine(
     // Fresh state for this run.
     notesRef.current = song.notes.map((n): GameNote => ({
       ...n,
-      state: 'active', // 'active' | 'hit' | 'miss'
+      state: 'active', // 'active' | 'holding' | 'hit' | 'miss'
       rating: null, // 'perfect' | 'good' | 'ok' | 'miss'
+      heldMs: 0,
+      creditedTo: 0,
+      holdBonus: 0,
       judgeElapsed: 0,
       judgeX: 0,
     }))
@@ -132,6 +139,10 @@ export function useGameEngine(
     // speed slows note motion and spacing together.
     const gameTime = () => (performance.now() - startRef.current) * speed
 
+    // Every note sustains for exactly one beat, so its hold window is
+    // [note.time, note.time + holdMs).
+    const holdMs = 60000 / (song.bpm * (song.subdivision || 1))
+
     const judge = (note: GameNote, now: number, rating: Judgement) => {
       note.state = rating === 'miss' ? 'miss' : 'hit'
       note.rating = rating
@@ -139,23 +150,49 @@ export function useGameEngine(
       note.judgeX = noteX(note.time - now)
     }
 
+    // Bank the time a held note was sustained since we last looked at it. A
+    // released (or re-grabbed) note simply stops (or resumes) earning credit.
+    const accrueHold = (note: GameNote, clock: number) => {
+      const held = isSustaining(
+        note.lane,
+        note.type,
+        activeKeysRef.current,
+        micEnabled ? micNoteRef.current : null,
+      )
+      if (held) {
+        const from = Math.max(note.creditedTo, note.time)
+        const to = Math.min(clock, note.time + holdMs)
+        if (to > from) note.heldMs += to - from
+      }
+      note.creditedTo = clock
+    }
+
+    // The hold window closed: score the onset grade, scaled by how much of the
+    // beat was actually held, plus the combo bonus banked at the press.
+    const finalizeHold = (note: GameNote, clock: number) => {
+      const rating = note.rating as Rating
+      scoreRef.current += holdPoints(rating, holdFraction(note.heldMs, holdMs)) + note.holdBonus
+      note.state = 'hit'
+      note.judgeElapsed = clock
+      note.judgeX = noteX(note.time - clock)
+    }
+
     const registerPress = (lane: number, wantPull: boolean) => {
       const now = gameTime()
 
-      // Find the closest still-active note in this lane.
+      // The oldest still-playable note in this lane. Notes are stored in time
+      // order, so the first match is the one you owe — a note you're late on is
+      // claimed before an early press can steal the note after it.
       let best: GameNote | null = null
-      let bestDelta = Infinity
       for (const n of notesRef.current) {
         if (n.lane !== lane || n.state !== 'active') continue
-        const d = Math.abs(n.time - now)
-        if (d < bestDelta) {
-          bestDelta = d
-          best = n
-        }
+        if (!isPlayable(now, n.time, holdMs)) continue
+        best = n
+        break
       }
 
       // Nothing in range: treat as a harmless "just playing around" press.
-      if (!best || bestDelta > HIT_WINDOW) return
+      if (!best) return
 
       const wantType: Direction = wantPull ? 'pull' : 'push'
       if (best.type !== wantType) {
@@ -171,15 +208,21 @@ export function useGameEngine(
         return
       }
 
+      const offset = Math.abs(best.time - now)
       let rating: Rating = 'ok'
-      if (bestDelta <= PERFECT_WINDOW) rating = 'perfect'
-      else if (bestDelta <= GOOD_WINDOW) rating = 'good'
+      if (offset <= PERFECT_WINDOW) rating = 'perfect'
+      else if (offset <= GOOD_WINDOW) rating = 'good'
 
-      judge(best, now, rating)
+      // The press earns the grade and the combo right away; the note now sustains
+      // and its points are settled when the hold window closes. Pressing late
+      // forfeits the beat already gone, so the hold can no longer score in full.
       comboRef.current += 1
       maxComboRef.current = Math.max(maxComboRef.current, comboRef.current)
-      const comboBonus = Math.floor(comboRef.current / 10) * 5
-      scoreRef.current += POINTS[rating] + comboBonus
+      best.state = 'holding'
+      best.rating = rating
+      best.heldMs = 0
+      best.creditedTo = Math.max(now, best.time)
+      best.holdBonus = Math.floor(comboRef.current / 10) * 5
       countsRef.current[rating] += 1
       setFeedback(rating.toUpperCase() + '!', rating)
     }
@@ -262,9 +305,10 @@ export function useGameEngine(
         }
       }
 
-      // Auto-miss notes that swept past the hit line untouched.
+      // Only give up on a note once its beat is all but over and nothing was
+      // played for it. Until then a late press can still claim it.
       for (const n of notesRef.current) {
-        if (n.state === 'active' && clock > n.time + MISS_WINDOW) {
+        if (n.state === 'active' && clock >= missTime(n.time, holdMs)) {
           judge(n, clock, 'miss')
           comboRef.current = 0
           countsRef.current.miss += 1
@@ -322,6 +366,14 @@ export function useGameEngine(
             micNoteRef.current = null
           }
         }
+      }
+
+      // Sustained notes bank held time (using this frame's keys and mic reading)
+      // and settle once their beat has run out.
+      for (const n of notesRef.current) {
+        if (n.state !== 'holding') continue
+        accrueHold(n, clock)
+        if (clock >= n.time + holdMs) finalizeHold(n, clock)
       }
 
       setElapsed(clock)

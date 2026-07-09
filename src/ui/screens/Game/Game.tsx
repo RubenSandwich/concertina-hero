@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { useGameEngine } from '#hooks/useGameEngine'
 import type { GameNote, GameResult } from '#hooks/useGameEngine'
 import type { Song, Section } from '#data/songs'
@@ -6,12 +5,13 @@ import { LANE_LABELS, LANE_COLORS, LANE_NOTES, type Direction } from '#data/inst
 import { HIT_LINE_PCT, LEAD_TIME, noteX } from '#data/timing'
 import './Game.css'
 
-// The note's on-screen x-position (percent), or null when it shouldn't render.
-// Bounds are generous so wide notes stay visible until fully off-screen.
-function noteScreenX(note: GameNote, elapsed: number): number | null {
-  if (note.state === 'active') {
+// The left edge of the note's card as a percent, or null when it shouldn't
+// render. `spanPct` is the card's width, so a card is culled only once it has
+// fully swept off the left edge.
+function noteScreenX(note: GameNote, elapsed: number, spanPct: number): number | null {
+  if (note.state === 'active' || note.state === 'holding') {
     const x = noteX(note.time - elapsed)
-    return x < -18 || x > 118 ? null : x
+    return x + spanPct < -6 || x > 112 ? null : x
   }
   // Recently hit/missed: freeze it briefly at its judged spot for the pop-out.
   return elapsed - note.judgeElapsed < 340 ? note.judgeX : null
@@ -35,6 +35,7 @@ function Note({ note, left, width }: NoteProps) {
   const cls =
     'note note--' +
     note.type +
+    (note.state === 'holding' ? ' note--holding' : '') +
     (note.state === 'hit' ? ' note--hit note--' + (note.rating ?? '') : '') +
     (note.state === 'miss' ? ' note--miss' : '')
   return (
@@ -68,29 +69,13 @@ export default function Game({
 }: GameProps) {
   const g = useGameEngine(song, { speed, micEnabled, waitForNote, onFinish })
 
-  // A note is as wide as the time until the next note, so a lone note fills its
-  // whole push/pull section; a ~10px gap is left before the following card.
-  // One beat spans `stepPct` percent of the lane. Notes are anchored by their
-  // left edge (half a beat left of their beat) so a standard one-beat note still
-  // straddles the hit line exactly as before. `halfNotePct` also lines the
-  // ribbon bands up with the note-card leading edges.
+  // Every note sustains for one beat. A card is anchored with its left edge on
+  // its beat and is exactly one beat (`stepPct`) wide, so it lies over the hit
+  // line for precisely the window in which the note can be held. A ~10px gap is
+  // trimmed off so adjacent cards stay visibly separate — a re-press, not a hold.
   const stepMs = 60000 / (song.bpm * (song.subdivision || 1))
   const stepPct = (stepMs / LEAD_TIME) * (100 - HIT_LINE_PCT)
-  const halfNotePct = stepPct / 2
-  const laneSpan = 100 - HIT_LINE_PCT
-  const noteWidthCss = (gapMs: number) =>
-    `max(56px, calc(${((gapMs / LEAD_TIME) * laneSpan).toFixed(2)}% - 10px))`
-  const gapById = useMemo(() => {
-    const m: Record<number, number> = {}
-    const ns = song.notes
-    for (let i = 0; i < ns.length; i++) {
-      // Skip chord siblings (same beat) so every note spans to the *next* beat.
-      let j = i + 1
-      while (j < ns.length && ns[j].time === ns[i].time) j++
-      m[ns[i].id] = j < ns.length ? ns[j].time - ns[i].time : stepMs
-    }
-    return m
-  }, [song, stepMs])
+  const noteWidth = `max(56px, calc(${stepPct.toFixed(2)}% - 10px))`
 
   const judged = g.counts.perfect + g.counts.good + g.counts.ok + g.counts.miss
   const accuracy = judged
@@ -154,10 +139,10 @@ export default function Game({
         <div className="section-ribbon">
           <div className="section-ribbon__marker" style={{ left: HIT_LINE_PCT + '%' }} />
           {song.sections.map((s) => {
-            // Shift left by half a note so a band starts at the note's leading
-            // edge rather than through its middle.
-            const left = noteX(s.start - g.elapsed) - halfNotePct
-            const right = noteX(s.end - g.elapsed) - halfNotePct
+            // Bands share the note anchoring, so a band starts exactly at the
+            // leading edge of the first card in the run.
+            const left = noteX(s.start - g.elapsed)
+            const right = noteX(s.end - g.elapsed)
             if (right < -6 || left > 112) return null
             return (
               <div
@@ -177,22 +162,17 @@ export default function Game({
           {LANE_LABELS.map((label, i) => {
             const activeType = g.activeKeys[i]
             const micHere = g.micNote && g.micNote.lane === i
-            const laneNotes: { n: GameNote; left: number; width: string }[] = []
+            const laneNotes: { n: GameNote; left: number }[] = []
             for (const n of g.notes) {
               if (n.lane !== i) continue
-              const x = noteScreenX(n, g.elapsed)
-              if (x != null)
-                laneNotes.push({
-                  n,
-                  left: x - halfNotePct,
-                  width: noteWidthCss(gapById[n.id] ?? stepMs),
-                })
+              const x = noteScreenX(n, g.elapsed, stepPct)
+              if (x != null) laneNotes.push({ n, left: x })
             }
             return (
               <div className="lane" key={label} style={{ '--lane': LANE_COLORS[i] }}>
                 <div className="lane-track">
-                  {laneNotes.map(({ n, left, width }) => (
-                    <Note key={n.id} note={n} left={left} width={width} />
+                  {laneNotes.map(({ n, left }) => (
+                    <Note key={n.id} note={n} left={left} width={noteWidth} />
                   ))}
                 </div>
                 <div

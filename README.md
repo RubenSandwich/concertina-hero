@@ -16,13 +16,18 @@ depending on whether you squeeze the bellows in (**push**) or draw them out
 
 | Direction  | What to press                     | Bellows    |
 | ---------- | --------------------------------- | ---------- |
-| ▼ **PUSH** | just tap the button's number key  | squeeze in |
+| ▼ **PUSH** | hold the button's number key      | squeeze in |
 | ▲ **PULL** | hold **⇧ Shift** + the number key | draw out   |
 
 Push notes are solid paper stickers; pull notes are striped. Each moving card
 shows the **note name** to play; the lane tells you the button. A look-ahead
 ribbon and HUD banner preview the upcoming push/pull direction. Match the
 direction _and_ the timing to score Perfect / Good / Ok.
+
+Notes are **held**, not tapped. Each card is one beat wide, and you keep its
+button down for as long as the card sits on the hit line. Your timing picks the
+grade; how much of the beat you actually hold decides how many of that grade's
+points you keep — so a note stabbed and dropped scores almost nothing.
 
 ### Button → note map
 

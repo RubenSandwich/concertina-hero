@@ -28,6 +28,36 @@ grouped into **sections** that drive the look-ahead ribbon.
 3-2-1 countdown. Practice **speed** scales the game clock in `useGameEngine`
 (lower = slower motion and spacing). **Space** pauses.
 
+## Held notes & scoring (`data/scoring.ts`)
+
+Every note **sustains for one beat**: its hold window is `[time, time + beat)`,
+which is exactly the span its card covers the hit line (cards are anchored with
+their left edge on the beat and are one beat wide).
+
+A press is graded on **onset timing** — `PERFECT_WINDOW` / `GOOD_WINDOW`, else
+Ok — and that grade, the combo and the counts are all awarded immediately. The
+note then enters the `holding` state and banks time for as long as its button
+stays down. Releasing early stops the credit; pressing again while the note is
+still live resumes it (`accrueHold`).
+
+A note is **never missed for being late**. It stays playable from `HIT_WINDOW`
+before its beat until `missTime` — `MISS_AT` (90%) through its hold window — and
+is only auto-missed if it reaches that point with nothing played (`isPlayable`).
+A late press therefore always lands, but it forfeits the beat already gone, so
+it can only ever bank the sliver of hold that remains. Lateness costs points, not
+the note. A press claims the **oldest** playable note in its lane, so a note
+you're behind on is caught before an early press can steal the next one.
+
+When the beat ends the note is finalized: it scores
+`holdPoints(rating, holdFraction(heldMs, beat))` — the grade's points scaled by
+the fraction held — plus the combo bonus banked at the press. So a note tapped
+and dropped scores ~0 even at Perfect, and pressing late forfeits the part of
+the beat already gone. Accuracy and rank still come from the hit **counts**, not
+the hold.
+
+In mic mode a sustained pitch counts as a held button (`isSustaining`), so
+holding a real note on the instrument holds the note in game.
+
 ## Microphone mode (`audio/pitch.ts`)
 
 An optional input: the mic listens, autocorrelation estimates the pitch, and it's
