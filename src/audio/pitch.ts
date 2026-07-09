@@ -6,7 +6,7 @@
 //
 // Both map what they hear onto the concertina's button notes.
 
-import { LANE_NOTES, DIRECTIONS, type Direction } from '../data/instrument.ts'
+import { LANE_NOTES, DIRECTIONS, NOTE_CANDIDATES, type Direction } from '../data/instrument.ts'
 import { getAudioContext, resumeAudio } from './sound.ts'
 
 let stream: MediaStream | null = null
@@ -344,10 +344,10 @@ function subtractHarmonics(mag: Float64Array, binHz: number, freq: number, amp: 
 // no real chord note is ever ruled out this way.
 function overtoneLanes(binHz: number, freq: number, type: Direction): Set<number> {
   const ruled = new Set<number>()
-  for (let lane = 0; lane < LANE_NOTES.length; lane++) {
-    const candidate = Math.round(LANE_NOTES[lane][type].freq / binHz)
+  for (const candidate of NOTE_CANDIDATES[type]) {
+    const bin = Math.round(candidate.freq / binHz)
     for (let h = 2; h <= HARMONICS; h++) {
-      if (Math.abs(candidate - Math.round((freq * h) / binHz)) <= CANCEL_BINS) ruled.add(lane)
+      if (Math.abs(bin - Math.round((freq * h) / binHz)) <= CANCEL_BINS) ruled.add(candidate.lane)
     }
   }
   return ruled
@@ -382,13 +382,13 @@ function pickNotes(
     const salGate = SAL_MIN * ref
     let chosen: ChordNote | null = null
     let chosenFund = 0
-    // Lanes ascend in frequency, and a note's overtones only ever lie *above* it,
-    // so the lowest surviving candidate cannot be anyone's overtone. Taking it
-    // first — rather than whichever peak is loudest — makes the result immune to
-    // a channel that attenuates fundamentals, which a laptop speaker and mic do.
-    for (let lane = 0; lane < LANE_NOTES.length; lane++) {
+    // NOTE_CANDIDATES is ordered by frequency, and a note's overtones only ever
+    // lie *above* it, so the lowest surviving candidate cannot be anyone's
+    // overtone. Taking it first — rather than whichever peak is loudest — makes
+    // the result immune to a channel that attenuates fundamentals, as a speaker
+    // and a mic do.
+    for (const { lane, name, freq } of NOTE_CANDIDATES[type]) {
       if (ruledOut.has(lane)) continue
-      const { freq, name } = LANE_NOTES[lane][type]
       // Without unexplained energy at a real peak of its own, a "note" is just
       // someone else's overtones or the skirt of their lobe.
       const fund = fundamentalResidual(mag, work, binHz, freq, SEARCH_BINS)

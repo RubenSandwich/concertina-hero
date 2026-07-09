@@ -60,11 +60,12 @@ holding a real note on the instrument holds the note in game.
 
 ### Grading a mic press
 
-A mic press is **always late**: the note must fill the ~85ms capture window before
-the detector can name it, and the two-frame onset debounce adds one more. That is
-a systematic bias of about `MIC_LATENCY` (105ms), not jitter — before it was
-accounted for, every one of Chord Parade's 24 notes graded Ok and none reached
-Good.
+A mic press is **always late**: an onset is only believed once the note has filled
+the ~85ms capture window (a window still holding the previous note's tail is
+rejected as transient — see below), and the two-frame debounce adds one more. That
+is a systematic bias of about `MIC_LATENCY` (195ms, measured at 187-215ms), not
+jitter — before it was accounted for, every one of Chord Parade's 24 notes graded
+Ok and none reached Good.
 
 So a mic press is **rewound** by `MIC_LATENCY` before it is graded and before it
 starts banking hold: the note really was sounding that long before it was heard.
@@ -142,6 +143,30 @@ synthesised sawtooths pass happily without them.
   loudest bin. The loudest bin is often a harmonic: on a laptop speaker, G's 2nd
   harmonic arrived 2.3x louder than G itself, which squeezed the other chord notes
   to a ~2x margin and made them flicker in and out between frames.
+
+### Custom tunings
+
+The detector reads the live tuning, so a retuned instrument is picked up with no
+further work — the candidate frequencies _and_ the harmonic collisions between
+them are derived from whatever tuning is current. Transposing the whole instrument
+works. `NOTE_CANDIDATES` (each direction's buttons in pitch order) is rebuilt
+inside `setNoteFrequencies`, the only thing that can change a tuning, so the
+detector never sorts or caches anything per frame.
+
+Three of the detector's assumptions are physics, not code, and a custom tuning can
+break them:
+
+- Two notes in the same direction closer than ~55Hz cannot be resolved (the Hann
+  main lobe at 10.8Hz bins).
+- A button that is an integer harmonic of another in the same chord is ruled out
+  as an overtone, so that chord loses a note.
+- `detectNote()`, which the tuning modal uses, only searches 150-1200Hz.
+
+Lane order used to be a fourth assumption — `pickNotes` scanned by lane index while
+relying on frequency order. They coincide with the default tuning, so tuning
+button 1 above button 2 silently inverted the "lowest note first" rule and let a
+sub-harmonic be claimed. The dictionaries are now sorted by frequency, which makes
+the invariant true by construction.
 
 The cost is that a **true octave chord is heard as its lower note alone** — the
 classic octave ambiguity. Note that octaves are not the only collision: button 6

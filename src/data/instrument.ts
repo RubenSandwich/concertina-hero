@@ -80,6 +80,35 @@ export const LANE_NOTES: LaneNote[] = DEFAULT_LANE_NOTES.map((n) => ({
   pull: { ...n.pull },
 }))
 
+// One button note, as one entry in a direction's dictionary.
+export interface NoteCandidate {
+  lane: number
+  type: Direction
+  name: string
+  freq: number
+}
+
+// The buttons of each direction, **ordered by frequency**. The mic detector takes
+// the lowest-pitched candidate first (a note's overtones only ever lie above it),
+// and that rule is about pitch, not lane index — the two coincide under the
+// default tuning, but a custom one may invert them.
+//
+// A tuning can only change through `setNoteFrequencies`, so this is rebuilt there
+// and nowhere else.
+export const NOTE_CANDIDATES: Record<Direction, NoteCandidate[]> = { push: [], pull: [] }
+
+function rebuildCandidates(): void {
+  for (const type of DIRECTIONS) {
+    NOTE_CANDIDATES[type] = LANE_NOTES.map((note, lane) => ({
+      lane,
+      type,
+      name: note[type].name,
+      freq: note[type].freq,
+    })).sort((a, b) => a.freq - b.freq)
+  }
+}
+rebuildCandidates()
+
 // A positive numeric frequency, or null if the value isn't usable.
 export function validFreq(value: unknown): number | null {
   const f = Number(value)
@@ -96,6 +125,7 @@ export function setNoteFrequencies(rows: unknown): void {
       if (f) note[type].freq = f
     }
   })
+  rebuildCandidates()
 }
 
 // A deep copy of the built-in default note map — the starting point for a new

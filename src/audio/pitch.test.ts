@@ -17,7 +17,18 @@ import {
   TRANSIENT_MAX,
   MIC_FFT_SIZE,
 } from './pitch.ts'
-import { LANE_NOTES } from '../data/instrument.ts'
+import { LANE_NOTES, setNoteFrequencies, getDefaultNotes } from '../data/instrument.ts'
+
+// LANE_NOTES is a live, module-level map, so any test that retunes it must put it
+// back — the whole file shares one instrument.
+function withTuning(rows: { push: { freq: number }; pull: { freq: number } }[], run: () => void) {
+  try {
+    setNoteFrequencies(rows)
+    run()
+  } finally {
+    setNoteFrequencies(getDefaultNotes())
+  }
+}
 
 const SR = 44100
 const SIZE = 2048
@@ -286,6 +297,38 @@ test('analyzeChord honours the maxNotes cap', () => {
 
 test('analyzeChord returns nothing for silence', () => {
   assert.deepEqual(analyzeChord(new Float32Array(MIC_FFT_SIZE), SR), [])
+})
+
+// ---------- Custom tunings ----------
+
+test('analyzeChord follows a retuned instrument', () => {
+  // Everything transposed down two semitones: the chord must still resolve, and
+  // at the new frequencies — the candidate table cannot be stale.
+  const down2 = getDefaultNotes().map((n) => ({
+    push: { freq: n.push.freq * Math.pow(2, -2 / 12) },
+    pull: { freq: n.pull.freq * Math.pow(2, -2 / 12) },
+  }))
+  withTuning(down2, () => {
+    const freqs = [0, 2, 4].map((l) => LANE_NOTES[l].push.freq)
+    assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer(freqs), SR)), [0, 2, 4])
+    assert.ok(Math.abs(LANE_NOTES[0].push.freq - 233.08) < 0.1, 'tuning really did change')
+  })
+  assert.ok(Math.abs(LANE_NOTES[0].push.freq - 261.63) < 0.01, 'defaults restored')
+})
+
+test('a tuning where lane order is not ascending still resolves', () => {
+  // Button 1 tuned ABOVE button 2, and to exactly twice it. Scanning by lane index
+  // would test 600Hz first and claim it — button 2's own 2nd harmonic — reporting
+  // a note nobody played. Scanning by frequency reaches 300Hz first, then rules
+  // 600Hz out as its overtone.
+  const swapped = getDefaultNotes().map((n, lane) => ({
+    push: { freq: lane === 0 ? 600 : lane === 1 ? 300 : n.push.freq },
+    pull: { freq: n.pull.freq },
+  }))
+  withTuning(swapped, () => {
+    assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer([300]), SR)), [1], 'only button 2 sounds')
+    assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer([600]), SR)), [0], 'only button 1 sounds')
+  })
 })
 
 // ---------- Transient rejection ----------
