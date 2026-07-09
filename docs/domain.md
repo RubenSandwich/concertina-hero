@@ -90,6 +90,24 @@ sounding sustains its note exactly as a held key does (`isSustaining`). It never
 plays the synth for mic hits — the real instrument does. A throttled `[mic]`
 readout is logged to help calibrate.
 
+### Transient rejection
+
+A window caught on a note boundary holds the old note's tail, the new note's
+attack, and the broadband splatter of the step between them. `analyzeChord` reads
+notes out of that mess which were never played — measured down a real mic, a
+phantom E appeared between every C and G. `detectChord` therefore also reports
+`stable`, from `transience()`: the level difference between the window's two
+halves. Correct readings sat at a median of **0.017**, every phantom at **0.418**
+or above, so `TRANSIENT_MAX` of 0.3 separates them cleanly.
+
+The engine believes an unstable reading for **nothing new**: no onsets, no change
+to the sustained set. It keeps holding what it already holds, because the tail
+proves those notes are still sounding.
+
+An **empty** reading is always believed, stable or not. It has no phantoms to
+guard against, and gating silence on stability stalls the release while a note
+decays — which makes the same button impossible to strike again in time.
+
 ### How chord detection works
 
 General polyphonic transcription is hard: the fundamentals are unknown, and low

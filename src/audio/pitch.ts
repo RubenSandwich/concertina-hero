@@ -442,11 +442,46 @@ export function analyzeChord(
   return best.sort((a, b) => a.lane - b.lane)
 }
 
+// How much the window straddles a change in the sound: the difference in level
+// between its first and second half, 0 (steady) to 1 (silence beside a note).
+//
+// A window caught on a note boundary holds the old note's tail, the new note's
+// attack, and the broadband splatter of the step between them — `analyzeChord`
+// reads notes out of that mess which were never played. Those readings are what
+// this catches. Measured through a real mic: correct readings sat at a median of
+// 0.017, every phantom at 0.418 or above.
+export function transience(b: Float32Array): number {
+  const half = b.length >> 1
+  if (half === 0) return 0
+  let first = 0
+  let second = 0
+  for (let i = 0; i < half; i++) first += b[i] * b[i]
+  for (let i = half; i < b.length; i++) second += b[i] * b[i]
+  first = Math.sqrt(first / half)
+  second = Math.sqrt(second / (b.length - half))
+  const loudest = Math.max(first, second)
+  return loudest > 0 ? Math.abs(second - first) / loudest : 0
+}
+
+// Above this a window is mid-transition and nothing new should be believed.
+export const TRANSIENT_MAX = 0.3
+
+// One frame's hearing. `stable` is false when the window spans a note boundary,
+// which means the notes may include phantoms — sustain what you hold, but do not
+// start anything new on it.
+export interface ChordReading {
+  notes: ChordNote[]
+  stable: boolean
+}
+
 // Sample the mic once and return every note sounding. Empty if the mic is off.
-export function detectChord(): ChordNote[] {
-  if (!analyser || !buf) return []
+export function detectChord(): ChordReading {
+  if (!analyser || !buf) return { notes: [], stable: true }
   const ctx = getAudioContext()
-  if (!ctx) return []
+  if (!ctx) return { notes: [], stable: true }
   analyser.getFloatTimeDomainData(buf)
-  return analyzeChord(buf, ctx.sampleRate)
+  return {
+    notes: analyzeChord(buf, ctx.sampleRate),
+    stable: transience(buf) <= TRANSIENT_MAX,
+  }
 }

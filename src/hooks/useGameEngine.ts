@@ -330,18 +330,35 @@ export function useGameEngine(
       // just started sounding is an onset — a press — and one that keeps sounding
       // sustains its note, exactly as a held key would. Chords work because the
       // detector reports the whole set.
-      if (micEnabled) {
-        const heard = detectChord()
+      const reading = micEnabled ? detectChord() : null
+      if (reading) {
+        const heard = reading.notes
 
         // Throttled debug readout (~5x/sec) to help calibrate a real instrument.
         const rt = performance.now()
-        if (heard.length && rt - micDebugAtRef.current > 200) {
+        if (heard.length && reading.stable && rt - micDebugAtRef.current > 200) {
           micDebugAtRef.current = rt
           const played = heard.map((n) => `${n.name} ${n.type} (button ${n.lane + 1})`).join(' + ')
           console.log(`[mic] ${played}`)
         }
 
-        if (heard.length) {
+        // An empty reading has no phantoms to guard against, so silence is always
+        // believed — gating it on stability would stall the release while a note
+        // decays, and the same button could not be struck again in time.
+        //
+        // A *non-empty* reading from a window caught mid-transition is another
+        // matter: it holds the old note's tail beside the new note's attack, and
+        // `analyzeChord` reads notes out of it that were never played. Keep
+        // sustaining what is already held, but start nothing new on it.
+        if (!heard.length) {
+          // Ride out brief dropouts so a sustained note doesn't stutter.
+          micSilentRef.current += 1
+          if (micSilentRef.current >= MIC_SILENT_FRAMES) {
+            micNotesRef.current = []
+            micHeldRef.current.clear()
+            micCandRef.current.clear()
+          }
+        } else if (reading.stable) {
           micSilentRef.current = 0
           micNotesRef.current = heard.map(({ lane, type, name }) => ({ lane, type, name }))
           const sounding = new Set(heard.map((n) => n.lane + ':' + n.type))
@@ -357,7 +374,9 @@ export function useGameEngine(
             micHeldRef.current.add(key)
             const [lane, type] = key.split(':')
             registerPress(Number(lane), type === 'pull', true)
-            console.log(`[mic] ✓ hit button ${Number(lane) + 1} ${type}`)
+            // An onset, not necessarily a hit — registerPress decides whether any
+            // note was actually there to claim.
+            console.log(`[mic] ▶ onset button ${Number(lane) + 1} ${type}`)
           }
 
           // Notes that stopped sounding release, and may be struck again later.
@@ -367,15 +386,8 @@ export function useGameEngine(
           for (const key of [...micHeldRef.current]) {
             if (!sounding.has(key)) micHeldRef.current.delete(key)
           }
-        } else {
-          // Ride out brief dropouts so a sustained note doesn't stutter.
-          micSilentRef.current += 1
-          if (micSilentRef.current >= MIC_SILENT_FRAMES) {
-            micNotesRef.current = []
-            micHeldRef.current.clear()
-            micCandRef.current.clear()
-          }
         }
+        // Otherwise the window straddles a note boundary: believe none of it.
       }
 
       // Sustained notes bank held time (using this frame's keys and mic reading)

@@ -12,7 +12,9 @@ import {
   analyzeBuffer,
   analyzeChord,
   spectrum,
+  transience,
   TOLERANCE_CENTS,
+  TRANSIENT_MAX,
   MIC_FFT_SIZE,
 } from './pitch.ts'
 import { LANE_NOTES } from '../data/instrument.ts'
@@ -284,6 +286,33 @@ test('analyzeChord honours the maxNotes cap', () => {
 
 test('analyzeChord returns nothing for silence', () => {
   assert.deepEqual(analyzeChord(new Float32Array(MIC_FFT_SIZE), SR), [])
+})
+
+// ---------- Transient rejection ----------
+
+test('transience is ~0 for a steady tone and for silence', () => {
+  assert.ok(transience(makeChordBuffer([440])) < 0.05, 'a steady tone is stationary')
+  assert.equal(transience(new Float32Array(MIC_FFT_SIZE)), 0, 'silence has no change in level')
+})
+
+test('transience is high when a note starts partway through the window', () => {
+  const onset = makeChordBuffer([440], { startAt: MIC_FFT_SIZE / 2 })
+  assert.ok(transience(onset) > 0.9, `got ${transience(onset)}`)
+})
+
+test('transience is high when a note stops partway through the window', () => {
+  // The release half of a boundary: loud first, silent second.
+  const full = makeChordBuffer([440])
+  const release = Float32Array.from(full)
+  release.fill(0, MIC_FFT_SIZE / 2)
+  assert.ok(transience(release) > 0.9, `got ${transience(release)}`)
+})
+
+test('TRANSIENT_MAX separates steady windows from straddling ones', () => {
+  const steady = transience(makeChordBuffer([261.63, 392]))
+  const straddling = transience(makeChordBuffer([261.63, 392], { startAt: MIC_FFT_SIZE / 2 }))
+  assert.ok(steady <= TRANSIENT_MAX, `steady ${steady} should be believed`)
+  assert.ok(straddling > TRANSIENT_MAX, `straddling ${straddling} should be rejected`)
 })
 
 test('a chord struck partway through the window is still heard', () => {

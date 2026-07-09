@@ -18,16 +18,17 @@ export const PERFECT_WINDOW = 70
 export const GOOD_WINDOW = 125
 export const HIT_WINDOW = 185 // largest *early* offset that still counts as a hit
 
-// A mic press is always late: the note has to fill the capture window before it
-// can be recognised. Measured end to end, detection lands 83-91ms after the note
-// starts and the two-frame onset debounce adds one more frame, so a press arrives
-// about this far behind the sound that caused it.
+// A mic press is always late: an onset is only believed once the note has filled
+// the capture window (a window still holding the previous note's tail is rejected
+// as transient, or it yields phantom notes), and the two-frame debounce adds one
+// more frame on top. Measured end to end against a real mic, an onset fires
+// 187-215ms after the note starts.
 //
 // This is a *bias*, not jitter, so it is subtracted rather than tolerated —
-// widening alone would need a ~190ms "Perfect", a third of a beat, and every
-// mic hit would still grade late. Playing Chord Parade through a real mic before
-// this, all 24 notes graded Ok and none reached Good.
-export const MIC_LATENCY = 105
+// widening alone would need a "Perfect" spanning a third of a beat, and every mic
+// hit would still grade late. Playing Chord Parade through a real mic before this,
+// all 24 notes graded Ok and none reached Good.
+export const MIC_LATENCY = 195
 
 // What is left after removing the bias is jitter: where the note's onset falls
 // inside a frame, and how fast a real reed speaks. Mic windows are widened for it.
