@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { KEY_CODES, type Direction } from '#data/instrument'
+import { KEY_CODES, LANE_NOTES, type Direction } from '#data/instrument'
 import { MIC_LATENCY, MIC_WINDOW_SCALE, isPlayable, missTime, noteX } from '#data/timing'
 import type { Song, Note } from '#data/songs'
 import { gradeFor, holdFraction, holdPoints, isSustaining } from '#data/scoring'
 import type { Rating, Judgement } from '#data/scoring'
 import { playNote, playMiss, resumeAudio } from '#audio/sound'
-import { detectChord } from '#audio/pitch'
+import { detectChord, aliasesOf } from '#audio/pitch'
 
 const COUNTDOWN_MS = 3000 // "3, 2, 1" before the song starts
 const END_BUFFER = 1800 // grace time after the last note before results
@@ -185,6 +185,30 @@ export function useGameEngine(
       note.judgeX = noteX(note.time - clock)
     }
 
+    // The mic hears a *pitch*, not a button. A concertina may sound the same note
+    // in more than one place, and two buttons tuned close enough are one peak to
+    // the detector either way — so a heard note stands for every button it could
+    // have come from (`aliasesOf`).
+    //
+    // Resolve that by asking the chart: press whichever of them the song is
+    // waiting for right now. If the song wants none of them, press the one that
+    // was heard, so a wrong-way press is still judged as one.
+    const micPresses = (lane: number, type: Direction): { lane: number; type: Direction }[] => {
+      const aliases = aliasesOf(lane, type)
+      if (aliases.length === 1) return aliases
+      const now = gameTime() - MIC_LATENCY
+      const wanted = aliases.filter((a) =>
+        notesRef.current.some(
+          (n) =>
+            n.lane === a.lane &&
+            n.type === a.type &&
+            n.state === 'active' &&
+            isPlayable(now, n.time, holdMs),
+        ),
+      )
+      return wanted.length ? wanted : [{ lane, type }]
+    }
+
     // `fromMic` presses are rewound by MIC_LATENCY: the note was already sounding
     // that long before the detector could name it, so it is graded — and starts
     // banking its hold — from when it was actually played, not when it was heard.
@@ -360,7 +384,15 @@ export function useGameEngine(
           }
         } else if (reading.stable) {
           micSilentRef.current = 0
-          micNotesRef.current = heard.map(({ lane, type, name }) => ({ lane, type, name }))
+          // A heard note sustains every button it could have come from. Only one
+          // of them will have a note holding, and the others cost nothing.
+          micNotesRef.current = heard.flatMap((n) =>
+            aliasesOf(n.lane, n.type).map(({ lane, type }) => ({
+              lane,
+              type,
+              name: LANE_NOTES[lane][type].name,
+            })),
+          )
           const sounding = new Set(heard.map((n) => n.lane + ':' + n.type))
 
           // A note must be heard for a couple of frames before it counts, which
@@ -372,11 +404,13 @@ export function useGameEngine(
             if (frames < 2) continue
             micCandRef.current.delete(key)
             micHeldRef.current.add(key)
-            const [lane, type] = key.split(':')
-            registerPress(Number(lane), type === 'pull', true)
+            const [laneStr, typeStr] = key.split(':')
+            for (const { lane, type } of micPresses(Number(laneStr), typeStr as Direction)) {
+              registerPress(lane, type === 'pull', true)
+            }
             // An onset, not necessarily a hit — registerPress decides whether any
             // note was actually there to claim.
-            console.log(`[mic] ▶ onset button ${Number(lane) + 1} ${type}`)
+            console.log(`[mic] ▶ onset button ${Number(laneStr) + 1} ${typeStr}`)
           }
 
           // Notes that stopped sounding release, and may be struck again later.

@@ -40,6 +40,10 @@ export type Detection =
 // How far off a played note may be (in cents) and still count as a button note.
 export const TOLERANCE_CENTS = 60
 
+// The band the autocorrelator searches, and so the band the tuner can hear.
+export const MIC_MIN_HZ = 150
+export const MIC_MAX_HZ = 1200
+
 // User-facing message when mic access fails or is denied.
 export const MIC_ERROR = 'Could not access the microphone. Check browser permissions.'
 
@@ -81,9 +85,9 @@ export function autoCorrelate(b: Float32Array, sampleRate: number): number {
   const rms = Math.sqrt(sumSq / SIZE)
   if (rms < 0.01) return -1 // too quiet to be a note
 
-  // Only search lags for the notes we care about (~150–1200 Hz).
-  const minLag = Math.max(2, Math.floor(sampleRate / 1200))
-  const maxLag = Math.min(SIZE - 1, Math.floor(sampleRate / 150))
+  // Only search lags for the notes we care about (MIC_MIN_HZ..MIC_MAX_HZ).
+  const minLag = Math.max(2, Math.floor(sampleRate / MIC_MAX_HZ))
+  const maxLag = Math.min(SIZE - 1, Math.floor(sampleRate / MIC_MIN_HZ))
   const corr = new Float32Array(maxLag + 1)
   let bestLag = -1
   let bestCorr = 0
@@ -484,4 +488,79 @@ export function detectChord(): ChordReading {
     notes: analyzeChord(buf, ctx.sampleRate),
     stable: transience(buf) <= TRANSIENT_MAX,
   }
+}
+
+// ---------------------------------------------------------------------------
+// Checking a tuning against what the microphone can actually hear
+// ---------------------------------------------------------------------------
+
+// How close two notes have to be before the microphone cannot tell them apart.
+//
+// A concertina is allowed to sound the same note in more than one place — the
+// same pitch on two buttons, or on a push here and a pull there — so this is a
+// fact about the *detector*, never a fault in the tuning. What the mic hears is a
+// pitch, not a button; `aliasesOf` turns a heard note back into every button it
+// might have come from, and the engine credits whichever one the chart wants.
+//
+// Same direction: a candidate scans +/- SEARCH_BINS around its own frequency, so
+// a closer neighbour falls inside that scan and the lower note claims the peak.
+// Swept: broken below 24Hz at 44.1kHz, below 26Hz at 48kHz.
+export const SAME_DIRECTION_ALIAS_HZ = 30
+
+// Across directions: a push and a pull note never sound at once, but they compete
+// to explain one peak, and the bellows direction goes to whichever dictionary
+// explains more. Swept: 2-6Hz apart chose the wrong direction, 8Hz up was reliable.
+export const CROSS_DIRECTION_ALIAS_HZ = 12
+
+// Every button/direction the microphone could have meant when it reported this
+// one — itself, plus anything tuned too close to tell apart. Usually just itself.
+export function aliasesOf(lane: number, type: Direction): { lane: number; type: Direction }[] {
+  const freq = LANE_NOTES[lane]?.[type]?.freq
+  if (!freq) return [{ lane, type }]
+  const found: { lane: number; type: Direction }[] = []
+  for (const other of DIRECTIONS) {
+    const limit = other === type ? SAME_DIRECTION_ALIAS_HZ : CROSS_DIRECTION_ALIAS_HZ
+    LANE_NOTES.forEach((note, otherLane) => {
+      if (Math.abs(note[other].freq - freq) < limit) found.push({ lane: otherLane, type: other })
+    })
+  }
+  return found
+}
+
+// Something about a tuning the microphone will struggle with. `error` means the
+// value isn't usable at all; `warning` means the instrument still plays, but mic
+// mode will misbehave. `notes` names the exact cells at fault, not just the
+// buttons — only one direction of a button is usually to blame.
+export interface TuningIssue {
+  level: 'error' | 'warning'
+  notes: { lane: number; type: Direction }[]
+  message: string
+}
+
+// Check a draft tuning. Only the value itself is checked: a concertina may sound
+// the same note in several places, so two buttons sharing a frequency is a normal
+// layout, not a mistake — `aliasesOf` sorts that out at play time.
+export function tuningIssues(
+  rows: readonly { push: { freq: number | string }; pull: { freq: number | string } }[],
+): TuningIssue[] {
+  const issues: TuningIssue[] = []
+  rows.forEach((row, lane) => {
+    for (const type of DIRECTIONS) {
+      const freq = Number(row[type].freq)
+      if (!Number.isFinite(freq) || freq <= 0) {
+        issues.push({
+          level: 'error',
+          notes: [{ lane, type }],
+          message: `Button ${lane + 1} ${type} needs a frequency.`,
+        })
+      } else if (freq < MIC_MIN_HZ || freq > MIC_MAX_HZ) {
+        issues.push({
+          level: 'warning',
+          notes: [{ lane, type }],
+          message: `Button ${lane + 1} ${type} is ${freq}Hz, outside the ${MIC_MIN_HZ}–${MIC_MAX_HZ}Hz range the microphone listens to. The keyboard still works.`,
+        })
+      }
+    }
+  })
+  return issues
 }

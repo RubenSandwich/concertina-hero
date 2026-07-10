@@ -153,14 +153,50 @@ works. `NOTE_CANDIDATES` (each direction's buttons in pitch order) is rebuilt
 inside `setNoteFrequencies`, the only thing that can change a tuning, so the
 detector never sorts or caches anything per frame.
 
-Three of the detector's assumptions are physics, not code, and a custom tuning can
-break them:
+The editor's `tuningIssues()` only checks the **value**: a missing number is an
+error, and a frequency outside `MIC_MIN_HZ..MIC_MAX_HZ` (150-1200Hz, the band
+`autoCorrelate` searches) is a warning. Warnings never block a save — the keyboard
+plays any tuning at all.
 
-- Two notes in the same direction closer than ~55Hz cannot be resolved (the Hann
-  main lobe at 10.8Hz bins).
-- A button that is an integer harmonic of another in the same chord is ruled out
-  as an overtone, so that chord loses a note.
-- `detectNote()`, which the tuning modal uses, only searches 150-1200Hz.
+Nothing checks whether two buttons share a pitch, because that is a **layout, not
+a mistake**. A real concertina sounds the same note in several places: the same
+pitch on two buttons, or a push here and a pull there.
+
+### Aliases: the mic hears a pitch, not a button
+
+`aliasesOf(lane, type)` returns every button/direction a heard note could have come
+from — itself, plus anything tuned too close to tell apart:
+
+- **`SAME_DIRECTION_ALIAS_HZ` (30Hz.)** A candidate scans +/- `SEARCH_BINS` around
+  itself, so a closer neighbour in the same direction falls inside that scan and
+  the lower note claims the peak. Swept: broken below 24Hz at 44.1kHz, below 26Hz
+  at 48kHz.
+- **`CROSS_DIRECTION_ALIAS_HZ` (12Hz.)** A push and a pull note never sound at
+  once, but they compete to explain one peak, and the bellows direction goes to
+  whichever dictionary explains more. Swept: 2-6Hz chose the wrong direction, 8Hz
+  and up was reliable.
+
+The engine resolves the ambiguity by asking the chart. `micPresses` presses
+whichever alias the song is currently waiting for (`isPlayable`); if it wants none
+of them, the heard one is pressed, so a genuine wrong-way press is still judged.
+A heard note also **sustains** every one of its aliases — only one of them will
+have a note holding, and the rest cost nothing.
+
+Under the default tuning every note is its own only alias, so none of this fires.
+
+### Sharps and flats
+
+Accidentals need no special handling — nothing anywhere assumes natural notes. What
+matters is the **spacing**, and a semitone is only ~15Hz at middle C but ~52Hz up at
+A5. Down low a chromatic row's neighbours become aliases of each other, so playing
+one credits whichever the chart wants; up high they separate cleanly. Either way it
+plays.
+
+One consequence of the overtone rule is worth knowing, and is inherent to the
+layout rather than a mistake: a button that is an integer harmonic of another **in
+the same direction** is ruled out as an overtone, so a chord containing both loses
+the upper note. The default tuning already has three such octave pairs per direction
+(C/C', E/E', G/G' on push). No shipped chart puts such a pair in one chord.
 
 Lane order used to be a fourth assumption — `pickNotes` scanned by lane index while
 relying on frequency order. They coincide with the default tuning, so tuning

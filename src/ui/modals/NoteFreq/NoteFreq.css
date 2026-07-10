@@ -10,6 +10,35 @@
   gap: var(--sp-8);
   flex-wrap: wrap;
 }
+/* A note the microphone will struggle to tell apart from another. */
+.freq-cell.has-issue {
+  border-color: var(--red-ink);
+}
+
+/* ---------- What the mic makes of this tuning ---------- */
+.tuning-issues {
+  list-style: none;
+  margin: var(--sp-8) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+.tuning-issues__item {
+  font-weight: 700;
+  font-size: var(--fs-sm);
+  line-height: 1.35;
+}
+.tuning-issues__item.is-error {
+  color: var(--red-ink);
+}
+.tuning-issues__item.is-warning {
+  color: var(--teal-ink);
+}
+.tuning-issues__item.is-more {
+  font-weight: 600;
+  opacity: 0.75;
+}
 .freq-row__btn {
   --lane: var(--yellow);
   flex: 0 0 auto;

@@ -13,6 +13,8 @@ import {
   analyzeChord,
   spectrum,
   transience,
+  tuningIssues,
+  aliasesOf,
   TOLERANCE_CENTS,
   TRANSIENT_MAX,
   MIC_FFT_SIZE,
@@ -328,6 +330,106 @@ test('a tuning where lane order is not ascending still resolves', () => {
   withTuning(swapped, () => {
     assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer([300]), SR)), [1], 'only button 2 sounds')
     assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer([600]), SR)), [0], 'only button 1 sounds')
+  })
+})
+
+// ---------- Checking a tuning ----------
+
+const freqRows = (push: number[], pull: number[]) =>
+  push.map((f, i) => ({ push: { freq: f }, pull: { freq: pull[i] } }))
+
+// A chromatic run of 7 semitones starting at `base`.
+const chromatic = (base: number) => Array.from({ length: 7 }, (_, i) => base * Math.pow(2, i / 12))
+
+test('the default tuning raises no issues', () => {
+  assert.deepEqual(tuningIssues(getDefaultNotes()), [])
+})
+
+test('a missing frequency is an error, not a warning', () => {
+  const rows = getDefaultNotes() as unknown as {
+    push: { freq: number | string }
+    pull: { freq: number | string }
+  }[]
+  const broken = rows.map((r, i) => (i === 2 ? { push: { freq: '' }, pull: r.pull } : r))
+  const errors = tuningIssues(broken).filter((x) => x.level === 'error')
+  assert.equal(errors.length, 1)
+  assert.match(errors[0].message, /Button 3 push needs a frequency/)
+})
+
+test('a note outside the microphone band warns but does not block', () => {
+  const rows = getDefaultNotes()
+  rows[0].push.freq = 60
+  const issues = tuningIssues(rows)
+  assert.ok(
+    issues.some((x) => x.level === 'warning' && /outside the 150–1200Hz range/.test(x.message)),
+  )
+  assert.equal(issues.filter((x) => x.level === 'error').length, 0)
+})
+
+test('repeating a note elsewhere on the instrument is not an issue', () => {
+  // A real concertina sounds the same note in several places — the same pitch on
+  // two buttons, or a push here and a pull there. That is a layout, not a fault.
+  const rows = getDefaultNotes()
+  rows[3].pull.freq = rows[0].push.freq // button 4 pull := button 1 push
+  rows[1].push.freq = rows[1].pull.freq // button 2 push := button 2 pull
+  assert.deepEqual(tuningIssues(rows), [])
+})
+
+test('a chromatic row raises no issues at any pitch inside the mic band', () => {
+  // 700Hz -> 1048Hz; a row from 880 would run past MIC_MAX_HZ and warn for that
+  // reason alone, which is a different complaint.
+  for (const base of [261.63, 700]) {
+    const rows = freqRows(
+      chromatic(base),
+      getDefaultNotes().map((n) => n.pull.freq),
+    )
+    assert.deepEqual(tuningIssues(rows), [], `chromatic from ${base}Hz`)
+  }
+})
+
+// ---------- Aliases: which button did the mic actually hear? ----------
+
+test('under the default tuning every note is its own only alias', () => {
+  for (let lane = 0; lane < LANE_NOTES.length; lane++) {
+    for (const type of DIRECTIONS) {
+      assert.deepEqual(aliasesOf(lane, type), [{ lane, type }], `button ${lane + 1} ${type}`)
+    }
+  }
+})
+
+test('the same pitch on two buttons makes them aliases of each other', () => {
+  const rows = getDefaultNotes()
+  rows[3].pull.freq = rows[0].push.freq // button 4 pull sounds button 1 push's note
+  withTuning(rows, () => {
+    assert.deepEqual(aliasesOf(0, 'push'), [
+      { lane: 0, type: 'push' },
+      { lane: 3, type: 'pull' },
+    ])
+    assert.deepEqual(aliasesOf(3, 'pull'), [
+      { lane: 0, type: 'push' },
+      { lane: 3, type: 'pull' },
+    ])
+  })
+})
+
+test('two buttons a semitone apart down low are aliases; up high they are not', () => {
+  const low = getDefaultNotes()
+  low[1].push.freq = low[0].push.freq * Math.pow(2, 1 / 12) // 15.6Hz apart
+  withTuning(low, () => {
+    assert.equal(aliasesOf(0, 'push').length, 2, 'the mic cannot separate them at middle C')
+  })
+
+  // 800Hz clears every default pull note by more than CROSS_DIRECTION_ALIAS_HZ,
+  // so the only neighbour in play is the semitone above it: 47.6Hz away.
+  const high = getDefaultNotes()
+  high[5].push.freq = 800
+  high[6].push.freq = 800 * Math.pow(2, 1 / 12)
+  withTuning(high, () => {
+    assert.deepEqual(
+      aliasesOf(5, 'push'),
+      [{ lane: 5, type: 'push' }],
+      'a semitone up high is clear',
+    )
   })
 })
 

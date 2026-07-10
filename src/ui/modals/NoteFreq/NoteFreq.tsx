@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { LANE_COLORS, getDefaultNotes, type Direction } from '#data/instrument'
 import type { Preset } from '#data/presets'
-import { startMic, stopMic, detectNote, MIC_ERROR } from '#audio/pitch'
+import { startMic, stopMic, detectNote, tuningIssues, MIC_ERROR } from '#audio/pitch'
 import { slug, downloadJSON } from '../../../utils'
 import Modal from '#components/Modal/Modal'
 import './NoteFreq.css'
@@ -58,6 +58,13 @@ export default function NoteFreq({
   const rafRef = useRef(0)
   const startedMicRef = useRef(false)
   const lastApplyRef = useRef(0)
+
+  // What the microphone will make of this tuning. Warnings never block a save —
+  // the keyboard plays any tuning — but a missing number does.
+  const issues = useMemo(() => tuningIssues(rows), [rows])
+  const blocking = issues.some((issue) => issue.level === 'error')
+  const cellHasIssue = (lane: number, type: Direction) =>
+    issues.some((issue) => issue.notes.some((n) => n.lane === lane && n.type === type))
 
   // On unmount, stop any listening loop and release the mic (unless the game's
   // own mic mode is using it).
@@ -136,6 +143,7 @@ export default function NoteFreq({
       setNameErr('Give your preset a name.')
       return
     }
+    if (blocking) return
     stopListening()
     onSave?.({ id: preset?.id, name: name.trim(), notes: rows })
   }
@@ -171,8 +179,14 @@ export default function NoteFreq({
               </span>
               {(['push', 'pull'] as const).map((type) => {
                 const on = listening?.lane === lane && listening?.type === type
+                const flagged = cellHasIssue(lane, type)
                 return (
-                  <div className={'freq-cell' + (on ? ' is-listening' : '')} key={type}>
+                  <div
+                    className={
+                      'freq-cell' + (on ? ' is-listening' : '') + (flagged ? ' has-issue' : '')
+                    }
+                    key={type}
+                  >
                     <span className="freq-cell__name">
                       {type === 'push' ? '▼' : '▲'} {row[type].name}
                     </span>
@@ -203,6 +217,21 @@ export default function NoteFreq({
         </div>
       </div>
 
+      {issues.length > 0 && (
+        <ul className="tuning-issues">
+          {issues.slice(0, 4).map((issue, i) => (
+            <li className={'tuning-issues__item is-' + issue.level} key={i}>
+              {issue.message}
+            </li>
+          ))}
+          {issues.length > 4 && (
+            <li className="tuning-issues__item is-more">
+              …and {issues.length - 4} more like these.
+            </li>
+          )}
+        </ul>
+      )}
+
       {micErr && <p className="modal__err">{micErr}</p>}
       {listening && (
         <p className="modal__listening">
@@ -217,7 +246,7 @@ export default function NoteFreq({
         <button className="btn btn--ghost" onClick={download}>
           Download
         </button>
-        <button className="btn btn--primary" onClick={save}>
+        <button className="btn btn--primary" onClick={save} disabled={blocking}>
           Save &amp; Close
         </button>
       </div>

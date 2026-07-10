@@ -102,7 +102,8 @@ export default function Game({
           <div className="mic-chip">
             <span className="mic-chip__dot" />
             <span className="mic-chip__note">
-              {g.micNotes.length ? g.micNotes.map((n) => n.name).join(' ') : '…'}
+              {/* Aliases share a pitch, so the same name can appear more than once. */}
+              {g.micNotes.length ? [...new Set(g.micNotes.map((n) => n.name))].join(' ') : '…'}
             </span>
           </div>
         )}
