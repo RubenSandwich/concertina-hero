@@ -1,10 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { applyActiveInstrument } from '#data/instrument'
 import { applyActivePreset } from '#data/presets'
 import App from './App'
 import './index.css'
 
-// Apply the saved note-frequency tuning before anything renders or plays.
+// Select the saved instrument, then apply its saved tuning on top — both before
+// anything renders or plays.
+applyActiveInstrument()
 applyActivePreset()
 
 createRoot(document.getElementById('root')!).render(

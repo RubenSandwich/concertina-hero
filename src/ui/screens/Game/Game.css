@@ -114,12 +114,11 @@
   color: var(--ink);
 }
 
-/* ---------- Playfield ---------- */
+/* ---------- Playfield: fall zone on top, keyboard below ---------- */
 .playfield {
   position: relative;
   height: 84vh;
-  min-height: 440px;
-  padding: var(--sp-10);
+  min-height: 480px;
   background:
     repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 4px),
     linear-gradient(180deg, #fff7e2, #ffeccb);
@@ -132,181 +131,63 @@
   transition: box-shadow 0.25s ease;
 }
 
-/* The lanes area sits below the section ribbon and fills the rest. */
-.lanes {
+/* The zone the notes fall through. Notes are clipped hard at its bottom edge —
+   the hit line — so a note "cuts off at the line". */
+.fall-zone {
   position: relative;
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Dashed "cut here" hit line running down the whole field. */
-.hit-zone {
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
-  width: 0;
-  border-left: 5px dashed color-mix(in srgb, var(--ink) 55%, transparent);
-  transform: translateX(-50%);
-  z-index: 3;
-  pointer-events: none;
-}
-
-/* ---------- Lanes ---------- */
-.lane {
-  --lane: var(--yellow);
-  position: relative;
-  flex: 1;
-  margin: var(--sp-4) 0;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--lane) 22%, #fff);
-  border: 3px solid color-mix(in srgb, var(--ink) 35%, transparent);
   overflow: hidden;
 }
-.lane-track {
+
+/* A faint colour band runs down each lane, brightening toward the hit line. */
+.lane-band {
   position: absolute;
-  inset: 0;
-}
-
-/* The key button + target that sits on the hit line for each lane. Its height
-   tracks the lane (so it never overflows the clipped lane) and stays square. */
-.key-target {
-  position: absolute;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  height: min(68px, 95%);
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* The border carries the current direction using the shared fills: a solid
-     push fill, or the striped pull fill (see .is-pull). A thin ink ring keeps
-     the paper-craft outline. */
-  border: 5px solid transparent;
-  border-radius: 14px 16px 13px 17px / 17px 13px 16px 14px;
-  background:
-    color-mix(in srgb, var(--lane) 55%, transparent) padding-box,
-    var(--push-fill) border-box;
-  box-shadow:
-    0 0 0 2px var(--ink),
-    3px 4px 0 color-mix(in srgb, var(--ink) 28%, transparent);
-  z-index: 4;
-  transition:
-    transform 0.06s ease,
-    box-shadow 0.06s ease;
-}
-.key-letter {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.7rem, 5.6vh, 3rem);
-  color: var(--ink);
-}
-.key-target.is-active {
-  transform: translate(-50%, -50%) scale(0.86);
-  box-shadow:
-    0 0 0 2px var(--ink),
-    0 0 0 7px rgba(255, 255, 255, 0.7);
-}
-.key-target.is-pull {
-  background:
-    color-mix(in srgb, var(--lane) 55%, transparent) padding-box,
-    var(--pull-fill) border-box;
-}
-
-/* ---------- Notes ---------- */
-.note {
-  position: absolute;
-  top: 50%;
-  transform: translate(0, -50%) rotate(var(--tilt, -1deg));
-  height: 90%;
-  max-height: 94px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-4);
-  padding: 1px var(--sp-2);
-  border: 4px solid var(--ink);
-  border-radius: 13px 15px 12px 16px / 16px 12px 15px 13px;
-  box-shadow: var(--shadow-sm);
-  will-change: left;
-  z-index: 2;
-}
-.note:nth-child(even) {
-  --tilt: 1deg;
-}
-
-/* Direction arrow (▲ pull / ▼ push) shown above the big note letter. */
-.note-arrow {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--fs-xl);
-  line-height: 0.8;
-  color: var(--ink);
-  -webkit-text-stroke: 2px #fff;
-  paint-order: stroke fill;
-}
-.note-name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: clamp(1.6rem, 4.6vh, 2.7rem);
-  line-height: 1;
-  color: var(--ink);
-  -webkit-text-stroke: 3px #fff;
-  paint-order: stroke fill;
-}
-
-/* PUSH: solid, filled "sticker" (bellows squeezed in). */
-.note--push {
-  background: var(--lane);
-}
-/* PULL: striped paper (bellows drawn out) with a bold double outline. */
-.note--pull {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--lane) 0 9px,
-    color-mix(in srgb, var(--lane) 55%, #fff) 9px 18px
+  top: 0;
+  bottom: 0;
+  width: var(--w);
+  left: calc(var(--x) - var(--w) / 2);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--band) 7%, transparent) 45%,
+    color-mix(in srgb, var(--band) 30%, transparent) 100%
   );
-  box-shadow:
-    var(--shadow-sm),
-    inset 0 0 0 3px rgba(255, 255, 255, 0.65);
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* Being sustained: lit up while its beat is banking held time. */
-.note--holding {
-  filter: brightness(1.1);
-  box-shadow:
-    var(--shadow-sm),
-    inset 0 0 0 4px #fff;
+/* Dashed divider between the two hands. */
+.hand-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left: 4px dashed color-mix(in srgb, var(--ink) 28%, transparent);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
 }
 
-/* Judgement animations. */
-.note--hit {
-  animation: notePop 0.32s ease forwards;
+/* The dashed "cut here" hit line across the bottom of the fall zone. */
+.hit-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-bottom: 5px dashed color-mix(in srgb, var(--ink) 55%, transparent);
+  pointer-events: none;
+  z-index: 4;
 }
-@keyframes notePop {
-  0% {
-    transform: translate(0, -50%) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(0, -140%) scale(1.4) rotate(8deg);
-    opacity: 0;
-  }
-}
-.note--miss {
-  animation: noteMiss 0.32s ease forwards;
-}
-@keyframes noteMiss {
-  0% {
-    transform: translate(0, -50%) scale(1) rotate(0deg);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translate(0, 60%) scale(0.7) rotate(-16deg);
-    opacity: 0;
-  }
+.hit-line__label {
+  position: absolute;
+  right: var(--sp-8);
+  bottom: 3px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.12em;
+  color: color-mix(in srgb, var(--ink) 50%, transparent);
 }
 
 /* ---------- Countdown ---------- */
@@ -403,7 +284,7 @@
   background: var(--red);
 }
 
-/* ---------- Current-direction indicator in the HUD ---------- */
+/* ---------- Current-direction tags in the HUD ---------- */
 .speed-tag {
   display: inline-block;
   margin-left: var(--sp-8);
@@ -421,50 +302,6 @@
   background: var(--green);
 }
 
-/* ---------- Section ribbon (scrolling push/pull timeline) ---------- */
-.section-ribbon {
-  position: relative;
-  flex: 0 0 30px;
-  height: 30px;
-  margin-bottom: var(--sp-8);
-  border: 3px solid var(--ink);
-  border-radius: 10px 12px 10px 12px;
-  background: #fffdf6;
-  overflow: hidden;
-}
-.section-block {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-6);
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--fs-xs);
-  letter-spacing: 0.04em;
-  color: var(--ink);
-  border-right: 3px solid var(--ink);
-  white-space: nowrap;
-  overflow: hidden;
-}
-.section-block--push {
-  background: var(--push-fill);
-}
-.section-block--pull {
-  background: var(--pull-fill);
-}
-.section-ribbon__marker {
-  position: absolute;
-  top: -2px;
-  bottom: -2px;
-  width: 0;
-  border-left: 3px dashed var(--ink);
-  transform: translateX(-50%);
-  z-index: 2;
-}
-
 /* Subtle colored inner glow so the whole field reflects the current mode. */
 .game.mode--push .playfield {
   box-shadow:
@@ -476,8 +313,8 @@
     var(--shadow-lg),
     inset 0 0 0 4px color-mix(in srgb, var(--sky) 42%, transparent);
 }
-.game.mode--pull .hit-zone {
-  border-left-color: color-mix(in srgb, var(--sky) 75%, var(--ink));
+.game.mode--pull .hit-line {
+  border-bottom-color: color-mix(in srgb, var(--sky) 75%, var(--ink));
 }
 
 /* ---------- Pause overlay ---------- */

@@ -2,10 +2,13 @@ import { useMemo, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { getSongs } from '#data/songLibrary'
 import { withLeadIn, type Song } from '#data/songs'
+import { getActiveInstrument, setActiveInstrument, type InstrumentSize } from '#data/instrument'
+import { applyActivePreset } from '#data/presets'
 import type { GameResult } from '#hooks/useGameEngine'
 import Start from '#screens/Start/Start'
 import Game from '#screens/Game/Game'
 import Results from '#screens/Results/Results'
+import ScreenGuard from '#modals/ScreenGuard/ScreenGuard'
 
 type Screen = 'start' | 'game' | 'results'
 type TransitionDirection = 'forward' | 'backward'
@@ -32,6 +35,18 @@ export default function App() {
   const [micEnabled, setMicEnabled] = useState(false) // play via microphone
   const [result, setResult] = useState<GameResult | null>(null)
   const [runId, setRunId] = useState(0) // bump to force a fresh Game mount
+
+  // The active instrument (a global setting): drives geometry/colours/tuning, and
+  // gates which songs are playable.
+  const [instrumentSize, setInstrumentSize] = useState<InstrumentSize>(() => getActiveInstrument())
+
+  // Switch instruments: rebuild the note map from the new layout, re-apply that
+  // size's own saved tuning on top, then re-render everything that reads them.
+  const changeInstrument = (size: InstrumentSize) => {
+    setActiveInstrument(size)
+    applyActivePreset()
+    setInstrumentSize(size)
+  }
 
   // The run-ready song: notes/sections shifted so nothing appears until the
   // countdown ends. Stable within a run (only changes when the song changes).
@@ -79,6 +94,8 @@ export default function App() {
             onSongsChange={refreshSongs}
             micEnabled={micEnabled}
             onMicChange={setMicEnabled}
+            instrumentSize={instrumentSize}
+            onInstrumentChange={changeInstrument}
           />
         )}
 
@@ -105,6 +122,8 @@ export default function App() {
           />
         )}
       </div>
+
+      <ScreenGuard />
     </div>
   )
 }

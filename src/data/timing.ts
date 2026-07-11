@@ -9,9 +9,6 @@ export const LEAD_TIME = 2200
 // small breather) means the playfield is empty until "1" disappears.
 export const LEAD_IN = LEAD_TIME + 200
 
-// Horizontal position of the hit line, as a percent from the left edge.
-export const HIT_LINE_PCT = 17
-
 // Timing windows (ms) measured from the ideal hit moment. They grade a press;
 // they no longer decide when a note is given up on (see MISS_AT).
 export const PERFECT_WINDOW = 70
@@ -51,10 +48,21 @@ export function isPlayable(now: number, noteTime: number, holdMs: number): boole
   return now >= noteTime - HIT_WINDOW && now < missTime(noteTime, holdMs)
 }
 
-// Convert a note's time-until-hit into a horizontal percent position.
-// delta === LEAD_TIME  -> just entering from the right edge (~100%)
-// delta === 0          -> exactly on the hit line
-// delta < 0            -> already swept past the hit line (moving off left)
-export function noteX(delta: number): number {
-  return HIT_LINE_PCT + (delta / LEAD_TIME) * (100 - HIT_LINE_PCT)
+// Notes fall vertically. `noteProgress` maps a note's time-until-hit to its
+// travel down the fall zone, as a fraction: 0 is the top (just spawned), 1 is the
+// hit line (exactly on its beat). Past 1 the note has crossed the line and is
+// clipped away; one beat later (progress 1 + beat/LEAD_TIME) it is gone.
+//   delta === LEAD_TIME  -> 0    (entering at the top)
+//   delta === 0          -> 1    (leading edge on the hit line)
+//   delta < 0            -> > 1  (crossed the line, being cut off)
+export function noteProgress(delta: number): number {
+  return 1 - delta / LEAD_TIME
+}
+
+// A falling note's card is on screen from the moment its leading edge clears the
+// top of the fall zone (progress > 0) until the card has fully crossed the hit
+// line and been clipped away — one beat past the line, at progress 1 + beatFrac.
+// `beatFrac` is the card's height as a fraction of the fall zone (one beat tall).
+export function noteVisible(progress: number, beatFrac: number): boolean {
+  return progress > 0 && progress < 1 + beatFrac
 }

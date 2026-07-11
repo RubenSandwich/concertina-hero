@@ -1,20 +1,23 @@
-// Note-frequency presets, persisted in localStorage.
+// Note-frequency presets, persisted in localStorage — **scoped per instrument
+// size**, since each anglo (7 / 10 / 20 / 30) has its own button count and tuning.
 //
-// A preset is { id, name, notes } where `notes` is a full 7-row map. The
-// built-in "Default" preset always exists and can't be edited or deleted; user
-// presets live in localStorage. Activating a preset pushes its frequencies into
+// A preset is { id, name, notes } where `notes` is a full N-row map for the active
+// instrument. The built-in "Default" preset always exists and can't be edited or
+// deleted; user presets live in localStorage under a size-specific key, so they
+// never leak across instruments. Activating a preset pushes its frequencies into
 // the live LANE_NOTES map (see instrument.ts) so the synth and mic detector pick
 // them up at once.
 
 import {
   DIRECTIONS,
+  getActiveInstrument,
   getDefaultNotes,
   setNoteFrequencies,
   validFreq,
   type Direction,
   type LaneNote,
   type NoteInfo,
-} from './instrument'
+} from './instrument.ts'
 
 // A saved note-frequency tuning. The built-in "Default" preset is `builtin`.
 export interface Preset {
@@ -24,8 +27,11 @@ export interface Preset {
   notes: LaneNote[]
 }
 
-const PRESETS_KEY = 'accordion-note-presets'
-const ACTIVE_PRESET_KEY = 'accordion-active-preset'
+// Storage keys are per instrument size, so a 20-button's presets are separate from
+// a 7-button's. (Old, size-agnostic presets under the previous keys are ignored —
+// no migration, as decided.)
+const presetsKey = () => `concertina-presets-${getActiveInstrument()}`
+const activePresetKey = () => `concertina-active-preset-${getActiveInstrument()}`
 export const DEFAULT_PRESET_ID = 'default'
 
 // A short, collision-resistant id for a new user preset.
@@ -38,8 +44,8 @@ function makeDefaultPreset(): Preset {
   return { id: DEFAULT_PRESET_ID, name: 'Default', builtin: true, notes: getDefaultNotes() }
 }
 
-// Coerce arbitrary rows into a full, valid 7-row map. Missing or bad values
-// fall back to the defaults so every preset is always playable.
+// Coerce arbitrary rows into a full, valid N-row map for the active instrument.
+// Missing or bad values fall back to the defaults so every preset is playable.
 function normalizeNotes(rows: unknown): LaneNote[] {
   return getDefaultNotes().map((def, i) => {
     const row = Array.isArray(rows) ? rows[i] : null
@@ -58,7 +64,7 @@ function normalizeNotes(rows: unknown): LaneNote[] {
 // User presets from localStorage (the built-in default is not stored here).
 function readUserPresets(): Preset[] {
   try {
-    const arr = JSON.parse(localStorage.getItem(PRESETS_KEY) || '[]')
+    const arr = JSON.parse(localStorage.getItem(presetsKey()) || '[]')
     if (!Array.isArray(arr)) return []
     return arr
       .filter((p) => p && typeof p === 'object')
@@ -74,7 +80,7 @@ function readUserPresets(): Preset[] {
 
 function writeUserPresets(presets: Preset[]): void {
   try {
-    localStorage.setItem(PRESETS_KEY, JSON.stringify(presets))
+    localStorage.setItem(presetsKey(), JSON.stringify(presets))
   } catch {
     /* storage unavailable — ignore */
   }
@@ -93,7 +99,7 @@ export function getPreset(id: string): Preset | null {
 // The id of the preset currently in effect.
 export function getActivePresetId(): string {
   try {
-    return localStorage.getItem(ACTIVE_PRESET_KEY) || DEFAULT_PRESET_ID
+    return localStorage.getItem(activePresetKey()) || DEFAULT_PRESET_ID
   } catch {
     return DEFAULT_PRESET_ID
   }
@@ -108,7 +114,7 @@ export function getActivePreset(): Preset {
 export function setActivePreset(id: string): Preset {
   const preset = getPreset(id) || makeDefaultPreset()
   try {
-    localStorage.setItem(ACTIVE_PRESET_KEY, preset.id)
+    localStorage.setItem(activePresetKey(), preset.id)
   } catch {
     /* ignore */
   }

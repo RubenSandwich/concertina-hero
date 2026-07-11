@@ -2,8 +2,9 @@
 // timed notes + push/pull sections, and the built song shape. Persistence of
 // user songs lives in songLibrary.ts.
 
-import { LEAD_IN } from './timing'
+import { LEAD_IN } from './timing.ts'
 import type { Direction } from './instrument'
+import { MAX_BUTTONS } from './layout.ts'
 
 // A single playable note parsed from a chart.
 export interface Note {
@@ -42,6 +43,9 @@ export interface Song extends SongDef {
   notes: Note[]
   sections: Section[]
   duration: number
+  // The highest button number the chart uses = the smallest instrument that can
+  // play it. The song list disables songs that need more buttons than you have.
+  requiredButtons: number
 }
 
 export const DIFFICULTIES: Difficulty[] = ['Easy', 'Medium', 'Hard']
@@ -54,7 +58,9 @@ export const DIFF_CLASS: Record<Difficulty, string> = {
 }
 
 // Chart format: a whitespace / line separated list of tokens like "+3" or "-4".
-//   - the number (1-7) is the concertina button to press.
+//   - the number (1–30) is the concertina button to press. Charts are
+//     instrument-agnostic — a song's highest button is the smallest instrument it
+//     needs (see `requiredButtons`), and the song list gates on that.
 //   - "+" means PUSH (squeeze the bellows in); "-" means PULL (draw them out).
 //     A bare number (e.g. "3") defaults to push.
 //   - "X" (or "x") is a REST: a silent beat where nothing is played.
@@ -65,7 +71,9 @@ export const DIFF_CLASS: Record<Difficulty, string> = {
 //
 // Example ("Row, Row, Row Your Boat"):  +3 +3 +3 -3 -4 X  ...
 
-const NOTE_RE = /^([+-]?)([1-7])$/
+// A signed button number 1–30 (single digit, 10–29, or exactly 30). Anything
+// outside that range — 0, 31, letters — is not a note.
+const NOTE_RE = /^([+-]?)([1-9]|[12]\d|30)$/
 // A token is either a "(...)" chord group or a run of non-space characters.
 const TOKEN_RE = /\([^)]*\)|\S+/g
 
@@ -77,18 +85,20 @@ interface ParseOptions {
 function parseChart(
   chart: string,
   { bpm, subdivision = 1 }: ParseOptions,
-): { notes: Note[]; duration: number } {
+): { notes: Note[]; duration: number; requiredButtons: number } {
   const step = 60000 / bpm / subdivision // ms between beats
   const notes: Note[] = []
   let noteId = 0
   let cursor = 0
+  let requiredButtons = 0 // the highest button number the chart references
 
   const addNote = (tok: string, time: number) => {
     const m = NOTE_RE.exec(tok)
     if (!m) return
     const type: Direction = m[1] === '-' ? 'pull' : 'push'
-    const lane = Number(m[2]) - 1
-    notes.push({ id: noteId++, lane, time, type })
+    const button = Number(m[2])
+    requiredButtons = Math.max(requiredButtons, button)
+    notes.push({ id: noteId++, lane: button - 1, time, type })
   }
 
   const tokens = chart.match(TOKEN_RE) || []
@@ -110,7 +120,7 @@ function parseChart(
     if (notes.length > before) cursor += 1 // only a valid note uses a beat
   })
 
-  return { notes, duration: Math.round(cursor * step) }
+  return { notes, duration: Math.round(cursor * step), requiredButtons }
 }
 
 // Group consecutive same-direction notes into push/pull runs. These drive the
@@ -145,7 +155,7 @@ export function buildSong({
   chart,
   builtin = false,
 }: BuildInput): Song {
-  const { notes, duration } = parseChart(chart, { bpm, subdivision })
+  const { notes, duration, requiredButtons } = parseChart(chart, { bpm, subdivision })
   const sections = deriveSections(notes, duration)
   return {
     id,
@@ -160,12 +170,37 @@ export function buildSong({
     notes,
     sections,
     duration,
+    requiredButtons,
   }
 }
 
 // Count the playable notes in a chart string (editor feedback + validation).
 export function chartNoteCount(chart: string): number {
   return parseChart(String(chart || ''), { bpm: 120 }).notes.length
+}
+
+// The highest button number a chart references = the smallest instrument that can
+// play it (0 for an empty chart). Editor feedback + song-list gating.
+export function chartRequiredButtons(chart: string): number {
+  return parseChart(String(chart || ''), { bpm: 120 }).requiredButtons
+}
+
+// Button numbers a chart uses that fall outside the playable range (1–30). The
+// parser silently drops these, so the editor surfaces them instead of letting a
+// typo like "+31" vanish. Returns the offending numbers, sorted, with no repeats.
+export function chartOutOfRange(chart: string): number[] {
+  const bad = new Set<number>()
+  for (const tok of String(chart || '').match(TOKEN_RE) || []) {
+    const inner = tok[0] === '(' ? tok.slice(1, -1).split(/\s+/) : [tok]
+    for (const t of inner) {
+      const m = /^[+-]?(\d+)$/.exec(t)
+      if (m) {
+        const n = Number(m[1])
+        if (n < 1 || n > MAX_BUTTONS) bad.add(n)
+      }
+    }
+  }
+  return [...bad].sort((a, b) => a - b)
 }
 
 // Shift a song so the first note only appears *after* the countdown ends: every

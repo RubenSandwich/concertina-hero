@@ -1,29 +1,56 @@
 # Domain concepts
 
-## Buttons, lanes, push/pull
+## Instruments, buttons, lanes, push/pull
 
-- **7 buttons = 7 lanes**, played with the number keys **1–7** (`KEY_CODES` in
-  `data/instrument.ts` maps `Digit1..7` / `Numpad1..7` to lane indices 0–6).
-- **Push vs pull** is the bellows direction: **push = tap the key**, **pull =
-  hold Shift + the key**. Each button is _bisonoric_ — a different note per
-  direction (button 1 = C push / D pull). The full map is `LANE_NOTES` in
-  `data/instrument.ts`.
+- The game supports four anglo sizes — **7 / 10 / 20 / 30 buttons** — as a global
+  setting (`getActiveInstrument` / `setActiveInstrument` in `data/instrument.ts`,
+  persisted to `localStorage`). The chosen size drives the geometry, colours, key
+  labels and tuning. `data/layout.ts` holds the pure per-size data (see below).
+- A **button = a lane**; `lane` (0…N-1) is the button's identity everywhere, and
+  equals the **display number − 1**. Numbers run top-to-bottom, left-to-right
+  across the screen (mirror-aware for the right hand).
+- Buttons are played on a **spatial key grid** matching their on-screen positions
+  (`KEY_CODES` derived from the active layout): `Q W E R T | Y U I O P` (top),
+  `A S D F G | H J K L ;` (home), `Z X C V B | N M , . /` (bottom). The 7-button
+  uses `Q W E R T Y U`; larger sizes fill more of the grid. Uses `event.code`, so
+  it's independent of the OS keyboard layout. On-screen buttons are tappable too.
+- **Push vs pull** is the bellows direction: **push = tap the key**, **pull = hold
+  Shift + the key** (tapping a button's push/pull half on-screen works too). Each
+  button is _bisonoric_ — a different note per direction. The live map is
+  `LANE_NOTES`; `LANE_BUTTONS` is the active geometry.
+
+## Instrument layouts (`data/layout.ts`)
+
+`LAYOUTS[size]` is a pure descriptor: a `HandGeom` (hands / cols / rows / split /
+mirror / stagger) plus a flat `ButtonSpec[]` — per button its `lane`, `number`,
+`hand`, `row`, `col`, on-screen `x`, `key`/`keyLabel`, `color`, and default
+push/pull notes. `instrument.ts` derives the live `LANE_NOTES` / `LANE_COLORS` / `KEY_CODES` /
+`NOTE_CANDIDATES` / `LANE_BUTTONS` from it, rebuilt in place when the size changes. `minInstrumentFor(buttons)` gives the smallest
+size that fits a button count; `MAX_BUTTONS` is 30.
 
 ## Chart format (`data/songs.ts`)
 
-A song's `chart` is a whitespace/newline list of one-beat tokens:
+Charts are **instrument-agnostic** — just a sequence of button numbers. A song's
+highest button (`requiredButtons`) is the smallest instrument that can play it, so
+a 1–7 song plays on every size and the song list disables songs that need more
+buttons than the selected instrument has. A `chart` is a whitespace/newline list
+of one-beat tokens:
 
-- `+N` push button _N_, `-N` pull button _N_ (N = 1–7); a bare `N` defaults to push.
+- `+N` push button _N_, `-N` pull button _N_ (N = 1–30); a bare `N` defaults to push.
 - `X` (or `x`) is a rest — a silent beat.
 - `(+1 +3)` is a chord — several buttons on the same beat (still one beat).
 - Line breaks carry no timing; they only separate tokens. End a phrase with `X` to pause.
 
-`parseChart` turns this into timed notes; consecutive same-direction notes are
-grouped into **sections** that drive the look-ahead ribbon.
+`parseChart` turns this into timed notes plus `requiredButtons`; consecutive
+same-direction notes are grouped into **sections** that drive the push/pull mode
+glow. `chartOutOfRange` lists button numbers outside 1–30 for the editor to flag.
 
 ## Timing & motion (`data/timing.ts`)
 
-`noteX(deltaMs)` maps a note's time-until-hit to an x-position percent.
+Notes **fall vertically** onto the drawn keyboard and cut off at the hit line.
+`noteProgress(deltaMs)` maps a note's time-until-hit to its travel down the fall
+zone (0 = top, 1 = the hit line, >1 = crossing and being clipped);
+`noteVisible(progress, beatFrac)` culls a card once it has fully passed the line.
 `LEAD_TIME` is the travel time; `LEAD_IN` delays the first note until after the
 3-2-1 countdown. Practice **speed** scales the game clock in `useGameEngine`
 (lower = slower motion and spacing). **Space** pauses.
@@ -31,8 +58,8 @@ grouped into **sections** that drive the look-ahead ribbon.
 ## Held notes & scoring (`data/scoring.ts`)
 
 Every note **sustains for one beat**: its hold window is `[time, time + beat)`,
-which is exactly the span its card covers the hit line (cards are anchored with
-their left edge on the beat and are one beat wide).
+which is exactly the span its card covers the hit line (a card's leading edge
+reaches the line on its beat and it is one beat tall).
 
 A press is graded on **onset timing** by `gradeFor` — `PERFECT_WINDOW` /
 `GOOD_WINDOW`, else Ok — and that grade, the combo and the counts are all awarded
@@ -113,8 +140,9 @@ decays — which makes the same button impossible to strike again in time.
 
 General polyphonic transcription is hard: the fundamentals are unknown, and low
 notes' harmonics land on high notes' fundamentals. Two facts make it tractable
-here. The concertina can only sound **14 known frequencies**, and the bellows move
-one way at a time, so a chord is **all push or all pull** — which doubles the gap
+here. The concertina can only sound a **small, known set of frequencies** (two per
+button — 14 on the 7-button), and the bellows move one way at a time, so a chord is
+**all push or all pull** — which doubles the gap
 between rival candidates (the closest same-direction pair is pull D 293.66 /
 F 349.23, 55.6Hz apart, comfortably resolved by ~10.8Hz bins).
 
@@ -150,8 +178,8 @@ The detector reads the live tuning, so a retuned instrument is picked up with no
 further work — the candidate frequencies _and_ the harmonic collisions between
 them are derived from whatever tuning is current. Transposing the whole instrument
 works. `NOTE_CANDIDATES` (each direction's buttons in pitch order) is rebuilt
-inside `setNoteFrequencies`, the only thing that can change a tuning, so the
-detector never sorts or caches anything per frame.
+whenever the tuning or the instrument changes (`setNoteFrequencies` /
+`setActiveInstrument`), so the detector never sorts or caches anything per frame.
 
 The editor's `tuningIssues()` only checks the **value**: a missing number is an
 error, and a frequency outside `MIC_MIN_HZ..MIC_MAX_HZ` (150-1200Hz, the band

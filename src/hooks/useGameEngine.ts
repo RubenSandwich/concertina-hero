@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { KEY_CODES, LANE_NOTES, type Direction } from '#data/instrument'
-import { MIC_LATENCY, MIC_WINDOW_SCALE, isPlayable, missTime, noteX } from '#data/timing'
+import { MIC_LATENCY, MIC_WINDOW_SCALE, isPlayable, missTime, noteProgress } from '#data/timing'
 import type { Song, Note } from '#data/songs'
 import { gradeFor, holdFraction, holdPoints, isSustaining } from '#data/scoring'
 import type { Rating, Judgement } from '#data/scoring'
@@ -31,7 +31,7 @@ export interface GameNote extends Note {
   creditedTo: number // clock up to which heldMs already accounts for
   holdBonus: number // combo bonus banked at the onset, added when finalized
   judgeElapsed: number
-  judgeX: number
+  judgeAt: number // fall-zone progress (0…1+) where the card froze when judged
 }
 
 interface Counts {
@@ -107,6 +107,14 @@ export function useGameEngine(
   const onFinishRef = useRef(onFinish)
   onFinishRef.current = onFinish
 
+  // On-screen buttons press through these, which point at the current run's
+  // handlers (rebuilt each run inside the effect). Wrapped in stable callbacks so
+  // the keyboard component isn't re-created every frame.
+  const pressRef = useRef<(lane: number, pull: boolean) => void>(() => {})
+  const releaseRef = useRef<(lane: number) => void>(() => {})
+  const pressLane = useCallback((lane: number, pull: boolean) => pressRef.current(lane, pull), [])
+  const releaseLane = useCallback((lane: number) => releaseRef.current(lane), [])
+
   useEffect(() => {
     // Fresh state for this run.
     notesRef.current = song.notes.map((n): GameNote => ({
@@ -117,7 +125,7 @@ export function useGameEngine(
       creditedTo: 0,
       holdBonus: 0,
       judgeElapsed: 0,
-      judgeX: 0,
+      judgeAt: 0,
     }))
     scoreRef.current = 0
     comboRef.current = 0
@@ -155,7 +163,7 @@ export function useGameEngine(
       note.state = rating === 'miss' ? 'miss' : 'hit'
       note.rating = rating
       note.judgeElapsed = now
-      note.judgeX = noteX(note.time - now)
+      note.judgeAt = noteProgress(note.time - now)
     }
 
     // Bank the time a held note was sustained since we last looked at it. A
@@ -182,7 +190,7 @@ export function useGameEngine(
       scoreRef.current += holdPoints(rating, holdFraction(note.heldMs, holdMs)) + note.holdBonus
       note.state = 'hit'
       note.judgeElapsed = clock
-      note.judgeX = noteX(note.time - clock)
+      note.judgeAt = noteProgress(note.time - clock)
     }
 
     // The mic hears a *pitch*, not a button. A concertina may sound the same note
@@ -276,6 +284,22 @@ export function useGameEngine(
       }
     }
 
+    // The shared press/release path for every input — a key, or a tap on an
+    // on-screen button. A press sounds the synth, holds the lane, and grades the
+    // note; releasing just stops the hold.
+    const doPress = (lane: number, pull: boolean) => {
+      if (pausedRef.current) return
+      resumeAudio()
+      activeKeysRef.current[lane] = pull ? 'pull' : 'push'
+      playNote(lane, pull ? 'pull' : 'push')
+      registerPress(lane, pull)
+    }
+    const doRelease = (lane: number) => {
+      delete activeKeysRef.current[lane]
+    }
+    pressRef.current = doPress
+    releaseRef.current = doRelease
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         e.preventDefault()
@@ -286,17 +310,13 @@ export function useGameEngine(
       const lane = KEY_CODES[e.code]
       if (lane === undefined) return
       e.preventDefault()
-      resumeAudio()
-      const pull = e.shiftKey
-      activeKeysRef.current[lane] = pull ? 'pull' : 'push'
-      playNote(lane, pull ? 'pull' : 'push')
-      registerPress(lane, pull)
+      doPress(lane, e.shiftKey)
     }
 
     const onKeyUp = (e: KeyboardEvent) => {
       const lane = KEY_CODES[e.code]
       if (lane === undefined) return
-      delete activeKeysRef.current[lane]
+      doRelease(lane)
     }
 
     window.addEventListener('keydown', onKeyDown)
@@ -473,5 +493,7 @@ export function useGameEngine(
     counts: countsRef.current,
     feedback: feedbackRef.current,
     activeKeys: activeKeysRef.current,
+    pressLane,
+    releaseLane,
   }
 }

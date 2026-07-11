@@ -1,51 +1,42 @@
 import { useGameEngine } from '#hooks/useGameEngine'
 import type { GameNote, GameResult } from '#hooks/useGameEngine'
 import type { Song, Section } from '#data/songs'
-import { LANE_LABELS, LANE_COLORS, LANE_NOTES, type Direction } from '#data/instrument'
-import { HIT_LINE_PCT, LEAD_TIME, noteX } from '#data/timing'
+import { LANE_COLORS, getActiveLayout, type Direction } from '#data/instrument'
+import { LEAD_TIME, noteProgress, noteVisible } from '#data/timing'
+import Keyboard from '#components/Keyboard/Keyboard'
+import NoteCard from '#components/NoteCard/NoteCard'
 import './Game.css'
 
-// The left edge of the note's card as a percent, or null when it shouldn't
-// render. `spanPct` is the card's width, so a card is culled only once it has
-// fully swept off the left edge.
-function noteScreenX(note: GameNote, elapsed: number, spanPct: number): number | null {
-  if (note.state === 'active' || note.state === 'holding') {
-    const x = noteX(note.time - elapsed)
-    return x + spanPct < -6 || x > 112 ? null : x
+// The tallest a note card is allowed to grow (fraction of the fall zone), so a
+// slow song's one-beat cards don't swallow the whole playfield.
+const MAX_CARD_FRAC = 0.42
+
+// A falling note with the vertical progress at which to draw it (0 = top of the
+// fall zone, 1 = the hit line). Active/holding notes track the clock; a just-
+// judged note freezes at where it was for a brief pop-out.
+interface PlacedNote {
+  note: GameNote
+  progress: number
+}
+
+function placeNotes(notes: GameNote[], elapsed: number, beatFrac: number): PlacedNote[] {
+  const placed: PlacedNote[] = []
+  for (const note of notes) {
+    if (note.state === 'active' || note.state === 'holding') {
+      const progress = noteProgress(note.time - elapsed)
+      if (noteVisible(progress, beatFrac)) placed.push({ note, progress })
+    } else if (elapsed - note.judgeElapsed < 340) {
+      // Recently hit/missed: freeze it at its judged spot for the pop-out.
+      placed.push({ note, progress: note.judgeAt })
+    }
   }
-  // Recently hit/missed: freeze it briefly at its judged spot for the pop-out.
-  return elapsed - note.judgeElapsed < 340 ? note.judgeX : null
+  return placed
 }
 
 // Which direction the song wants right now (drives the mode UI).
 function currentDir(sections: Section[], elapsed: number): Direction {
   for (const s of sections) if (elapsed < s.end) return s.dir
   return sections.length ? sections[sections.length - 1].dir : 'push'
-}
-
-interface NoteProps {
-  note: GameNote
-  left: number
-  width: string
-}
-
-function Note({ note, left, width }: NoteProps) {
-  const noteName = LANE_NOTES[note.lane][note.type].name
-  const isPull = note.type === 'pull'
-  const cls =
-    'note note--' +
-    note.type +
-    (note.state === 'holding' ? ' note--holding' : '') +
-    (note.state === 'hit' ? ' note--hit note--' + (note.rating ?? '') : '') +
-    (note.state === 'miss' ? ' note--miss' : '')
-  return (
-    <div className={cls} style={{ left: left + '%', width }}>
-      <span className="note-arrow" aria-hidden="true">
-        {isPull ? '▲' : '▼'}
-      </span>
-      <span className="note-name">{noteName}</span>
-    </div>
-  )
 }
 
 interface GameProps {
@@ -68,20 +59,56 @@ export default function Game({
   onQuit,
 }: GameProps) {
   const g = useGameEngine(song, { speed, micEnabled, waitForNote, onFinish })
+  const layout = getActiveLayout()
+  const { buttons, geom } = layout
 
-  // Every note sustains for one beat. A card is anchored with its left edge on
-  // its beat and is exactly one beat (`stepPct`) wide, so it lies over the hit
-  // line for precisely the window in which the note can be held. A ~10px gap is
-  // trimmed off so adjacent cards stay visibly separate — a re-press, not a hold.
+  // Each note sustains one beat; its card is that many fall-zone-heights tall, so
+  // it covers the hit line for exactly the window in which it can be held.
   const stepMs = 60000 / (song.bpm * (song.subdivision || 1))
-  const stepPct = (stepMs / LEAD_TIME) * (100 - HIT_LINE_PCT)
-  const noteWidth = `max(56px, calc(${stepPct.toFixed(2)}% - 10px))`
+  const beatFrac = stepMs / LEAD_TIME
+  const cardHpct = Math.min(beatFrac, MAX_CARD_FRAC) * 100
+  const cardH = `max(46px, calc(${cardHpct.toFixed(2)}% - 6px))`
+
+  // Note/lane-band width: a little under the tightest gap between two lanes, so
+  // even the staggered 30-button rows stay visibly apart.
+  const xs = [...new Set(buttons.map((b) => b.x))].sort((a, b) => a - b)
+  let minGap = 1
+  for (let i = 1; i < xs.length; i++) minGap = Math.min(minGap, xs[i] - xs[i - 1])
+  const cardW = `max(34px, ${(minGap * 82).toFixed(2)}%)`
+  // Keyboard circle diameter as a fraction of the playfield width — a bit under the
+  // tightest lane gap, so even the staggered 20/30-button rows never collide across
+  // the bellows divider. CSS caps it by the row height.
+  const keyFrac = (minGap * 0.82).toFixed(4)
 
   const judged = g.counts.perfect + g.counts.good + g.counts.ok + g.counts.miss
   const accuracy = judged
     ? Math.round(((g.counts.perfect + g.counts.good + g.counts.ok) / judged) * 100)
     : 100
   const mode = currentDir(song.sections, Math.max(g.elapsed, 0))
+
+  const placed = placeNotes(g.notes, g.elapsed, beatFrac)
+
+  // Two independent per-lane signals drive the keyboard's three states:
+  //   active  — a note is falling in this lane (it wakes up, but isn't filled in)
+  //   pressed — its key/tap/mic is being played right now (fully coloured in)
+  const active: (Direction | null)[] = buttons.map(() => null)
+  const pressed: (Direction | null)[] = buttons.map(() => null)
+  // When a lane has several notes falling at once, the highlight tracks the next
+  // one to play — the note nearest the hit line (highest progress), not whichever
+  // was spawned last.
+  const activeProgress: number[] = buttons.map(() => -Infinity)
+  for (const { note, progress } of placed) {
+    if ((note.state === 'active' || note.state === 'holding') && progress > 0) {
+      if (progress > activeProgress[note.lane]) {
+        activeProgress[note.lane] = progress
+        active[note.lane] = note.type
+      }
+    }
+  }
+  for (const n of g.micNotes) pressed[n.lane] = n.type
+  for (const laneStr of Object.keys(g.activeKeys)) {
+    pressed[Number(laneStr)] = g.activeKeys[Number(laneStr)]
+  }
 
   return (
     <div className={'game mode--' + mode}>
@@ -137,61 +164,48 @@ export default function Game({
         )}
       </div>
 
-      <div className="playfield">
-        {/* Scrolling ribbon showing the push/pull sections as they approach. */}
-        <div className="section-ribbon">
-          <div className="section-ribbon__marker" style={{ left: HIT_LINE_PCT + '%' }} />
-          {song.sections.map((s) => {
-            // Bands share the note anchoring, so a band starts exactly at the
-            // leading edge of the first card in the run.
-            const left = noteX(s.start - g.elapsed)
-            const right = noteX(s.end - g.elapsed)
-            if (right < -6 || left > 112) return null
-            return (
-              <div
-                key={s.id}
-                className={'section-block section-block--' + s.dir}
-                style={{ left: left + '%', width: right - left + '%' }}
-              >
-                <span>{s.dir === 'pull' ? '▲ PULL' : '▼ PUSH'}</span>
-              </div>
-            )
-          })}
+      <div
+        className="playfield"
+        style={{ '--w': cardW, '--h': cardH, '--key-frac': keyFrac } as React.CSSProperties}
+      >
+        <div className="fall-zone">
+          {/* A faint colour band runs down each lane. */}
+          {buttons.map((b) => (
+            <div
+              key={b.lane}
+              className="lane-band"
+              style={
+                { '--x': (b.x * 100).toFixed(3) + '%', '--band': b.color } as React.CSSProperties
+              }
+            />
+          ))}
+
+          {geom.split && <div className="hand-divider" />}
+
+          {placed.map(({ note, progress }) => (
+            <NoteCard
+              key={note.id}
+              note={note}
+              x={buttons[note.lane].x}
+              color={LANE_COLORS[note.lane]}
+              progress={progress}
+            />
+          ))}
+
+          <div className="hit-line">
+            <span className="hit-line__label">HIT</span>
+          </div>
         </div>
 
-        <div className="lanes">
-          <div className="hit-zone" style={{ left: HIT_LINE_PCT + '%' }} />
-
-          {LANE_LABELS.map((label, i) => {
-            const activeType = g.activeKeys[i]
-            const micHere = g.micNotes.some((n) => n.lane === i)
-            const laneNotes: { n: GameNote; left: number }[] = []
-            for (const n of g.notes) {
-              if (n.lane !== i) continue
-              const x = noteScreenX(n, g.elapsed, stepPct)
-              if (x != null) laneNotes.push({ n, left: x })
-            }
-            return (
-              <div className="lane" key={label} style={{ '--lane': LANE_COLORS[i] }}>
-                <div className="lane-track">
-                  {laneNotes.map(({ n, left }) => (
-                    <Note key={n.id} note={n} left={left} width={noteWidth} />
-                  ))}
-                </div>
-                <div
-                  className={
-                    'key-target' +
-                    (activeType || micHere ? ' is-active' : '') +
-                    (mode === 'pull' ? ' is-pull' : '')
-                  }
-                  style={{ left: HIT_LINE_PCT + '%' }}
-                >
-                  <span className="key-letter">{label}</span>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+        <Keyboard
+          buttons={buttons}
+          geom={geom}
+          active={active}
+          pressed={pressed}
+          labelMode={micEnabled ? 'number' : 'key'}
+          onPress={g.pressLane}
+          onRelease={g.releaseLane}
+        />
 
         {g.countdown > 0 && (
           <div className="countdown">

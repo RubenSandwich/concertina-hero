@@ -9,7 +9,8 @@ with React 19 + Vite 8 + TypeScript in a Paper Mario / paper-mache visual style.
 npm run dev           # Vite dev server (http://localhost:5173/)
 npm run build         # tsc type-check, then production build — verify changes with this
 npm run typecheck     # tsc --noEmit only
-npm test              # mic pitch-detection + scoring unit tests (Node's test runner)
+npm test              # unit tests: mic detection, scoring, timing, layout, songs,
+                      #   instrument key map, per-size presets (Node's test runner)
 npm run format        # format everything with Prettier
 npm run format:check  # verify formatting, no writes
 ```

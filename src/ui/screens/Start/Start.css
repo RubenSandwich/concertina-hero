@@ -40,16 +40,22 @@
   font-size: var(--fs-base);
   font-weight: 500;
 }
+.howto__lead {
+  margin: 0 0 var(--sp-16);
+  font-size: var(--fs-base);
+  font-weight: 500;
+}
 .howto__hint {
   margin: var(--sp-12) 0 0;
   font-weight: 600;
   color: var(--muted);
 }
 
-/* Button -> note reference (push note over pull note for each of the 7 buttons). */
+/* Button -> note reference (push note over pull note per button). Columns fill to
+   fit the instrument, so it works from 7 up to 30 buttons. */
 .note-map {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
   gap: var(--sp-8);
   margin-top: var(--sp-16);
 }
@@ -67,10 +73,22 @@
   box-shadow: var(--shadow-xs);
 }
 .note-map__num {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-4);
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--fs-lg);
   line-height: 1;
+}
+/* The key to press for this button, beside its number. */
+.note-map__key {
+  font-size: var(--fs-xs);
+  padding: 1px 5px;
+  color: var(--ink);
+  background: color-mix(in srgb, var(--lane) 45%, #fff);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
 }
 .note-map__notes {
   display: flex;
@@ -90,12 +108,6 @@
 }
 .nm--pull {
   color: #1f6f9c;
-}
-
-@media (max-width: 560px) {
-  .note-map {
-    grid-template-columns: repeat(4, 1fr);
-  }
 }
 
 .key-cap {
@@ -205,6 +217,36 @@
   color: var(--muted);
 }
 
+/* A song that needs more buttons than the selected instrument has: greyed out,
+   un-tilted and not clickable. Its supported-size chip turns red. */
+.song-card.is-locked {
+  cursor: not-allowed;
+  opacity: 0.5;
+  filter: grayscale(0.7);
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+.song-card.is-locked:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+/* The smallest concertina this song plays on (and up), shown on every card. */
+.song-card__supports {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xs);
+  color: var(--ink);
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  padding: 2px var(--sp-10);
+  white-space: nowrap;
+}
+.song-card__supports.is-blocked {
+  background: var(--red);
+}
+
 /* Big "manage songs" button that opens the song library (replaces the old drop
    zone). Styled as a full-width dashed "add" tile. */
 .song-manage-btn {
@@ -247,6 +289,12 @@
 }
 .practice-row--divider {
   border-top: 3px dashed color-mix(in srgb, var(--ink) 25%, transparent);
+}
+/* The segmented pickers can wrap under their description on a narrow panel, but
+   stay right-aligned (like every other setting's control) when they fit. */
+.practice-row .segmented {
+  flex-wrap: wrap;
+  max-width: 100%;
 }
 /* Stacked label + description that fills the left side of a row. */
 .practice-row__info {

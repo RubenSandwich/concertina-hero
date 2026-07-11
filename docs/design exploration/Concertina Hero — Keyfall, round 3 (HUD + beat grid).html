@@ -1,0 +1,408 @@
+<!doctype html><html><head><!-- frame-runtime --><base href="/_f/1783706446-852a/"><script>window.__FRAME_PREAMBLE={"capabilities":{"downloads":"downloads.DUzXFHNF.js","mcp":"mcp.Djj5DQjZ.js","self":"self.DqF_PxOe.js"},"transforms":"_transforms.DYk1Ltlh.js"}</script><script>(function(){"use strict";const X="modulepreload",Y=function(e){return"/"+e},Z={},U=function(t,n,u){let o=Promise.resolve();function i(f){const a=new Event("vite:preloadError",{cancelable:!0});if(a.payload=f,window.dispatchEvent(a),!a.defaultPrevented)throw f}return o.then(f=>{for(const a of f||[])a.status==="rejected"&&i(a.reason);return t().catch(i)})},D=["light","dark","system"];function $(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_init;return t!=null&&typeof t=="object"}function q(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_theme;if(t==null||typeof t!="object")return!1;const n=t.theme;return typeof n=="string"&&D.includes(n)}function M(e){if(window===top||e.type==="auxclick"&&e.button!==1)return;const t=e.composedPath?e.composedPath():[e.target];let n=null;for(let f=0;f<t.length;f++){const a=t[f];if(a&&a.matches&&a.matches("a[href],area[href]")){n=a;break}}if(!n&&e.target&&e.target.closest&&(n=e.target.closest("a[href],area[href]")),!n)return;const u=n.getAttribute("href");if(!u)return;let o,i;try{o=new URL(u,document.baseURI),i=new URL(document.baseURI).origin}catch{return}(o.protocol==="http:"||o.protocol==="https:")&&o.origin!==i&&(e.preventDefault(),parent.postMessage({__frame_nav:!0,url:o.href},"*"))}const L={};function y(e){if(window===top)return;const t=Date.now();t-(L[e]||0)<500||(L[e]=t,parent.postMessage({__frame_engaged:!0,kind:e},"*"))}const F=2e3,T=["wheel","touchstart","touchmove","keydown","pointerdown"];let k=0;function B(e){e.isTrusted&&(k=Date.now())}function z(){addEventListener("click",M,!0),addEventListener("auxclick",M,!0)}function W(){for(let e=0;e<T.length;e++)addEventListener(T[e],B,{capture:!0,passive:!0});addEventListener("scroll",e=>{e.isTrusted&&Date.now()-k<F&&y("scroll")},{capture:!0,passive:!0}),addEventListener("pointermove",e=>{e.isTrusted&&y("pointer")},{capture:!0,passive:!0}),addEventListener("click",e=>{e.isTrusted&&y("click")},{capture:!0,passive:!0})}function x(e,t,n){const u=[...t.values()].filter(o=>o.targets.some(i=>i.startsWith(e+".")));return{wrap(o,i){const f=`${e}.${o}`,a=u.filter(s=>s.targets.includes(f));return a.length===0?(...s)=>{try{return i(...s)}catch(d){return Promise.reject(d)}}:(...s)=>{let d=s;for(const c of a){const l=c.module.parameters;if(l)try{d=l(d)}catch{return Promise.reject({code:"transform_error",id:c.id,scope:e,message:"parameters transform failed"})}}let m;try{m=i(...d)}catch(c){m=Promise.reject(c)}return m.then(c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.returns;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"returns"}),c}}return c},c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.throws;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"throws"}),Promise.reject(c)}}return Promise.reject(c)})}}}}function H(e,t,n,u=()=>{}){const o=new Set(e.changes??[]),i=new Map;for(const f of o){const a=t[f];a&&i.set(f,a)}return{contract:e.contract,changes:o,flags:new Set(e.flags??[]),capabilities:e.capabilities??{},transforms:i,shellOrigin:n.shellOrigin,mount:n.mount,pipe:f=>x(f,i,u)}}(function(){const e=Object.defineProperty,t=globalThis,n=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let u=0;for(let o=0;o<n.length;o++){const i=n[o];try{e(t,i,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[i]}catch{}try{e(t,i,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[i]=="function"&&u++}if(u&&window!==top)try{parent.postMessage({__frame_rtc_lockdown_failed:u},"*")}catch{}})();const K=1e4,G=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function J(e){for(const t of G)if(t.endsWith(":*"))try{const n=new URL(e);if(`${n.protocol}//${n.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}const w=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities??{}}),E=window.__FRAME_PREAMBLE?.transforms,C=/^[\w.-]+\.js$/,V=/^[a-z][a-z0-9_-]{0,63}$/;let A=null,g=null;function P(e,t,n){try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!0,enumerable:!0})}catch{}}}let R=!1;function N(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,R=!0):R&&(delete t.dataset.theme,t.style.colorScheme="",R=!1)}const _=new Map;function Q(e,t){const n=_.get(e);if(!n)return;Object.assign(n.impl,t),n.impl.__settled=()=>Promise.reject({code:"capability_removed",message:`${e}: method not in this runtime`});const u=n.queue;n.queue=[];for(const o of u){const i=t[o.method];i?i(...o.args).then(o.resolve,o.reject):o.reject({code:"capability_removed",message:`${e}.${o.method} is not in this runtime`})}}function O(e,t){const n=_.get(e);if(!n)return;n.impl.__settled=()=>Promise.reject(t);const u=n.queue;n.queue=[];for(const o of u)o.reject(t)}const j=Object.getOwnPropertyDescriptor(window,"claude");if(window!==top&&!(j&&j.writable===!1)){z(),W();const e=j?.value??{};P(window,"claude",e);const t=s=>{const d={impl:Object.create(null),queue:[]};_.set(s,d);const m=new Proxy(d.impl,{get:(c,l)=>{if(typeof l=="string"&&!(l==="then"||l==="toJSON"||l==="valueOf"))return l==="toString"?Object.prototype.toString:(...h)=>{const p=c[l]??c.__settled;return p?p(...h):new Promise((b,S)=>{d.queue.push({method:l,args:h,resolve:b,reject:S})})}},set:()=>!1});P(e,s,m)};for(const s of Object.keys(w)){if(e[s]!==void 0){P(e,s,e[s]);continue}t(s)}let n=null,u=null,o=0;const i=s=>{s.source!==parent||!J(s.origin)||$(s.data)&&(n=s.data.__frame_init,g=s.origin,removeEventListener("message",i),clearTimeout(o),u?.())};addEventListener("message",i),parent.postMessage({__frame_connect:!0},"*");const f=new Promise(s=>{u=s,o=setTimeout(()=>{removeEventListener("message",i),s()},K)}),a=document.readyState==="loading"?new Promise(s=>document.addEventListener("DOMContentLoaded",()=>s(),{once:!0})):Promise.resolve();f.then(async()=>{if(!n||!g){for(const r of _.keys())O(r,{code:"not_granted",message:"frame initialization did not arrive - capability unavailable"});return}N(n.theme);const s=g;addEventListener("message",r=>{r.source!==parent||r.origin!==s||q(r.data)&&N(r.data.__frame_theme.theme)});const d=r=>U(()=>import("/_runtime/"+r),void 0),m=Object.keys(n.capabilities??{});for(const r of m)Object.hasOwn(w,r)||V.test(r)&&e[r]===void 0&&(t(r),O(r,{code:"capability_disabled",message:"capability not in this runtime generation"}));const c=m.filter(r=>Object.hasOwn(w,r)).map(r=>[r,w[r]]).filter(r=>typeof r[1]=="string"&&C.test(r[1])),[l,...h]=await Promise.allSettled([E&&C.test(E)?d(E):Promise.resolve({}),...c.map(([,r])=>d(r))]),p=g;A=H(n,l.status==="fulfilled"&&l.value?.TRANSFORMS||{},{shellOrigin:p,mount:Q},r=>parent.postMessage({__frame_cap_telemetry:r},p));const b=r=>parent.postMessage({__frame_cap_telemetry:{kind:"cap-load-error",cap:r}},p),S=A;h.forEach((r,v)=>{const I=c[v][0];if(r.status!=="fulfilled"){b(I);return}try{r.value?.install?.(S)}catch{b(I)}});for(const[r,v]of _)v.queue.length===0&&Object.keys(v.impl).length>0||O(r,{code:m.includes(r)?"capability_disabled":"not_granted",message:"capability not available in this session"});await a,parent.postMessage({__frame_ready:!0},g)})}})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>Concertina Hero — Keyfall, round 3 (HUD + beat grid)</title>
+<style>
+  :root {
+    --ink:#3a2a20; --paper:#fffbef; --cream:#fff3d0;
+    --l0:#2ec4b6; --l1:#4cc9f0; --l2:#5b8def; --l3:#8f7bf0; --l4:#8ac926;
+    --r0:#ff5d5d; --r1:#ff924c; --r2:#ffb63a; --r3:#ffd23f; --r4:#ff8fce;
+    --ground:#fdf7ea; --panel:#fffdf7; --text:#33241b; --muted:#7a6455; --rule:#e2d3bd; --accent:#b5461f;
+    --red-ink:#b71c1c; --teal-ink:#0c655c;
+    --display:ui-rounded,'SF Pro Rounded','Hiragino Maru Gothic ProN','Quicksand','Trebuchet MS',system-ui,sans-serif;
+    --body:system-ui,-apple-system,'Segoe UI',sans-serif;
+    --mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,monospace;
+    --shadow-sm:3px 4px 0 rgba(58,42,32,0.22); --shadow:5px 6px 0 rgba(58,42,32,0.16);
+  }
+  @media (prefers-color-scheme:dark){:root{--ground:#22190f;--panel:#2c2115;--text:#f6e9d6;--muted:#b39c86;--rule:#4a3a29;--accent:#ff9a6c;}}
+  :root[data-theme='dark']{--ground:#22190f;--panel:#2c2115;--text:#f6e9d6;--muted:#b39c86;--rule:#4a3a29;--accent:#ff9a6c;}
+  :root[data-theme='light']{--ground:#fdf7ea;--panel:#fffdf7;--text:#33241b;--muted:#7a6455;--rule:#e2d3bd;--accent:#b5461f;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1080px;margin:0 auto;padding:56px 24px 96px;display:flex;flex-direction:column;gap:52px;}
+  h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;}
+  h1{font-size:clamp(2rem,4.6vw,3.15rem);font-weight:800;letter-spacing:-0.02em;line-height:1.05;}
+  h2{font-size:1.55rem;font-weight:800;letter-spacing:-0.01em;}
+  h3{font-size:1.02rem;font-weight:700;}
+  p{margin:0;max-width:68ch;}
+  .eyebrow{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+  .lede{font-size:1.1rem;color:var(--muted);max-width:62ch;}
+  code,.k{font-family:var(--mono);font-size:0.85em;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);padding:0.08em 0.36em;border-radius:4px;}
+  section{display:flex;flex-direction:column;gap:18px;}
+  .rule{height:1px;background:var(--rule);border:0;margin:0;}
+  .caption{font-size:0.84rem;color:var(--muted);font-style:italic;}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px;}
+  .chip{font-family:var(--mono);font-size:0.74rem;letter-spacing:0.05em;border:1.5px solid var(--rule);border-radius:999px;padding:5px 11px;color:var(--muted);}
+  .chip.lock::before{content:'✓ ';color:#2f7a1f;}
+
+  /* ---- stage ---- */
+  .stage{background:linear-gradient(#cfeaf7,#f3e2c2);border:4px solid var(--ink);border-radius:18px 22px 16px 24px;box-shadow:var(--shadow);padding:10px;overflow-x:auto;overflow-y:hidden;}
+
+  /* ---- HUD (faithful to the game's real HUD) ---- */
+  .ghud{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
+  .quit{font-family:var(--display);font-weight:800;font-size:0.9rem;color:var(--ink);background:var(--paper);border:3px solid var(--ink);border-radius:10px;padding:7px 14px;box-shadow:var(--shadow-sm);cursor:default;}
+  .np{display:flex;flex-direction:column;line-height:1.15;margin-right:auto;}
+  .np-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);opacity:0.6;}
+  .np-name{font-family:var(--display);font-weight:800;font-size:1.05rem;color:var(--red-ink);}
+  .stats{display:flex;gap:8px;}
+  .stat{background:var(--paper);border:3px solid var(--ink);border-radius:10px;padding:5px 13px;text-align:center;box-shadow:var(--shadow-sm);min-width:66px;}
+  .stat span{display:block;font-family:var(--mono);font-size:0.54rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);opacity:0.6;}
+  .stat b{font-family:var(--display);font-size:1.05rem;color:var(--ink);font-variant-numeric:tabular-nums;}
+  .stat.combo{background:var(--cream);}
+  .stat.combo.hot{background:var(--r3);animation:pulse 0.7s ease-in-out infinite alternate;}
+  @keyframes pulse{to{transform:scale(1.05);}}
+  @media (prefers-reduced-motion:reduce){.stat.combo.hot{animation:none;}}
+
+  /* combo/feedback pop over the field */
+  .fb{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:20;font-family:var(--display);font-weight:800;font-size:1.15rem;color:#fff;-webkit-text-stroke:4px var(--ink);paint-order:stroke fill;}
+  .fb.perfect{color:var(--r3);}
+
+  /* ---- field ---- */
+  .field{position:relative;background:var(--paper);border:3px solid var(--ink);border-radius:12px;overflow:hidden;}
+  .divider{position:absolute;top:6px;bottom:6px;left:50%;width:3px;transform:translateX(-50%);background:repeating-linear-gradient(var(--ink) 0 7px,transparent 7px 14px);opacity:0.4;z-index:8;}
+
+  .beat{position:absolute;left:0;right:0;height:0;border-top:1.5px solid color-mix(in srgb,var(--ink) 16%,transparent);z-index:1;}
+  .beat.bar{border-top:2px solid color-mix(in srgb,var(--ink) 34%,transparent);}
+  .band{position:absolute;left:0;right:0;background:color-mix(in srgb,var(--ink) 3.5%,transparent);z-index:0;}
+  .btick{position:absolute;left:5px;font-family:var(--mono);font-size:0.54rem;color:var(--ink);opacity:0.4;z-index:2;transform:translateY(-50%);}
+
+  .strike{position:absolute;left:0;right:0;height:0;border-top:3px dashed var(--ink);z-index:9;}
+  .strikeglow{position:absolute;left:0;right:0;z-index:2;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--r3) 30%,transparent));}
+  .strikelabel{position:absolute;right:6px;z-index:10;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);opacity:0.55;background:var(--paper);padding:0 5px;border-radius:4px;transform:translateY(-50%);}
+
+  /* a hold-note: head at the bottom, tail rising for the hold length */
+  .note{position:absolute;border:2.5px solid var(--ink);border-radius:10px;z-index:5;box-shadow:2px 3px 0 rgba(58,42,32,0.18);overflow:hidden;}
+  .note .head{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:2px;font-family:var(--display);font-weight:800;color:var(--ink);}
+  .note .head .arw{font-size:0.7em;opacity:0.8;}
+  .note .nub{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(58,42,32,0.35);}
+
+  /* keyboard */
+  .hand{position:absolute;width:50%;} .hand.left{left:0;} .hand.right{right:0;}
+  .btn{position:absolute;border:2.5px solid var(--ink);border-radius:50%;z-index:6;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+  .btn .half{flex:1;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:var(--ink);}
+  .btn .half.pull{background:color-mix(in srgb,#fff 55%,#d8d1bf);border-bottom:1.5px solid color-mix(in srgb,var(--ink) 40%,transparent);}
+  .btn .half.push{background:#ddd6c4;}
+  .btn.lit{box-shadow:0 0 0 4px color-mix(in srgb,var(--hue) 42%,#fff),var(--shadow-sm);}
+  .kbzone{position:absolute;left:8px;right:8px;z-index:4;background:color-mix(in srgb,var(--ink) 4%,transparent);border-top:2px solid color-mix(in srgb,var(--ink) 12%,transparent);}
+  .kblabel{position:absolute;z-index:7;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);opacity:0.5;}
+
+  /* ---- figure: reading a note ---- */
+  .figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;}
+  .fig{background:var(--panel);border:1.5px solid var(--rule);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .fig h3{display:flex;align-items:baseline;gap:8px;}
+  .anote{position:relative;height:280px;background:var(--paper);border:2.5px solid var(--ink);border-radius:10px;overflow:hidden;}
+  .callout{position:absolute;font-family:var(--mono);font-size:0.64rem;color:var(--ink);z-index:10;}
+  .callout .pill{background:var(--cream);border:1.5px solid var(--ink);border-radius:6px;padding:2px 6px;display:inline-block;}
+  .brace{position:absolute;border-left:2px solid var(--accent);z-index:9;}
+  .brace::before,.brace::after{content:'';position:absolute;left:-4px;width:8px;height:2px;background:var(--accent);}
+  .brace::before{top:0;} .brace::after{bottom:0;}
+
+  /* ---- colour key ---- */
+  .keygrid{display:flex;flex-direction:column;gap:14px;}
+  .keyrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .keyrow .lab{font-family:var(--mono);font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);width:96px;flex:0 0 auto;}
+  .kbtn{width:34px;height:34px;border:2px solid var(--ink);border-radius:50%;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-sm);}
+  .kbtn i{flex:1;display:block;}
+  .stack{display:flex;flex-direction:column;gap:5px;align-items:center;}
+  .stack small{font-family:var(--mono);font-size:0.56rem;color:var(--muted);}
+
+  .verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;}
+  .verdict div{border:1.5px solid var(--rule);border-radius:10px;padding:12px 14px;background:var(--panel);}
+  .verdict strong{display:block;font-family:var(--mono);font-size:0.66rem;letter-spacing:0.11em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+  .verdict p{font-size:0.92rem;}
+  ul{margin:0;padding-left:1.15em;max-width:68ch;} li{margin-bottom:8px;}
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Concertina Hero · Keyfall · round 3</p>
+    <h1>Now with a clock</h1>
+    <p class="lede">
+      Your four calls are baked in. This round dresses the screen: the real HUD up top, and a
+      beat grid behind the fall so a note's height tells you exactly how long to hold it.
+    </p>
+    <div class="chips">
+      <span class="chip lock">Active tracks only</span>
+      <span class="chip lock">Shared strike line</span>
+      <span class="chip lock">Pull top · push bottom</span>
+      <span class="chip lock">Colour fixed by position</span>
+    </div>
+  </header>
+
+  <hr class="rule" />
+
+  <section>
+    <p class="eyebrow">The screen, together</p>
+    <h2>HUD, grid, strike line, keyboard</h2>
+    <p>
+      Notes fall through a grid where <strong>every band is one beat</strong>. A note is as tall
+      as it is long to hold — a quick note is one band, a sustained note stretches over several.
+      Press when the head reaches the dashed strike line, then hold while the tail passes it. The
+      keyboard below lights the button to move, in the note's own colour.
+    </p>
+    <div class="stage">
+      <div class="ghud">
+        <span class="quit">‹ Quit</span>
+        <div class="np"><span class="np-label">Now Playing</span><span class="np-name">The Kesh Jig</span></div>
+        <div class="stats">
+          <div class="stat"><span>Score</span><b>4,820</b></div>
+          <div class="stat"><span>Accuracy</span><b>96%</b></div>
+          <div class="stat combo hot"><span>Combo</span><b>12×</b></div>
+        </div>
+      </div>
+      <div class="field" id="hero" style="height:560px">
+        <div class="fb perfect">PERFECT!</div>
+      </div>
+    </div>
+    <p class="caption">Each band = one beat · a note's height = how long to hold it · illustrative note names.</p>
+  </section>
+
+  <hr class="rule" />
+
+  <section>
+    <p class="eyebrow">Reading one note</p>
+    <h2>Head, tail, and the beat it lands on</h2>
+    <div class="figs">
+      <div class="fig">
+        <h3>Anatomy of a hold</h3>
+        <p style="font-size:0.9rem;color:var(--muted)">
+          The head is the moment to press; the tail is the hold. Count the bands it covers and
+          you know the length before it arrives.
+        </p>
+        <div class="anote" id="fignote"></div>
+      </div>
+      <div class="fig">
+        <h3>How length reads at a glance</h3>
+        <p style="font-size:0.9rem;color:var(--muted)">
+          Three notes on the same button, three lengths. No numbers to read — the shape carries
+          the rhythm, which is the whole point of a falling-note game.
+        </p>
+        <div class="anote" id="figlen"></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <section>
+    <p class="eyebrow">Decision 04, spelled out</p>
+    <h2>Colour fixed by position</h2>
+    <p>
+      Thirty buttons, thirty stable colours, built from three facts you already feel in your
+      hands. <strong>Hand</strong> sets the temperature, <strong>column</strong> sets the hue,
+      <strong>row</strong> sets the shade. The same button is the same colour in every song, so
+      the colour of a falling note tells you where to reach before you read a thing.
+    </p>
+    <div class="keygrid">
+      <div class="keyrow">
+        <span class="lab">Left · cool</span>
+        <div id="keyLeft" style="display:flex;gap:16px;flex-wrap:wrap"></div>
+      </div>
+      <div class="keyrow">
+        <span class="lab">Right · warm</span>
+        <div id="keyRight" style="display:flex;gap:16px;flex-wrap:wrap"></div>
+      </div>
+    </div>
+    <p class="caption">Each column shows its three rows (back · middle · front) as three shades of one hue.</p>
+  </section>
+
+  <hr class="rule" />
+
+  <section>
+    <p class="eyebrow">What this round settles, and doesn't</p>
+    <h2>Next questions</h2>
+    <ul>
+      <li><strong>How many beats tall is the screen?</strong> The grid here shows eight. Fewer beats = bigger, easier-to-read notes but less warning; more beats = more runway but tighter spacing. A per-song or difficulty setting could tune it.</li>
+      <li><strong>Held-note scoring is already built.</strong> The engine grades the press, then scales points by the fraction of the beat you actually hold — so the tail isn't decoration, it's the thing being measured. The grid just makes that visible.</li>
+      <li><strong>Chords stack cleanly.</strong> Several notes crossing the strike line together light several buttons at once — same as the toy game, just wider.</li>
+      <li><strong>Staggered-track spacing</strong> is still the open visual problem: real anglo columns aren't evenly spaced, so two active tracks can sit close. Worth a dedicated pass next.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+(() => {
+  const L=['--l0','--l1','--l2','--l3','--l4'], R=['--r0','--r1','--r2','--r3','--r4'];
+  const NOTES={
+    left:[
+      [['C#','A#'],['G#','D#'],['E','C'],['A','F'],['B','G']],
+      [['A','G'],['D','B'],['F','D'],['A','G'],['C','B']],
+      [['D','C'],['G','E'],['B','G'],['D','C'],['F','E']],
+    ],
+    right:[
+      [['D#','A#'],['G#','F'],['C','A'],['E','C'],['A','F']],
+      [['B','G'],['D','C'],['F','E'],['A','G'],['B','C']],
+      [['F','D'],['A','G'],['C','B'],['E','D'],['F','G']],
+    ],
+  };
+  // row -> shade expression around a --hue custom property
+  const shade = r => r===0 ? 'color-mix(in srgb, var(--hue) 82%, #000)'
+                   : r===2 ? 'color-mix(in srgb, var(--hue) 58%, #fff)'
+                   : 'var(--hue)';
+  const fill = (r, pull) => {
+    const s = shade(r);
+    return pull ? `repeating-linear-gradient(-45deg, ${s} 0 7px, color-mix(in srgb, ${s} 55%, #fff) 7px 14px)` : s;
+  };
+
+  function handGeom(W,H,o){
+    const cols=5,rows=3,BS=o.bs;
+    const colGap=(W-2*o.padX-cols*BS)/(cols-1);
+    const arc=[o.arc,o.arc*0.4,0,o.arc*0.4,o.arc];
+    const rowGap=(o.kbH-2*o.padY-rows*BS)/(rows-1);
+    const kbTop=H-o.kbH;
+    const cx=c=>o.padX+c*(BS+colGap)+BS/2;
+    const cyRow=r=>kbTop+o.padY+r*(BS+rowGap)+BS/2;
+    return {cols,rows,BS,cx,cy:(r,c)=>cyRow(r)+arc[c]};
+  }
+
+  function buildKeyboard(host,hand,W,H,o,activeMap){
+    const g=handGeom(W,H,o), vars=hand==='left'?L:R;
+    for(let r=0;r<g.rows;r++)for(let c=0;c<g.cols;c++){
+      const x=g.cx(c),y=g.cy(r,c),on=activeMap.get(r+'-'+c);
+      const b=document.createElement('div');
+      b.className='btn'+(on?' lit':'');
+      b.style.left=(x-g.BS/2)+'px';b.style.top=(y-g.BS/2)+'px';b.style.width=g.BS+'px';b.style.height=g.BS+'px';
+      if(on)b.style.setProperty('--hue',`var(${vars[c]})`);
+      const fs=(g.BS*0.32)+'px';
+      const [pull,push]=NOTES[hand][r][c];
+      const tp=on&&on.dir==='pull', ts=on&&on.dir==='push';
+      const pf=tp?`background:${fill(r,true)}`:'', sf=ts?`background:${fill(r,false)}`:'';
+      b.innerHTML=`<div class="half pull" style="font-size:${fs};${pf}">${on?pull:''}</div>`+
+                  `<div class="half push" style="font-size:${fs};${sf}">${on?push:''}</div>`;
+      host.appendChild(b);
+    }
+    return g;
+  }
+
+  // one full playfield (hero)
+  function buildHero(){
+    const field=document.getElementById('hero'); if(!field) return;
+    const W=field.clientWidth||660, H=field.clientHeight;
+    [...field.querySelectorAll('.divider,.beat,.band,.btick,.strike,.strikeglow,.strikelabel,.kbzone,.kblabel,.hand,.note')].forEach(n=>n.remove());
+    const o={bs:40,padX:16,padY:11,kbH:186,arc:7};
+    const strikeY=H-o.kbH-12;
+    const FH=strikeY, B=8, sec=FH/B;
+
+    // bands + beat lines + labels
+    for(let k=0;k<B;k++){
+      if(k%2===0){const band=document.createElement('div');band.className='band';band.style.top=(strikeY-(k+1)*sec)+'px';band.style.height=sec+'px';field.appendChild(band);}
+    }
+    for(let k=0;k<=B;k++){
+      const y=strikeY-k*sec;
+      const line=document.createElement('div');line.className='beat'+(k%4===0?' bar':'');line.style.top=y+'px';field.appendChild(line);
+      if(k>0){const t=document.createElement('div');t.className='btick';t.style.top=y+'px';t.textContent=k;field.appendChild(t);}
+    }
+    // strike glow + line + label
+    const glow=document.createElement('div');glow.className='strikeglow';glow.style.top=(strikeY-sec*0.5)+'px';glow.style.height=(sec*0.5)+'px';field.appendChild(glow);
+    const s=document.createElement('div');s.className='strike';s.style.top=strikeY+'px';field.appendChild(s);
+    const sl=document.createElement('div');sl.className='strikelabel';sl.style.top=strikeY+'px';sl.textContent='hit';field.appendChild(sl);
+
+    // keyboard zone bg + hands
+    const kz=document.createElement('div');kz.className='kbzone';kz.style.top=(strikeY+8)+'px';kz.style.bottom='6px';kz.style.borderRadius='8px';field.appendChild(kz);
+    const div=document.createElement('div');div.className='divider';field.appendChild(div);
+
+    const activeL=[
+      {r:1,c:0,dir:'pull',d:1.0,h:1},
+      {r:2,c:2,dir:'push',d:3.2,h:2},
+      {r:0,c:4,dir:'pull',d:5.4,h:1},
+    ];
+    const activeR=[
+      {r:1,c:2,dir:'push',d:0.15,h:1},   // at the strike line — being pressed
+      {r:2,c:3,dir:'pull',d:2.1,h:3},    // long hold
+      {r:0,c:0,dir:'push',d:6.0,h:1},
+    ];
+    const mapL=new Map(activeL.filter(n=>n.d<0.4).map(n=>[n.r+'-'+n.c,n]));
+    const mapR=new Map(activeR.filter(n=>n.d<0.4).map(n=>[n.r+'-'+n.c,n]));
+
+    const left=document.createElement('div');left.className='hand left';left.style.top='0';left.style.bottom='0';field.appendChild(left);
+    const right=document.createElement('div');right.className='hand right';right.style.top='0';right.style.bottom='0';field.appendChild(right);
+    const gL=buildKeyboard(left,'left',W/2,H,o,mapL);
+    const gR=buildKeyboard(right,'right',W/2,H,o,mapR);
+
+    // hand labels
+    const ll=document.createElement('div');ll.className='kblabel';ll.style.left='14px';ll.style.top=(strikeY+12)+'px';ll.textContent='Left hand';field.appendChild(ll);
+    const rl=document.createElement('div');rl.className='kblabel';rl.style.right='14px';rl.style.top=(strikeY+12)+'px';rl.textContent='Right hand';field.appendChild(rl);
+
+    // falling hold-notes
+    const place=(hand,list,g,xOffset)=>{
+      const vars=hand==='left'?L:R;
+      list.forEach(n=>{
+        const x=xOffset+g.cx(n.c);
+        const w=g.BS*0.9, headTop=strikeY-n.d*sec, top=headTop-n.h*sec;
+        const el=document.createElement('div');el.className='note';
+        el.style.setProperty('--hue',`var(${vars[n.c]})`);
+        el.style.left=(x-w/2)+'px';el.style.width=w+'px';el.style.top=top+'px';el.style.height=(n.h*sec)+'px';
+        el.style.background=fill(n.r,n.dir==='pull');
+        const [pull,push]=NOTES[hand][n.r][n.c];
+        const name=n.dir==='pull'?pull:push, arw=n.dir==='pull'?'▲':'▼';
+        el.innerHTML=`<div class="nub"></div><div class="head" style="height:${Math.min(n.h*sec,g.BS*0.8)}px;font-size:${g.BS*0.32}px"><span class="arw">${arw}</span>${name}</div>`;
+        field.appendChild(el);
+      });
+    };
+    place('left',activeL,gL,0);
+    place('right',activeR,gR,W/2);
+  }
+
+  // small figure: anatomy of one hold-note over 4 beats
+  function buildFigNote(){
+    const host=document.getElementById('fignote'); if(!host) return;
+    host.innerHTML='';
+    const H=host.clientHeight, W=host.clientWidth, B=4, strikeY=H-30, sec=strikeY/B;
+    for(let k=0;k<=B;k++){const y=strikeY-k*sec;const l=document.createElement('div');l.className='beat'+(k%4===0?' bar':'');l.style.top=y+'px';host.appendChild(l);
+      if(k%2===0&&k<B){const band=document.createElement('div');band.className='band';band.style.top=(strikeY-(k+1)*sec)+'px';band.style.height=sec+'px';host.appendChild(band);}}
+    const s=document.createElement('div');s.className='strike';s.style.top=strikeY+'px';host.appendChild(s);
+    // the note: 2-beat hold, head 0 (at line)
+    const w=64, hh=2*sec, top=strikeY-hh;
+    const el=document.createElement('div');el.className='note';el.style.setProperty('--hue','var(--r1)');
+    el.style.left=(W*0.42-w/2)+'px';el.style.width=w+'px';el.style.top=top+'px';el.style.height=hh+'px';
+    el.style.background='var(--r1)';
+    el.innerHTML=`<div class="nub"></div><div class="head" style="height:34px;font-size:15px"><span class="arw">▼</span>G</div>`;
+    host.appendChild(el);
+    // callouts
+    const c1=document.createElement('div');c1.className='callout';c1.style.left=(W*0.42+w/2+10)+'px';c1.style.top=(strikeY-16)+'px';c1.innerHTML='<span class="pill">press — head at the line</span>';host.appendChild(c1);
+    const c2=document.createElement('div');c2.className='callout';c2.style.left=(W*0.42+w/2+10)+'px';c2.style.top=(top+6)+'px';c2.innerHTML='<span class="pill">hold 2 beats — the tail</span>';host.appendChild(c2);
+    const br=document.createElement('div');br.className='brace';br.style.left=(W*0.42-w/2-10)+'px';br.style.top=top+'px';br.style.height=hh+'px';host.appendChild(br);
+    const bl=document.createElement('div');bl.className='callout';bl.style.left=(W*0.42-w/2-58)+'px';bl.style.top=(top+hh/2-8)+'px';bl.innerHTML='2 beats';host.appendChild(bl);
+    const nowl=document.createElement('div');nowl.className='btick';nowl.style.left='5px';nowl.style.top=strikeY+'px';nowl.textContent='hit';host.appendChild(nowl);
+  }
+
+  // small figure: three lengths on one button
+  function buildFigLen(){
+    const host=document.getElementById('figlen'); if(!host) return;
+    host.innerHTML='';
+    const H=host.clientHeight, W=host.clientWidth, B=6, strikeY=H-30, sec=strikeY/B;
+    for(let k=0;k<=B;k++){const y=strikeY-k*sec;const l=document.createElement('div');l.className='beat'+(k%4===0?' bar':'');l.style.top=y+'px';host.appendChild(l);
+      if(k%2===0&&k<B){const band=document.createElement('div');band.className='band';band.style.top=(strikeY-(k+1)*sec)+'px';band.style.height=sec+'px';host.appendChild(band);}}
+    const s=document.createElement('div');s.className='strike';s.style.top=strikeY+'px';host.appendChild(s);
+    const specs=[{x:0.22,d:0.3,h:1,lab:'1'},{x:0.5,d:1.3,h:2,lab:'2'},{x:0.78,d:2.5,h:3,lab:'3'}];
+    specs.forEach(sp=>{
+      const w=46, hh=sp.h*sec, top=strikeY-sp.d*sec-hh, x=W*sp.x;
+      const el=document.createElement('div');el.className='note';el.style.setProperty('--hue','var(--l1)');
+      el.style.left=(x-w/2)+'px';el.style.width=w+'px';el.style.top=top+'px';el.style.height=hh+'px';el.style.background='var(--l1)';
+      el.innerHTML=`<div class="nub"></div><div class="head" style="height:26px;font-size:13px"><span class="arw">▼</span>D</div>`;
+      host.appendChild(el);
+      const lab=document.createElement('div');lab.className='callout';lab.style.left=(x-6)+'px';lab.style.top=(top-16)+'px';lab.innerHTML=`<span class="pill">${sp.lab}×</span>`;host.appendChild(lab);
+    });
+  }
+
+  // colour key: 5 columns, each a stack of 3 shades
+  function buildKey(id,vars){
+    const host=document.getElementById(id); if(!host) return; host.innerHTML='';
+    vars.forEach((v,c)=>{
+      const stack=document.createElement('div');stack.className='stack';
+      const btns=document.createElement('div');btns.style.display='flex';btns.style.flexDirection='column';btns.style.gap='4px';
+      [0,1,2].forEach(r=>{
+        const k=document.createElement('div');k.className='kbtn';k.style.setProperty('--hue',`var(${v})`);
+        k.innerHTML=`<i style="background:${shade(r)}"></i>`;
+        btns.appendChild(k);
+      });
+      const s=document.createElement('small');s.textContent='col '+(c+1);
+      stack.appendChild(btns);stack.appendChild(s);host.appendChild(stack);
+    });
+  }
+
+  function render(){buildHero();buildFigNote();buildFigLen();buildKey('keyLeft',L);buildKey('keyRight',R);}
+  render();
+  let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(render,150);});
+})();
+</script>
+
+</body></html>

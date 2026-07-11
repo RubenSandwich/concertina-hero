@@ -1,5 +1,14 @@
 import { useState } from 'react'
-import { DIFFICULTIES, DIFF_CLASS, chartNoteCount, type Song, type Difficulty } from '#data/songs'
+import {
+  DIFFICULTIES,
+  DIFF_CLASS,
+  chartNoteCount,
+  chartRequiredButtons,
+  chartOutOfRange,
+  type Song,
+  type Difficulty,
+} from '#data/songs'
+import { minInstrumentFor } from '#data/layout'
 import { randomAccentColor } from '#data/colors'
 import { slug, downloadJSON } from '../../../utils'
 import Modal from '#components/Modal/Modal'
@@ -66,6 +75,8 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
   }
 
   const noteCount = chartNoteCount(draft.chart)
+  const required = chartRequiredButtons(draft.chart)
+  const outOfRange = chartOutOfRange(draft.chart)
 
   const download = () => {
     downloadJSON(`concertina-song-${slug(draft.name, 'song')}.json`, {
@@ -83,6 +94,9 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
     const bpm = Number(draft.bpm)
     if (!Number.isFinite(bpm) || bpm <= 0) return setError('BPM must be a positive number.')
     if (!noteCount) return setError('Add some notes to the chart (tokens like +3 or -4).')
+    if (outOfRange.length) {
+      return setError(`Buttons must be 1–30. Out of range: ${outOfRange.join(', ')}.`)
+    }
     try {
       onSave({
         id: song?.id,
@@ -188,6 +202,12 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
               <span className="modal__field-note">
                 {' '}
                 — {noteCount} note{noteCount === 1 ? '' : 's'}
+                {required > 0 && (
+                  <>
+                    {' '}
+                    · needs a {minInstrumentFor(required)}-button (up to {required})
+                  </>
+                )}
               </span>
             </span>
             <textarea
@@ -199,8 +219,9 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
               onChange={(e) => set({ chart: e.target.value })}
             />
             <span className="modal__field-hint">
-              One token per beat: <b>+N</b> push, <b>−N</b> pull (button 1–7). <b>X</b> is a rest,
-              and <b>(−4 −3)</b> plays a chord. Line breaks are just for readability.
+              One token per beat: <b>+N</b> push, <b>−N</b> pull (button 1–30). <b>X</b> is a rest,
+              and <b>(−4 −3)</b> plays a chord. Line breaks are just for readability. A song's
+              highest button sets the smallest concertina that can play it.
             </span>
           </label>
         </div>

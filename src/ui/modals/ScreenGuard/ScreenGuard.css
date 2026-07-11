@@ -1,0 +1,54 @@
+/* Full-screen blocking guard for windows below the minimum app width. */
+.screen-guard {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-24);
+  background: color-mix(in srgb, var(--ink) 60%, transparent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.screen-guard__card {
+  max-width: 440px;
+  padding: var(--sp-28) var(--sp-34);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-12);
+  text-align: center;
+  transform: rotate(-1deg);
+}
+.screen-guard__icon {
+  width: 72px;
+  height: auto;
+  transform: rotate(-4deg);
+  filter: drop-shadow(3px 4px 0 color-mix(in srgb, var(--ink) 20%, transparent));
+}
+.screen-guard__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-3xl);
+  color: var(--red-ink);
+}
+.screen-guard__body {
+  margin: 0;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.screen-guard__meter {
+  margin: var(--sp-4) 0 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xl);
+  color: var(--red-ink);
+}
+.screen-guard__meter span {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--muted);
+}

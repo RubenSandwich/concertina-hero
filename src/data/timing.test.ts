@@ -3,7 +3,15 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { missTime, isPlayable, HIT_WINDOW, MISS_AT } from './timing.ts'
+import {
+  missTime,
+  isPlayable,
+  noteProgress,
+  noteVisible,
+  HIT_WINDOW,
+  MISS_AT,
+  LEAD_TIME,
+} from './timing.ts'
 
 const BEAT = 600 // one beat at 100 BPM
 
@@ -39,4 +47,21 @@ test('short beats shrink the late window below the early one', () => {
   assert.equal(isPlayable(-HIT_WINDOW, 0, fast), true, 'early tolerance is unchanged')
   assert.equal(isPlayable(89, 0, fast), true)
   assert.equal(isPlayable(90, 0, fast), false, 'the beat is over, so the note is gone')
+})
+
+test('noteProgress maps time-until-hit to a fall from the top (0) to the line (1)', () => {
+  assert.equal(noteProgress(LEAD_TIME), 0, 'just spawned at the top')
+  assert.equal(noteProgress(LEAD_TIME / 2), 0.5, 'halfway down')
+  assert.equal(noteProgress(0), 1, 'leading edge on the hit line')
+  assert.ok(noteProgress(-LEAD_TIME / 2) > 1, 'past the line, being clipped')
+})
+
+test('noteVisible spans spawn to one beat past the line, and nothing else', () => {
+  const beatFrac = 0.2 // a one-beat-tall card
+  assert.equal(noteVisible(-0.01, beatFrac), false, 'not spawned yet')
+  assert.equal(noteVisible(0.0, beatFrac), false, 'exactly at the top edge is not yet in')
+  assert.equal(noteVisible(0.5, beatFrac), true, 'falling through the zone')
+  assert.equal(noteVisible(1, beatFrac), true, 'on the hit line')
+  assert.equal(noteVisible(1 + beatFrac - 0.01, beatFrac), true, 'still clipping away')
+  assert.equal(noteVisible(1 + beatFrac, beatFrac), false, 'fully past the line — gone')
 })

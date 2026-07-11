@@ -1,0 +1,167 @@
+/* ---------- The drawn anglo keyboard ---------- */
+.keyboard {
+  position: relative;
+  flex: 0 0 auto;
+  /* Circle diameter: `--key-frac` of the playfield width (set on .playfield from
+     the tightest lane gap, so circles never cross the divider), also bounded by
+     the vertical room per row (short screens) and a sensible maximum. The
+     playfield is min(1180px, 98vw) wide, less its ~5px border. */
+  --key: min(calc(min(1170px, 97vw) * var(--key-frac)), calc(36vh / var(--rows) - 26px), 96px);
+  /* Each row just fits a circle plus its label, so the keyboard hugs the buttons
+     rather than reserving tall fixed bands. */
+  --krow: calc(var(--key) * 1.3 + 8px);
+  height: calc(var(--rows) * var(--krow) + 8px);
+  background: color-mix(in srgb, var(--cream) 55%, #fff);
+  border-top: 3px solid color-mix(in srgb, var(--ink) 22%, transparent);
+}
+.hand-divider--keys {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  border-left: 4px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
+.hand-label {
+  position: absolute;
+  top: var(--sp-4);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ink) 42%, transparent);
+  z-index: 2;
+}
+.hand-label--left {
+  left: var(--sp-10);
+}
+.hand-label--right {
+  right: var(--sp-10);
+}
+
+/* One drawn button: a circle of its two notes (pull top / push below), muted
+   until a note falls in its lane, plus its label underneath. */
+.key-btn {
+  position: absolute;
+  left: var(--x);
+  top: calc((var(--row) + 0.5) * var(--krow) + 4px);
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  z-index: 2;
+}
+.key-btn__circle {
+  width: var(--key);
+  height: var(--key);
+  border-radius: 50%;
+  border: 4px solid var(--ink);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  /* Idle: muted and slightly desaturated, so "note incoming" clearly stands out. */
+  opacity: 0.6;
+  filter: saturate(0.8);
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    opacity 0.08s ease,
+    filter 0.08s ease;
+}
+.key-btn.is-active .key-btn__circle,
+.key-btn.is-pressed .key-btn__circle {
+  filter: none;
+}
+.key-btn__note {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: calc(var(--key) * 0.3);
+  line-height: 1;
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Pull on top (tinted), push on the bottom half. */
+.key-btn__note--pull {
+  background: color-mix(in srgb, var(--btn-color) 30%, #fff);
+}
+.key-btn__note--push {
+  background: color-mix(in srgb, var(--btn-color) 12%, #fff);
+  border-top: 2px solid color-mix(in srgb, var(--ink) 45%, transparent);
+}
+.key-btn__label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: calc(var(--key) * 0.28);
+  line-height: 1;
+  color: var(--muted);
+}
+
+/* Three distinct states (idle is the muted base above). Both lit states light up
+   only the half that must be played (push or pull) — never the whole button —
+   and the other half recedes to a faint wash so the target half stands out.
+
+   ACTIVE — a note is falling in this lane. The button wakes up: it brightens and
+   gains a ring, and the half to play tints in — but it is NOT filled. */
+.key-btn.is-active .key-btn__circle {
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--btn-color) 42%, #fff),
+    var(--shadow-xs);
+}
+.key-btn.is-active.key-btn--pull .key-btn__note--pull,
+.key-btn.is-active.key-btn--push .key-btn__note--push {
+  background: color-mix(in srgb, var(--btn-color) 52%, #fff);
+}
+.key-btn.is-active .key-btn__label {
+  color: var(--ink);
+}
+
+/* PRESSED — its key/tap/mic is down. It goes further than active: a bigger pop, a
+   thicker glowing ring, and the half to play is fully filled (solid push / striped
+   pull) rather than just tinted, so pressed always reads stronger than active. */
+.key-btn.is-pressed .key-btn__circle {
+  opacity: 1;
+  transform: scale(1.12);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--btn-color) 60%, #fff),
+    0 0 18px color-mix(in srgb, var(--btn-color) 70%, transparent),
+    var(--shadow-xs);
+}
+.key-btn.is-pressed .key-btn__label {
+  color: var(--ink);
+}
+.key-btn.is-pressed.key-btn--push .key-btn__note--push {
+  background: var(--btn-color);
+}
+.key-btn.is-pressed.key-btn--pull .key-btn__note--pull {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--btn-color) 0 7px,
+    color-mix(in srgb, var(--btn-color) 55%, #fff) 7px 14px
+  );
+}
+
+/* In either lit state, the half that isn't the one to play recedes to a faint
+   wash so the highlighted half stands out. */
+.key-btn--push .key-btn__note--pull,
+.key-btn--pull .key-btn__note--push {
+  background: color-mix(in srgb, var(--btn-color) 14%, #fff);
+}
