@@ -1,396 +1,1671 @@
-<!doctype html><html><head><!-- frame-runtime --><base href="/_f/1783721629-2eb6/"><script>window.__FRAME_PREAMBLE={"capabilities":{"downloads":"downloads.DUzXFHNF.js","mcp":"mcp.Djj5DQjZ.js","self":"self.DqF_PxOe.js"},"transforms":"_transforms.DYk1Ltlh.js"}</script><script>(function(){"use strict";const X="modulepreload",Y=function(e){return"/"+e},Z={},U=function(t,n,u){let o=Promise.resolve();function i(f){const a=new Event("vite:preloadError",{cancelable:!0});if(a.payload=f,window.dispatchEvent(a),!a.defaultPrevented)throw f}return o.then(f=>{for(const a of f||[])a.status==="rejected"&&i(a.reason);return t().catch(i)})},D=["light","dark","system"];function $(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_init;return t!=null&&typeof t=="object"}function q(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_theme;if(t==null||typeof t!="object")return!1;const n=t.theme;return typeof n=="string"&&D.includes(n)}function M(e){if(window===top||e.type==="auxclick"&&e.button!==1)return;const t=e.composedPath?e.composedPath():[e.target];let n=null;for(let f=0;f<t.length;f++){const a=t[f];if(a&&a.matches&&a.matches("a[href],area[href]")){n=a;break}}if(!n&&e.target&&e.target.closest&&(n=e.target.closest("a[href],area[href]")),!n)return;const u=n.getAttribute("href");if(!u)return;let o,i;try{o=new URL(u,document.baseURI),i=new URL(document.baseURI).origin}catch{return}(o.protocol==="http:"||o.protocol==="https:")&&o.origin!==i&&(e.preventDefault(),parent.postMessage({__frame_nav:!0,url:o.href},"*"))}const L={};function y(e){if(window===top)return;const t=Date.now();t-(L[e]||0)<500||(L[e]=t,parent.postMessage({__frame_engaged:!0,kind:e},"*"))}const F=2e3,T=["wheel","touchstart","touchmove","keydown","pointerdown"];let k=0;function B(e){e.isTrusted&&(k=Date.now())}function z(){addEventListener("click",M,!0),addEventListener("auxclick",M,!0)}function W(){for(let e=0;e<T.length;e++)addEventListener(T[e],B,{capture:!0,passive:!0});addEventListener("scroll",e=>{e.isTrusted&&Date.now()-k<F&&y("scroll")},{capture:!0,passive:!0}),addEventListener("pointermove",e=>{e.isTrusted&&y("pointer")},{capture:!0,passive:!0}),addEventListener("click",e=>{e.isTrusted&&y("click")},{capture:!0,passive:!0})}function x(e,t,n){const u=[...t.values()].filter(o=>o.targets.some(i=>i.startsWith(e+".")));return{wrap(o,i){const f=`${e}.${o}`,a=u.filter(s=>s.targets.includes(f));return a.length===0?(...s)=>{try{return i(...s)}catch(d){return Promise.reject(d)}}:(...s)=>{let d=s;for(const c of a){const l=c.module.parameters;if(l)try{d=l(d)}catch{return Promise.reject({code:"transform_error",id:c.id,scope:e,message:"parameters transform failed"})}}let m;try{m=i(...d)}catch(c){m=Promise.reject(c)}return m.then(c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.returns;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"returns"}),c}}return c},c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.throws;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"throws"}),Promise.reject(c)}}return Promise.reject(c)})}}}}function H(e,t,n,u=()=>{}){const o=new Set(e.changes??[]),i=new Map;for(const f of o){const a=t[f];a&&i.set(f,a)}return{contract:e.contract,changes:o,flags:new Set(e.flags??[]),capabilities:e.capabilities??{},transforms:i,shellOrigin:n.shellOrigin,mount:n.mount,pipe:f=>x(f,i,u)}}(function(){const e=Object.defineProperty,t=globalThis,n=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let u=0;for(let o=0;o<n.length;o++){const i=n[o];try{e(t,i,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[i]}catch{}try{e(t,i,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[i]=="function"&&u++}if(u&&window!==top)try{parent.postMessage({__frame_rtc_lockdown_failed:u},"*")}catch{}})();const K=1e4,G=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function J(e){for(const t of G)if(t.endsWith(":*"))try{const n=new URL(e);if(`${n.protocol}//${n.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}const w=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities??{}}),E=window.__FRAME_PREAMBLE?.transforms,C=/^[\w.-]+\.js$/,V=/^[a-z][a-z0-9_-]{0,63}$/;let A=null,g=null;function P(e,t,n){try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!0,enumerable:!0})}catch{}}}let R=!1;function N(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,R=!0):R&&(delete t.dataset.theme,t.style.colorScheme="",R=!1)}const _=new Map;function Q(e,t){const n=_.get(e);if(!n)return;Object.assign(n.impl,t),n.impl.__settled=()=>Promise.reject({code:"capability_removed",message:`${e}: method not in this runtime`});const u=n.queue;n.queue=[];for(const o of u){const i=t[o.method];i?i(...o.args).then(o.resolve,o.reject):o.reject({code:"capability_removed",message:`${e}.${o.method} is not in this runtime`})}}function O(e,t){const n=_.get(e);if(!n)return;n.impl.__settled=()=>Promise.reject(t);const u=n.queue;n.queue=[];for(const o of u)o.reject(t)}const j=Object.getOwnPropertyDescriptor(window,"claude");if(window!==top&&!(j&&j.writable===!1)){z(),W();const e=j?.value??{};P(window,"claude",e);const t=s=>{const d={impl:Object.create(null),queue:[]};_.set(s,d);const m=new Proxy(d.impl,{get:(c,l)=>{if(typeof l=="string"&&!(l==="then"||l==="toJSON"||l==="valueOf"))return l==="toString"?Object.prototype.toString:(...h)=>{const p=c[l]??c.__settled;return p?p(...h):new Promise((b,S)=>{d.queue.push({method:l,args:h,resolve:b,reject:S})})}},set:()=>!1});P(e,s,m)};for(const s of Object.keys(w)){if(e[s]!==void 0){P(e,s,e[s]);continue}t(s)}let n=null,u=null,o=0;const i=s=>{s.source!==parent||!J(s.origin)||$(s.data)&&(n=s.data.__frame_init,g=s.origin,removeEventListener("message",i),clearTimeout(o),u?.())};addEventListener("message",i),parent.postMessage({__frame_connect:!0},"*");const f=new Promise(s=>{u=s,o=setTimeout(()=>{removeEventListener("message",i),s()},K)}),a=document.readyState==="loading"?new Promise(s=>document.addEventListener("DOMContentLoaded",()=>s(),{once:!0})):Promise.resolve();f.then(async()=>{if(!n||!g){for(const r of _.keys())O(r,{code:"not_granted",message:"frame initialization did not arrive - capability unavailable"});return}N(n.theme);const s=g;addEventListener("message",r=>{r.source!==parent||r.origin!==s||q(r.data)&&N(r.data.__frame_theme.theme)});const d=r=>U(()=>import("/_runtime/"+r),void 0),m=Object.keys(n.capabilities??{});for(const r of m)Object.hasOwn(w,r)||V.test(r)&&e[r]===void 0&&(t(r),O(r,{code:"capability_disabled",message:"capability not in this runtime generation"}));const c=m.filter(r=>Object.hasOwn(w,r)).map(r=>[r,w[r]]).filter(r=>typeof r[1]=="string"&&C.test(r[1])),[l,...h]=await Promise.allSettled([E&&C.test(E)?d(E):Promise.resolve({}),...c.map(([,r])=>d(r))]),p=g;A=H(n,l.status==="fulfilled"&&l.value?.TRANSFORMS||{},{shellOrigin:p,mount:Q},r=>parent.postMessage({__frame_cap_telemetry:r},p));const b=r=>parent.postMessage({__frame_cap_telemetry:{kind:"cap-load-error",cap:r}},p),S=A;h.forEach((r,v)=>{const I=c[v][0];if(r.status!=="fulfilled"){b(I);return}try{r.value?.install?.(S)}catch{b(I)}});for(const[r,v]of _)v.queue.length===0&&Object.keys(v.impl).length>0||O(r,{code:m.includes(r)?"capability_disabled":"not_granted",message:"capability not available in this session"});await a,parent.postMessage({__frame_ready:!0},g)})}})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
-<title>Concertina Hero — notes in motion</title>
-<style>
-  :root{
-    --ink:#3a2a20;--paper:#fffbef;--cream:#fff3d0;
-    --c0:#ff5d5d;--c1:#ff924c;--c2:#ffd23f;--c3:#8ac926;--c4:#2ec4b6;--c5:#4cc9f0;--c6:#b892ff;
-    --l0:#2ec4b6;--l1:#4cc9f0;--l2:#5b8def;--l3:#8f7bf0;--l4:#8ac926;
-    --r0:#ff5d5d;--r1:#ff924c;--r2:#ffb63a;--r3:#ffd23f;--r4:#ff8fce;
-    --ground:#fdf7ea;--panel:#fffdf7;--text:#33241b;--muted:#7a6455;--rule:#e2d3bd;--accent:#b5461f;--red-ink:#b71c1c;
-    --display:ui-rounded,'SF Pro Rounded','Hiragino Maru Gothic ProN','Quicksand','Trebuchet MS',system-ui,sans-serif;
-    --body:system-ui,-apple-system,'Segoe UI',sans-serif;
-    --mono:ui-monospace,'SF Mono','Cascadia Mono',Menlo,monospace;
-    --shadow-sm:3px 4px 0 rgba(58,42,32,0.22);--shadow:5px 6px 0 rgba(58,42,32,0.16);
-  }
-  @media (prefers-color-scheme:dark){:root{--ground:#22190f;--panel:#2c2115;--text:#f6e9d6;--muted:#b39c86;--rule:#4a3a29;--accent:#ff9a6c;}}
-  :root[data-theme='dark']{--ground:#22190f;--panel:#2c2115;--text:#f6e9d6;--muted:#b39c86;--rule:#4a3a29;--accent:#ff9a6c;}
-  :root[data-theme='light']{--ground:#fdf7ea;--panel:#fffdf7;--text:#33241b;--muted:#7a6455;--rule:#e2d3bd;--accent:#b5461f;}
-  *{box-sizing:border-box;}
-  body{margin:0;background:var(--ground);color:var(--text);font-family:var(--body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;}
-  .wrap{max-width:1080px;margin:0 auto;padding:56px 24px 96px;display:flex;flex-direction:column;gap:32px;}
-  h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;}
-  h1{font-size:clamp(2rem,4.6vw,3.15rem);font-weight:800;letter-spacing:-0.02em;line-height:1.05;}
-  h2{font-size:1.3rem;font-weight:800;letter-spacing:-0.01em;}
-  p{margin:0;max-width:70ch;}
-  .eyebrow{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
-  .lede{font-size:1.1rem;color:var(--muted);max-width:64ch;}
-  .rule{height:1px;background:var(--rule);border:0;margin:0;}
-
-  .controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
-  .ctl{display:flex;flex-direction:column;gap:5px;}
-  .ctl-l{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding-left:2px;}
-  .seg{display:inline-flex;background:var(--panel);border:2.5px solid var(--ink);border-radius:12px;padding:3px;box-shadow:var(--shadow-sm);}
-  .seg button{font-family:var(--display);font-weight:800;font-size:0.9rem;color:var(--ink);background:transparent;border:0;border-radius:9px;padding:7px 14px;cursor:pointer;}
-  .seg button.on{background:var(--ink);color:var(--paper);}
-  .btnpill{font-family:var(--display);font-weight:800;font-size:0.9rem;color:var(--ink);background:var(--cream);border:2.5px solid var(--ink);border-radius:11px;padding:8px 16px;cursor:pointer;box-shadow:var(--shadow-sm);}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto;font-size:0.8rem;color:var(--muted);}
-  .legend span{display:inline-flex;align-items:center;gap:6px;}
-  .swatch{width:14px;height:14px;border-radius:4px;border:2px solid var(--ink);}
-  .swatch.push{background:var(--r1);}
-  .swatch.pull{background:repeating-linear-gradient(-45deg,var(--r1) 0 5px,color-mix(in srgb,var(--r1) 55%,#fff) 5px 10px);}
-
-  .stage{background:linear-gradient(#cfeaf7,#f3e2c2);border:4px solid var(--ink);border-radius:18px 22px 16px 24px;box-shadow:var(--shadow);padding:10px;overflow:hidden;}
-  .ghud{display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap;}
-  .quit{font-family:var(--display);font-weight:800;font-size:0.9rem;color:var(--ink);background:var(--paper);border:3px solid var(--ink);border-radius:10px;padding:7px 14px;box-shadow:var(--shadow-sm);}
-  .np{display:flex;flex-direction:column;line-height:1.15;margin-right:auto;}
-  .np-label{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink);opacity:0.6;}
-  .np-name{font-family:var(--display);font-weight:800;font-size:1.05rem;color:var(--red-ink);}
-  .stats{display:flex;gap:8px;}
-  .stat{background:var(--paper);border:3px solid var(--ink);border-radius:10px;padding:5px 13px;text-align:center;box-shadow:var(--shadow-sm);min-width:64px;}
-  .stat span{display:block;font-family:var(--mono);font-size:0.54rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);opacity:0.6;}
-  .stat b{font-family:var(--display);font-size:1.02rem;color:var(--ink);font-variant-numeric:tabular-nums;}
-  .stat.combo{background:var(--cream);}
-
-  .field{position:relative;background:var(--paper);border:3px solid var(--ink);border-radius:12px;overflow:hidden;}
-  .divider{position:absolute;top:6px;bottom:6px;left:50%;width:3px;transform:translateX(-50%);background:repeating-linear-gradient(var(--ink) 0 7px,transparent 7px 14px);opacity:0.4;z-index:8;}
-  .beat{position:absolute;left:0;right:0;height:0;border-top:1.5px solid color-mix(in srgb,var(--ink) 16%,transparent);z-index:1;}
-  .beat.bar{border-top:2px solid color-mix(in srgb,var(--ink) 34%,transparent);}
-  .band{position:absolute;left:0;right:0;background:color-mix(in srgb,var(--ink) 3.5%,transparent);z-index:0;}
-  .btick{position:absolute;left:5px;font-family:var(--mono);font-size:0.54rem;color:var(--ink);opacity:0.4;z-index:2;transform:translateY(-50%);}
-  .strike{position:absolute;left:0;right:0;height:0;border-top:3px dashed var(--ink);z-index:9;}
-  .strikeglow{position:absolute;left:0;right:0;z-index:2;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--r3) 30%,transparent));}
-  .strikelabel{position:absolute;right:6px;z-index:10;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);opacity:0.55;background:var(--paper);padding:0 5px;border-radius:4px;transform:translateY(-50%);}
-
-  .track{position:absolute;z-index:2;border-radius:6px 6px 0 0;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--hue) 20%,transparent) 34%,color-mix(in srgb,var(--hue) 26%,transparent));}
-  .note{position:absolute;border:2.5px solid var(--ink);border-radius:9px;z-index:5;box-shadow:2px 3px 0 rgba(58,42,32,0.18);overflow:hidden;will-change:top,mask;}
-  .note.held{box-shadow:2px 3px 0 rgba(58,42,32,0.18), 0 0 16px color-mix(in srgb,var(--hue) 65%,transparent);}
-  .note .head{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;gap:1px;font-family:var(--display);font-weight:800;color:var(--ink);}
-  .note .head .arw{font-size:0.72em;opacity:0.82;}
-  .note .nub{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(58,42,32,0.35);}
-  .btn{position:absolute;border:2.5px solid var(--ink);border-radius:50%;z-index:6;overflow:hidden;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;transition:box-shadow .12s ease;}
-  .btn .half{flex:1;display:grid;place-items:center;font-family:var(--display);font-weight:800;color:color-mix(in srgb,var(--ink) 52%,transparent);}
-  .btn.lit .half{color:var(--ink);}
-  .btn .half.pull{background:color-mix(in srgb,#fff 55%,#d8d1bf);border-bottom:1.2px solid color-mix(in srgb,var(--ink) 40%,transparent);}
-  .btn .half.push{background:#ddd6c4;}
-  .btn.lit{box-shadow:0 0 0 4px color-mix(in srgb,var(--hue) 45%,#fff),var(--shadow-sm);}
-  .btn.holding{box-shadow:0 0 0 5px color-mix(in srgb,var(--hue) 55%,#fff), 0 0 18px color-mix(in srgb,var(--hue) 55%,transparent), var(--shadow-sm);}
-  .holdspark{position:absolute;z-index:10;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse at center, color-mix(in srgb,var(--hue) 80%,#fff) 0%, color-mix(in srgb,var(--hue) 40%,transparent) 55%, transparent 75%);}
-  .kblabel{position:absolute;z-index:7;font-family:var(--mono);font-size:0.56rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink);opacity:0.5;}
-  .kbnum{position:absolute;z-index:6;font-family:var(--mono);font-weight:700;color:color-mix(in srgb,var(--ink) 50%,transparent);transform:translate(-50%,-50%);text-align:center;font-variant-numeric:tabular-nums;line-height:1;pointer-events:none;}
-
-  .caption{font-size:0.85rem;color:var(--muted);}
-  .caption b{color:var(--text);font-weight:700;}
-  .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
-  .card{background:var(--panel);border:1.5px solid var(--rule);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:5px;}
-  .card .k{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);}
-  .card b{font-family:var(--display);font-size:1rem;}
-  .card p{font-size:0.86rem;color:var(--muted);}
-  @media (prefers-reduced-motion:reduce){.btn{transition:none;}}
-</style>
-
-<div class="wrap">
-  <header>
-    <p class="eyebrow">Concertina Hero · falling notes, animated</p>
-    <h1>Notes in motion</h1>
-    <p class="lede">
-      Live playfield, not a still. Watch a note drop, snap off cleanly right at the hit line, and
-      watch every button light the moment its note appears up top.
-    </p>
-  </header>
-
-  <div class="controls">
-    <div class="ctl"><span class="ctl-l">Buttons</span>
-      <div class="seg" id="seg">
-        <button data-k="f7">7</button>
-        <button data-k="f10">10</button>
-        <button data-k="f20" class="on">20</button>
-        <button data-k="f30">30</button>
-      </div>
-    </div>
-    <button class="btnpill" id="pause">❚❚ Pause</button>
-    <div class="legend">
-      <span><i class="swatch push"></i> push (solid)</span>
-      <span><i class="swatch pull"></i> pull (striped)</span>
-    </div>
-  </div>
-
-  <div class="stage">
-    <div class="ghud"><span class="quit">‹ Quit</span>
-      <div class="np"><span class="np-label">Now Playing</span><span class="np-name" id="song">The Kesh Jig</span></div>
-      <div class="stats"><div class="stat"><span>Score</span><b id="score">0</b></div><div class="stat"><span>Accuracy</span><b>93%</b></div><div class="stat combo"><span>Combo</span><b id="combo">0×</b></div></div>
-    </div>
-    <div class="field" id="stage" style="height:560px"></div>
-  </div>
-
-  <div class="notes">
-    <div class="card"><span class="k">1 · at the line</span><b>Notes cut off at the line</b>
-      <p>A falling note is clipped hard at the hit line — a clean, flat edge, nothing shows past it. That crisp cut makes the exact hit moment easy to read, classic rhythm-game style.</p></div>
-    <div class="card"><span class="k">2 · mirrored hands</span><b>Right hand is a mirror</b>
-      <p>The two hands mirror across the bellows divider, the way they sit on the real instrument: the left hand's stagger leans one way, the right hand's leans the other. Switch to 10, 20 or 30 to see it.</p></div>
-    <div class="card"><span class="k">3 · keys stay visible</span><b>Every incoming key lights up</b>
-      <p>The moment a note appears at the top, its target button lights with the note's colour and letters — so you can find the key long before the note lands, not just as it arrives.</p></div>
-  </div>
-
-  <p class="caption"><b>Reading it:</b> each horizontal band is one beat; a note's height is how long to hold.
-    A tall bar feeds through the hit line as you hold it — the button glows and a spark sits on the line
-    while points build for the fraction you actually sustain.</p>
-</div>
-
-<script>
-(() => {
-  const RAINBOW=['--c0','--c1','--c2','--c3','--c4','--c5','--c6'];
-  const COOL=['--l0','--l1','--l2','--l3','--l4'], WARM=['--r0','--r1','--r2','--r3','--r4'];
-  const NOTES7=[['D','C'],['F','E'],['A','G'],['B','C'],['D','E'],['F','G'],['A','B']];
-  const NOTES3={
-    left:[[['C#','A#'],['G#','D#'],['E','C'],['A','F'],['B','G']],
-          [['A','G'],['D','B'],['F','D'],['A','G'],['C','B']],
-          [['D','C'],['G','E'],['B','G'],['D','C'],['F','E']]],
-    right:[[['D#','A#'],['G#','F'],['C','A'],['E','C'],['A','F']],
-           [['B','G'],['D','C'],['F','E'],['A','G'],['B','C']],
-           [['F','D'],['A','G'],['C','B'],['E','D'],['F','G']]],
-  };
-  const rowMap={1:[1],2:[0,2],3:[0,1,2]};
-  const shadeExpr=(row,R)=> R===1?'var(--hue)':(row===0?'color-mix(in srgb, var(--hue) 82%, #000)':row===R-1?'color-mix(in srgb, var(--hue) 58%, #fff)':'var(--hue)');
-  const fillExpr=(row,R,pull)=>{const s=shadeExpr(row,R);return pull?`repeating-linear-gradient(-45deg, ${s} 0 7px, color-mix(in srgb, ${s} 55%, #fff) 7px 14px)`:s;};
-  const noteNames=(cfg,hand,row,c)=> cfg.palette==='rainbow' ? NOTES7[c] : NOTES3[hand][rowMap[cfg.R][row]][c];
-  const hueVar=(cfg,hand,c)=> cfg.palette==='rainbow' ? RAINBOW[c] : (hand===0?COOL[c]:WARM[c]);
-  // buttons numbered left-to-right across the screen, top row first (1..N).
-  // the right hand is mirrored, so its on-screen order runs c=cols-1 .. 0.
-  const noteNumber=(cfg,hand,row,c)=>{
-    const cols=cfg.cols;
-    if(cfg.hands===1) return c+1;
-    const base=row*(2*cols);
-    return hand==='left' ? base+c+1 : base+cols+(cols-1-c)+1;
-  };
-
-  const el=(cls)=>{const d=document.createElement('div');d.className=cls;return d;};
-  const B=8;            // beats visible above the line
-  const LOOP=16;        // the note stream repeats every LOOP beats
-  const BPM=94, BPS=BPM/60;
-
-  // right hand mirrors: reflect local x within the hand's own width
-  function handGeom(handIdx,W,H,cfg,mirror){
-    const {R,cols,bs:BS,colGap,rowGapY,kbH}=cfg;
-    const handW=cfg.hands===1?W:W/2, xOff=cfg.hands===1?0:handIdx*(W/2);
-    const clusterW=(cols-1)*colGap + (R>=2?colGap/2:0);
-    const originX=(handW-clusterW)/2;
-    const q=colGap*(cfg.splitFrac||0.2);
-    const kbTop=H-kbH, rowsSpan=(R-1)*rowGapY, startY=kbTop+(kbH-(rowsSpan+BS))/2+BS/2;
-    const refl=lx=> mirror? handW-lx : lx;
-    const bxL=(row,c)=> originX + c*colGap + (row===1?colGap/2:0);
-    const laneL=c=> originX + c*colGap;
-    const nxL=(row,c,split)=>{
-      if(R===1) return bxL(row,c);
-      if(row===1) return bxL(1,c);
-      if(R===2) return laneL(c);
-      if(split) return laneL(c) + (row===0?-q:q);
-      return laneL(c);
-    };
-    const bx=(row,c)=> xOff + refl(bxL(row,c));
-    const by=(row,c)=> startY + row*rowGapY;
-    const nx=(row,c,split)=> xOff + refl(nxL(row,c,split));
-    return {BS,colGap,q,bx,by,nx,R,cols};
-  }
-
-  function grid(field,W,H,kbH){
-    const strikeY=H-kbH-12,FH=strikeY,sec=FH/B;
-    for(let k=0;k<B;k++) if(k%2===0){const b=el('band');b.style.top=(strikeY-(k+1)*sec)+'px';b.style.height=sec+'px';field.appendChild(b);}
-    for(let k=0;k<=B;k++){const y=strikeY-k*sec;const l=el('beat'+(k%4===0?' bar':''));l.style.top=y+'px';field.appendChild(l);
-      if(k>0){const t=el('btick');t.style.top=y+'px';t.textContent=k;field.appendChild(t);}}
-    const glow=el('strikeglow');glow.style.top=(strikeY-sec*0.5)+'px';glow.style.height=(sec*0.5)+'px';field.appendChild(glow);
-    const s=el('strike');s.style.top=strikeY+'px';field.appendChild(s);
-    const sl=el('strikelabel');sl.style.top=strikeY+'px';sl.textContent='hit';field.appendChild(sl);
-    return {strikeY,sec};
-  }
-
-  function buildSize(cfg){
-    const field=document.getElementById('stage'); field.innerHTML='';
-    const W=field.clientWidth||1000,H=field.clientHeight;
-    const {strikeY,sec}=grid(field,W,H,cfg.kbH);
-    if(cfg.hands===2){field.appendChild(el('divider'));}
-
-    const trackLayer=el('');trackLayer.style.cssText='position:absolute;inset:0;';field.appendChild(trackLayer);
-    const noteLayer=el('');noteLayer.style.cssText='position:absolute;inset:0;';field.appendChild(noteLayer);
-    const sparkLayer=el('');sparkLayer.style.cssText='position:absolute;inset:0;pointer-events:none;';
-
-    // keyboard (persistent buttons, blank until lit)
-    const btnLayer=el('');btnLayer.style.cssText='position:absolute;inset:0;';field.appendChild(btnLayer);
-    field.appendChild(sparkLayer);
-    const geoms={}, keyMap=new Map();
-    const hands = cfg.hands===1?[['single',0,false]]:[['left',0,false],['right',1,true]];
-    hands.forEach(([hand,idx,mirror])=>{
-      const hk=hand==='single'?'left':hand;
-      const g=handGeom(idx,W,H,cfg,mirror); geoms[hand]={g,hk};
-      for(let row=0;row<g.R;row++)for(let c=0;c<g.cols;c++){
-        const x=g.bx(row,c),y=g.by(row,c);
-        const b=el('btn');
-        b.style.left=(x-g.BS/2)+'px';b.style.top=(y-g.BS/2)+'px';b.style.width=g.BS+'px';b.style.height=g.BS+'px';
-        b.style.setProperty('--hue',`var(${hueVar(cfg,hk,c)})`);
-        const ph=el('half pull'),pu=el('half push');
-        // letters are always on the key; the highlight comes and goes with the lane
-        const [pull,push]=noteNames(cfg,hk,row,c), fs=(g.BS*0.3)+'px';
-        ph.textContent=pull;pu.textContent=push;ph.style.fontSize=fs;pu.style.fontSize=fs;
-        b.appendChild(ph);b.appendChild(pu);btnLayer.appendChild(b);
-        // button number, sitting just below the key
-        const numEl=el('kbnum');numEl.textContent=noteNumber(cfg,hand,row,c);
-        const NUMOFF=Math.max(9,(cfg.rowGapY-g.BS)/2);
-        numEl.style.left=x+'px';numEl.style.top=(y+g.BS/2+NUMOFF)+'px';numEl.style.fontSize=Math.max(8,g.BS*0.28)+'px';
-        btnLayer.appendChild(numEl);
-        keyMap.set(hand+'|'+row+'|'+c,{b,pull:ph,push:pu,x,y,row,c,hk});
+<!doctype html>
+<html>
+  <head>
+    <!-- frame-runtime -->
+    <base href="/_f/1783721629-2eb6/" />
+    <script>
+      window.__FRAME_PREAMBLE = {
+        capabilities: {
+          downloads: 'downloads.DUzXFHNF.js',
+          mcp: 'mcp.Djj5DQjZ.js',
+          self: 'self.DqF_PxOe.js',
+        },
+        transforms: '_transforms.DYk1Ltlh.js',
       }
-    });
-    if(cfg.hands===2){
-      const ll=el('kblabel');ll.style.left='14px';ll.style.top=(strikeY+10)+'px';ll.textContent='Left';field.appendChild(ll);
-      const rl=el('kblabel');rl.style.right='14px';rl.style.top=(strikeY+10)+'px';rl.textContent='Right';field.appendChild(rl);
-    }
-    return {cfg,W,H,strikeY,sec,trackLayer,noteLayer,sparkLayer,geoms,keyMap,pool:new Map(),sparkPool:new Map()};
-  }
-
-  function makeNote(){
-    const note=el('note'), track=el('track');
-    note.innerHTML=`<div class="nub"></div><div class="head"></div>`;
-    return {note,track,head:note.querySelector('.head'),dir:null,wid:null,letter:null};
-  }
-
-  function render(st,t){
-    const {cfg,strikeY,sec,trackLayer,noteLayer,sparkLayer,geoms,keyMap,pool,sparkPool}=st;
-
-    // gather visible note instances from the looping stream
-    const vis=[];
-    cfg.stream.forEach((n,i)=>{
-      const kc=Math.round((t-n.beat)/LOOP);
-      for(let k=kc-1;k<=kc+1;k++){
-        const d=(n.beat+k*LOOP)-t;
-        if(d<=B+0.5 && d>=-(n.h+1.3)) vis.push(Object.assign({},n,{i,k,d}));
-      }
-    });
-
-    // which keys to light: nearest incoming note per key, plus a holding flag
-    const lit=new Map();
-    vis.forEach(v=>{
-      const key=v.hand+'|'+v.row+'|'+v.c;
-      const holding = v.d<=0.12 && v.d>=-(v.h)-0.05;
-      let cur=lit.get(key);
-      if(!cur){lit.set(key,{d:v.d,dir:v.dir,holding});}
-      else{ if(v.d<cur.d){cur.d=v.d;cur.dir=v.dir;} cur.holding=cur.holding||holding; }
-    });
-
-    // notes
-    const seen=new Set();
-    vis.forEach(v=>{
-      const {g,hk}=geoms[v.hand];
-      const x=g.nx(v.row,v.c,!!v.split), wid=g.BS*(v.split?0.6:0.82);
-      const headY=strikeY - v.d*sec, hgt=v.h*sec, topY=headY-hgt;
-      const hue=`var(${hueVar(cfg,hk,v.c)})`;
-      const uid=v.i+':'+v.k;
-      let rec=pool.get(uid);
-      if(!rec){rec=makeNote();pool.set(uid,rec);noteLayer.appendChild(rec.note);trackLayer.appendChild(rec.track);}
-      const tr=rec.track;
-      tr.style.setProperty('--hue',hue);tr.style.left=(x-wid/2)+'px';tr.style.width=wid+'px';tr.style.top='4px';tr.style.height=(strikeY-4)+'px';
-      const nEl=rec.note;
-      nEl.style.setProperty('--hue',hue);nEl.style.left=(x-wid/2)+'px';nEl.style.width=wid+'px';nEl.style.top=topY+'px';nEl.style.height=hgt+'px';
-      nEl.style.background=fillExpr(v.row,g.R,v.dir==='pull');
-      const [pull,push]=noteNames(cfg,hk,v.row,v.c), name=v.dir==='pull'?pull:push, arw=v.dir==='pull'?'▲':'▼', showLetter=wid>24;
-      if(rec.dir!==v.dir || rec.wid!==wid){
-        rec.head.innerHTML=`<span class="arw">${arw}</span>${showLetter?name:''}`;
-        rec.head.style.fontSize=(wid*0.42)+'px';
-        rec.dir=v.dir;rec.wid=wid;
-      }
-      rec.head.style.height=Math.min(hgt,g.BS*0.8)+'px';
-      // clip the note hard at the hit line — nothing shows past it
-      const lineLocal=strikeY-topY;
-      let m='none';
-      if(lineLocal<hgt){const p=Math.max(lineLocal,0);m=`linear-gradient(to bottom,#000 ${p}px,transparent ${p}px)`;}
-      nEl.style.webkitMaskImage=m;nEl.style.maskImage=m;
-      const holdingThis = v.d<=0.12 && v.d>=-(v.h)-0.05;
-      nEl.classList.toggle('held',holdingThis);
-      seen.add(uid);
-    });
-    for(const [uid,rec] of pool){ if(!seen.has(uid)){rec.note.remove();rec.track.remove();pool.delete(uid);} }
-
-    // keyboard: light every key that has a note on the board
-    const sparkSeen=new Set();
-    keyMap.forEach((rec,keyid)=>{
-      const info=lit.get(keyid), b=rec.b;
-      if(info){
-        b.classList.add('lit'); b.classList.toggle('holding',!!info.holding);
-        // colour the half that matches the incoming direction; letters are already there
-        rec.pull.style.background = info.dir==='pull'? fillExpr(rec.row,cfg.R,true):'';
-        rec.push.style.background = info.dir==='push'? fillExpr(rec.row,cfg.R,false):'';
-        if(info.holding){
-          let sp=sparkPool.get(keyid);
-          if(!sp){sp=el('holdspark');sparkLayer.appendChild(sp);sparkPool.set(keyid,sp);}
-          const sw=cfg.bs*1.7, sh=cfg.bs*0.55;
-          sp.style.setProperty('--hue',`var(${hueVar(cfg,rec.hk,rec.c)})`);
-          sp.style.left=(rec.x-sw/2)+'px';sp.style.top=(strikeY-sh/2)+'px';sp.style.width=sw+'px';sp.style.height=sh+'px';
-          sparkSeen.add(keyid);
+    </script>
+    <script>
+      ;(function () {
+        'use strict'
+        const X = 'modulepreload',
+          Y = function (e) {
+            return '/' + e
+          },
+          Z = {},
+          U = function (t, n, u) {
+            let o = Promise.resolve()
+            function i(f) {
+              const a = new Event('vite:preloadError', { cancelable: !0 })
+              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+            }
+            return o.then((f) => {
+              for (const a of f || []) a.status === 'rejected' && i(a.reason)
+              return t().catch(i)
+            })
+          },
+          D = ['light', 'dark', 'system']
+        function $(e) {
+          if (e == null || typeof e != 'object') return !1
+          const t = e.__frame_init
+          return t != null && typeof t == 'object'
         }
-      } else {
-        b.classList.remove('lit','holding');
-        rec.pull.style.background='';rec.push.style.background='';
+        function q(e) {
+          if (e == null || typeof e != 'object') return !1
+          const t = e.__frame_theme
+          if (t == null || typeof t != 'object') return !1
+          const n = t.theme
+          return typeof n == 'string' && D.includes(n)
+        }
+        function M(e) {
+          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          const t = e.composedPath ? e.composedPath() : [e.target]
+          let n = null
+          for (let f = 0; f < t.length; f++) {
+            const a = t[f]
+            if (a && a.matches && a.matches('a[href],area[href]')) {
+              n = a
+              break
+            }
+          }
+          if (
+            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+          )
+            return
+          const u = n.getAttribute('href')
+          if (!u) return
+          let o, i
+          try {
+            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+          } catch {
+            return
+          }
+          ;(o.protocol === 'http:' || o.protocol === 'https:') &&
+            o.origin !== i &&
+            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+        }
+        const L = {}
+        function y(e) {
+          if (window === top) return
+          const t = Date.now()
+          t - (L[e] || 0) < 500 ||
+            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+        }
+        const F = 2e3,
+          T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
+        let k = 0
+        function B(e) {
+          e.isTrusted && (k = Date.now())
+        }
+        function z() {
+          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+        }
+        function W() {
+          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          ;(addEventListener(
+            'scroll',
+            (e) => {
+              e.isTrusted && Date.now() - k < F && y('scroll')
+            },
+            { capture: !0, passive: !0 },
+          ),
+            addEventListener(
+              'pointermove',
+              (e) => {
+                e.isTrusted && y('pointer')
+              },
+              { capture: !0, passive: !0 },
+            ),
+            addEventListener(
+              'click',
+              (e) => {
+                e.isTrusted && y('click')
+              },
+              { capture: !0, passive: !0 },
+            ))
+        }
+        function x(e, t, n) {
+          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          return {
+            wrap(o, i) {
+              const f = `${e}.${o}`,
+                a = u.filter((s) => s.targets.includes(f))
+              return a.length === 0
+                ? (...s) => {
+                    try {
+                      return i(...s)
+                    } catch (d) {
+                      return Promise.reject(d)
+                    }
+                  }
+                : (...s) => {
+                    let d = s
+                    for (const c of a) {
+                      const l = c.module.parameters
+                      if (l)
+                        try {
+                          d = l(d)
+                        } catch {
+                          return Promise.reject({
+                            code: 'transform_error',
+                            id: c.id,
+                            scope: e,
+                            message: 'parameters transform failed',
+                          })
+                        }
+                    }
+                    let m
+                    try {
+                      m = i(...d)
+                    } catch (c) {
+                      m = Promise.reject(c)
+                    }
+                    return m.then(
+                      (c) => {
+                        for (let l = a.length - 1; l >= 0; l--) {
+                          const h = a[l],
+                            p = h.module.returns
+                          if (p)
+                            try {
+                              c = p(c)
+                            } catch {
+                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                            }
+                        }
+                        return c
+                      },
+                      (c) => {
+                        for (let l = a.length - 1; l >= 0; l--) {
+                          const h = a[l],
+                            p = h.module.throws
+                          if (p)
+                            try {
+                              c = p(c)
+                            } catch {
+                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                            }
+                        }
+                        return Promise.reject(c)
+                      },
+                    )
+                  }
+            },
+          }
+        }
+        function H(e, t, n, u = () => {}) {
+          const o = new Set(e.changes ?? []),
+            i = new Map()
+          for (const f of o) {
+            const a = t[f]
+            a && i.set(f, a)
+          }
+          return {
+            contract: e.contract,
+            changes: o,
+            flags: new Set(e.flags ?? []),
+            capabilities: e.capabilities ?? {},
+            transforms: i,
+            shellOrigin: n.shellOrigin,
+            mount: n.mount,
+            pipe: (f) => x(f, i, u),
+          }
+        }
+        ;(function () {
+          const e = Object.defineProperty,
+            t = globalThis,
+            n = [
+              'RTCPeerConnection',
+              'webkitRTCPeerConnection',
+              'RTCDataChannel',
+              'RTCIceCandidate',
+              'RTCSessionDescription',
+              'RTCRtpSender',
+              'RTCRtpReceiver',
+            ]
+          let u = 0
+          for (let o = 0; o < n.length; o++) {
+            const i = n[o]
+            try {
+              e(t, i, { value: void 0, writable: !1, configurable: !1 })
+            } catch {
+              try {
+                delete t[i]
+              } catch {}
+              try {
+                e(t, i, { value: void 0, writable: !1, configurable: !0 })
+              } catch {}
+            }
+            typeof t[i] == 'function' && u++
+          }
+          if (u && window !== top)
+            try {
+              parent.postMessage({ __frame_rtc_lockdown_failed: u }, '*')
+            } catch {}
+        })()
+        const K = 1e4,
+          G = Object.freeze([
+            ...(window.__FRAME_PREAMBLE?.origins ?? [
+              'https://claude.ai',
+              'https://preview.claude.ai',
+            ]),
+          ])
+        function J(e) {
+          for (const t of G)
+            if (t.endsWith(':*'))
+              try {
+                const n = new URL(e)
+                if (`${n.protocol}//${n.hostname}:*` === t) return !0
+              } catch {}
+            else if (e === t) return !0
+          return !1
+        }
+        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+          E = window.__FRAME_PREAMBLE?.transforms,
+          C = /^[\w.-]+\.js$/,
+          V = /^[a-z][a-z0-9_-]{0,63}$/
+        let A = null,
+          g = null
+        function P(e, t, n) {
+          try {
+            Object.defineProperty(e, t, {
+              value: n,
+              writable: !1,
+              configurable: !1,
+              enumerable: !0,
+            })
+          } catch {
+            try {
+              Object.defineProperty(e, t, {
+                value: n,
+                writable: !1,
+                configurable: !0,
+                enumerable: !0,
+              })
+            } catch {}
+          }
+        }
+        let R = !1
+        function N(e) {
+          const t = document.documentElement
+          e === 'light' || e === 'dark'
+            ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
+            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+        }
+        const _ = new Map()
+        function Q(e, t) {
+          const n = _.get(e)
+          if (!n) return
+          ;(Object.assign(n.impl, t),
+            (n.impl.__settled = () =>
+              Promise.reject({
+                code: 'capability_removed',
+                message: `${e}: method not in this runtime`,
+              })))
+          const u = n.queue
+          n.queue = []
+          for (const o of u) {
+            const i = t[o.method]
+            i
+              ? i(...o.args).then(o.resolve, o.reject)
+              : o.reject({
+                  code: 'capability_removed',
+                  message: `${e}.${o.method} is not in this runtime`,
+                })
+          }
+        }
+        function O(e, t) {
+          const n = _.get(e)
+          if (!n) return
+          n.impl.__settled = () => Promise.reject(t)
+          const u = n.queue
+          n.queue = []
+          for (const o of u) o.reject(t)
+        }
+        const j = Object.getOwnPropertyDescriptor(window, 'claude')
+        if (window !== top && !(j && j.writable === !1)) {
+          ;(z(), W())
+          const e = j?.value ?? {}
+          P(window, 'claude', e)
+          const t = (s) => {
+            const d = { impl: Object.create(null), queue: [] }
+            _.set(s, d)
+            const m = new Proxy(d.impl, {
+              get: (c, l) => {
+                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                  return l === 'toString'
+                    ? Object.prototype.toString
+                    : (...h) => {
+                        const p = c[l] ?? c.__settled
+                        return p
+                          ? p(...h)
+                          : new Promise((b, S) => {
+                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                            })
+                      }
+              },
+              set: () => !1,
+            })
+            P(e, s, m)
+          }
+          for (const s of Object.keys(w)) {
+            if (e[s] !== void 0) {
+              P(e, s, e[s])
+              continue
+            }
+            t(s)
+          }
+          let n = null,
+            u = null,
+            o = 0
+          const i = (s) => {
+            s.source !== parent ||
+              !J(s.origin) ||
+              ($(s.data) &&
+                ((n = s.data.__frame_init),
+                (g = s.origin),
+                removeEventListener('message', i),
+                clearTimeout(o),
+                u?.()))
+          }
+          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          const f = new Promise((s) => {
+              ;((u = s),
+                (o = setTimeout(() => {
+                  ;(removeEventListener('message', i), s())
+                }, K)))
+            }),
+            a =
+              document.readyState === 'loading'
+                ? new Promise((s) =>
+                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                  )
+                : Promise.resolve()
+          f.then(async () => {
+            if (!n || !g) {
+              for (const r of _.keys())
+                O(r, {
+                  code: 'not_granted',
+                  message: 'frame initialization did not arrive - capability unavailable',
+                })
+              return
+            }
+            N(n.theme)
+            const s = g
+            addEventListener('message', (r) => {
+              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+            })
+            const d = (r) => U(() => import('/_runtime/' + r), void 0),
+              m = Object.keys(n.capabilities ?? {})
+            for (const r of m)
+              Object.hasOwn(w, r) ||
+                (V.test(r) &&
+                  e[r] === void 0 &&
+                  (t(r),
+                  O(r, {
+                    code: 'capability_disabled',
+                    message: 'capability not in this runtime generation',
+                  })))
+            const c = m
+                .filter((r) => Object.hasOwn(w, r))
+                .map((r) => [r, w[r]])
+                .filter((r) => typeof r[1] == 'string' && C.test(r[1])),
+              [l, ...h] = await Promise.allSettled([
+                E && C.test(E) ? d(E) : Promise.resolve({}),
+                ...c.map(([, r]) => d(r)),
+              ]),
+              p = g
+            A = H(
+              n,
+              (l.status === 'fulfilled' && l.value?.TRANSFORMS) || {},
+              { shellOrigin: p, mount: Q },
+              (r) => parent.postMessage({ __frame_cap_telemetry: r }, p),
+            )
+            const b = (r) =>
+                parent.postMessage(
+                  { __frame_cap_telemetry: { kind: 'cap-load-error', cap: r } },
+                  p,
+                ),
+              S = A
+            h.forEach((r, v) => {
+              const I = c[v][0]
+              if (r.status !== 'fulfilled') {
+                b(I)
+                return
+              }
+              try {
+                r.value?.install?.(S)
+              } catch {
+                b(I)
+              }
+            })
+            for (const [r, v] of _)
+              (v.queue.length === 0 && Object.keys(v.impl).length > 0) ||
+                O(r, {
+                  code: m.includes(r) ? 'capability_disabled' : 'not_granted',
+                  message: 'capability not available in this session',
+                })
+            ;(await a, parent.postMessage({ __frame_ready: !0 }, g))
+          })
+        }
+      })()
+    </script>
+    <!-- /frame-runtime -->
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: light;
       }
-    });
-    for(const [id,sp] of sparkPool){ if(!sparkSeen.has(id)){sp.remove();sparkPool.delete(id);} }
-  }
+      body {
+        margin: 0;
+        padding: 0;
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #faf9f5;
+        color: #141413;
+      }
+      img {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Concertina Hero — notes in motion</title>
+    <style>
+      :root {
+        --ink: #3a2a20;
+        --paper: #fffbef;
+        --cream: #fff3d0;
+        --c0: #ff5d5d;
+        --c1: #ff924c;
+        --c2: #ffd23f;
+        --c3: #8ac926;
+        --c4: #2ec4b6;
+        --c5: #4cc9f0;
+        --c6: #b892ff;
+        --l0: #2ec4b6;
+        --l1: #4cc9f0;
+        --l2: #5b8def;
+        --l3: #8f7bf0;
+        --l4: #8ac926;
+        --r0: #ff5d5d;
+        --r1: #ff924c;
+        --r2: #ffb63a;
+        --r3: #ffd23f;
+        --r4: #ff8fce;
+        --ground: #fdf7ea;
+        --panel: #fffdf7;
+        --text: #33241b;
+        --muted: #7a6455;
+        --rule: #e2d3bd;
+        --accent: #b5461f;
+        --red-ink: #b71c1c;
+        --display:
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
+          system-ui, sans-serif;
+        --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+        --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
+        --shadow: 5px 6px 0 rgba(58, 42, 32, 0.16);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ground: #22190f;
+          --panel: #2c2115;
+          --text: #f6e9d6;
+          --muted: #b39c86;
+          --rule: #4a3a29;
+          --accent: #ff9a6c;
+        }
+      }
+      :root[data-theme='dark'] {
+        --ground: #22190f;
+        --panel: #2c2115;
+        --text: #f6e9d6;
+        --muted: #b39c86;
+        --rule: #4a3a29;
+        --accent: #ff9a6c;
+      }
+      :root[data-theme='light'] {
+        --ground: #fdf7ea;
+        --panel: #fffdf7;
+        --text: #33241b;
+        --muted: #7a6455;
+        --rule: #e2d3bd;
+        --accent: #b5461f;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--text);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 56px 24px 96px;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        text-wrap: balance;
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(2rem, 4.6vw, 3.15rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+      h2 {
+        font-size: 1.3rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      p {
+        margin: 0;
+        max-width: 70ch;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .lede {
+        font-size: 1.1rem;
+        color: var(--muted);
+        max-width: 64ch;
+      }
+      .rule {
+        height: 1px;
+        background: var(--rule);
+        border: 0;
+        margin: 0;
+      }
 
-  // --- note streams (repeat every LOOP=16 beats) ---
-  const S=(hand,row,c,dir,beat,h,split)=>({hand,row,c,dir,beat,h,split:!!split});
-  const CONFIGS={
-    f7:{hands:1,R:1,cols:7,palette:'rainbow',bs:46,colGap:118,rowGapY:0,kbH:118,song:'Twinkle, Twinkle',
-      stream:[
-        S('single',0,0,'pull',0,1),S('single',0,2,'push',1,1),S('single',0,4,'pull',2,2),
-        S('single',0,1,'push',4,1),S('single',0,3,'pull',5,1),S('single',0,5,'push',6,1),S('single',0,6,'pull',7,1),
-        S('single',0,3,'push',8,2),S('single',0,0,'pull',10,1),S('single',0,2,'push',11,1),
-        S('single',0,4,'pull',12,1),S('single',0,6,'push',13,1),S('single',0,1,'pull',14,2),
-      ]},
-    f10:{hands:2,R:1,cols:5,palette:'hands',bs:42,colGap:92,rowGapY:0,kbH:120,song:'Row Your Boat',
-      stream:[
-        S('left',0,1,'pull',0,1),S('right',0,4,'push',1,1),S('left',0,3,'push',2,2),S('right',0,0,'pull',3,1),
-        S('right',0,2,'push',4,2),S('left',0,0,'pull',5,1),S('right',0,3,'pull',7,1),S('left',0,4,'push',8,1),
-        S('right',0,1,'push',9,1),S('left',0,2,'pull',10,2),S('right',0,4,'pull',11,2),S('left',0,1,'push',13,1),
-        S('right',0,0,'push',14,1),
-      ]},
-    f20:{hands:2,R:2,cols:5,palette:'hands',bs:38,colGap:92,rowGapY:58,kbH:192,song:'The Kesh Jig',
-      stream:[
-        S('left',0,2,'pull',0,1),S('right',1,1,'push',1,1),S('left',1,2,'push',2,2),S('right',0,3,'pull',3,2),
-        S('left',0,0,'pull',4,1),S('right',1,4,'push',5,1),S('left',1,3,'push',6,1),S('right',0,0,'pull',7,1),
-        S('left',0,4,'pull',8,2),S('right',1,2,'pull',9,2),S('left',1,1,'pull',11,1),S('right',0,2,'push',12,1),
-        S('left',0,3,'push',13,1),S('right',1,0,'pull',14,1),
-      ]},
-    f30:{hands:2,R:3,cols:5,palette:'hands',bs:34,colGap:88,rowGapY:54,kbH:196,splitFrac:0.18,song:'The Kesh Jig',
-      stream:[
-        S('left',0,0,'pull',0,1),S('left',1,1,'push',1,2),S('right',1,2,'push',2,1),S('left',0,3,'push',3,1),
-        S('right',2,0,'pull',4,3),S('left',0,2,'pull',5,1,true),S('left',2,2,'push',5,1,true),S('right',0,4,'pull',6,1),
-        S('left',1,4,'pull',7,2),S('right',1,3,'push',8,1),S('right',0,1,'push',9,1,true),S('right',2,1,'pull',9,1,true),
-        S('left',2,0,'push',10,1),S('right',2,3,'pull',11,1),S('left',0,4,'pull',12,1),S('right',0,0,'push',13,1),
-        S('left',1,2,'push',14,1),
-      ]},
-  };
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .ctl {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .ctl-l {
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        padding-left: 2px;
+      }
+      .seg {
+        display: inline-flex;
+        background: var(--panel);
+        border: 2.5px solid var(--ink);
+        border-radius: 12px;
+        padding: 3px;
+        box-shadow: var(--shadow-sm);
+      }
+      .seg button {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 0.9rem;
+        color: var(--ink);
+        background: transparent;
+        border: 0;
+        border-radius: 9px;
+        padding: 7px 14px;
+        cursor: pointer;
+      }
+      .seg button.on {
+        background: var(--ink);
+        color: var(--paper);
+      }
+      .btnpill {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 0.9rem;
+        color: var(--ink);
+        background: var(--cream);
+        border: 2.5px solid var(--ink);
+        border-radius: 11px;
+        padding: 8px 16px;
+        cursor: pointer;
+        box-shadow: var(--shadow-sm);
+      }
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-left: auto;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .legend span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .swatch {
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        border: 2px solid var(--ink);
+      }
+      .swatch.push {
+        background: var(--r1);
+      }
+      .swatch.pull {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--r1) 0 5px,
+          color-mix(in srgb, var(--r1) 55%, #fff) 5px 10px
+        );
+      }
 
-  let st=null, curKey='f20', songBeats=0, lastTs=0, playing=true;
-  const scoreEl=document.getElementById('score'), comboEl=document.getElementById('combo'), songEl=document.getElementById('song');
+      .stage {
+        background: linear-gradient(#cfeaf7, #f3e2c2);
+        border: 4px solid var(--ink);
+        border-radius: 18px 22px 16px 24px;
+        box-shadow: var(--shadow);
+        padding: 10px;
+        overflow: hidden;
+      }
+      .ghud {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+      .quit {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 0.9rem;
+        color: var(--ink);
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 10px;
+        padding: 7px 14px;
+        box-shadow: var(--shadow-sm);
+      }
+      .np {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.15;
+        margin-right: auto;
+      }
+      .np-label {
+        font-family: var(--mono);
+        font-size: 0.6rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink);
+        opacity: 0.6;
+      }
+      .np-name {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.05rem;
+        color: var(--red-ink);
+      }
+      .stats {
+        display: flex;
+        gap: 8px;
+      }
+      .stat {
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 10px;
+        padding: 5px 13px;
+        text-align: center;
+        box-shadow: var(--shadow-sm);
+        min-width: 64px;
+      }
+      .stat span {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.54rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink);
+        opacity: 0.6;
+      }
+      .stat b {
+        font-family: var(--display);
+        font-size: 1.02rem;
+        color: var(--ink);
+        font-variant-numeric: tabular-nums;
+      }
+      .stat.combo {
+        background: var(--cream);
+      }
 
-  function loop(now){
-    if(lastTs && playing) songBeats += (now-lastTs)/1000*BPS;
-    lastTs=now;
-    if(st) render(st,songBeats);
-    // playful HUD counters
-    if(playing){ const beats=Math.floor(songBeats); scoreEl.textContent=(beats*130+40).toLocaleString(); comboEl.textContent=((beats%18)+1)+'×'; }
-    requestAnimationFrame(loop);
-  }
-  requestAnimationFrame(loop);
+      .field {
+        position: relative;
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .divider {
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        left: 50%;
+        width: 3px;
+        transform: translateX(-50%);
+        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        opacity: 0.4;
+        z-index: 8;
+      }
+      .beat {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0;
+        border-top: 1.5px solid color-mix(in srgb, var(--ink) 16%, transparent);
+        z-index: 1;
+      }
+      .beat.bar {
+        border-top: 2px solid color-mix(in srgb, var(--ink) 34%, transparent);
+      }
+      .band {
+        position: absolute;
+        left: 0;
+        right: 0;
+        background: color-mix(in srgb, var(--ink) 3.5%, transparent);
+        z-index: 0;
+      }
+      .btick {
+        position: absolute;
+        left: 5px;
+        font-family: var(--mono);
+        font-size: 0.54rem;
+        color: var(--ink);
+        opacity: 0.4;
+        z-index: 2;
+        transform: translateY(-50%);
+      }
+      .strike {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0;
+        border-top: 3px dashed var(--ink);
+        z-index: 9;
+      }
+      .strikeglow {
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 2;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          color-mix(in srgb, var(--r3) 30%, transparent)
+        );
+      }
+      .strikelabel {
+        position: absolute;
+        right: 6px;
+        z-index: 10;
+        font-family: var(--mono);
+        font-size: 0.56rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink);
+        opacity: 0.55;
+        background: var(--paper);
+        padding: 0 5px;
+        border-radius: 4px;
+        transform: translateY(-50%);
+      }
 
-  function select(key){
-    curKey=key; const cfg=CONFIGS[key]; st=buildSize(cfg); songEl.textContent=cfg.song;
-    document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.k===key));
-  }
-  document.getElementById('seg').addEventListener('click',e=>{const b=e.target.closest('button');if(b)select(b.dataset.k);});
-  const pause=document.getElementById('pause');
-  pause.addEventListener('click',()=>{playing=!playing;pause.textContent=playing?'❚❚ Pause':'▶ Play';});
+      .track {
+        position: absolute;
+        z-index: 2;
+        border-radius: 6px 6px 0 0;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          color-mix(in srgb, var(--hue) 20%, transparent) 34%,
+          color-mix(in srgb, var(--hue) 26%, transparent)
+        );
+      }
+      .note {
+        position: absolute;
+        border: 2.5px solid var(--ink);
+        border-radius: 9px;
+        z-index: 5;
+        box-shadow: 2px 3px 0 rgba(58, 42, 32, 0.18);
+        overflow: hidden;
+        will-change: top, mask;
+      }
+      .note.held {
+        box-shadow:
+          2px 3px 0 rgba(58, 42, 32, 0.18),
+          0 0 16px color-mix(in srgb, var(--hue) 65%, transparent);
+      }
+      .note .head {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1px;
+        font-family: var(--display);
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .note .head .arw {
+        font-size: 0.72em;
+        opacity: 0.82;
+      }
+      .note .nub {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 3px;
+        background: rgba(58, 42, 32, 0.35);
+      }
+      .btn {
+        position: absolute;
+        border: 2.5px solid var(--ink);
+        border-radius: 50%;
+        z-index: 6;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        display: flex;
+        flex-direction: column;
+        transition: box-shadow 0.12s ease;
+      }
+      .btn .half {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        font-family: var(--display);
+        font-weight: 800;
+        color: color-mix(in srgb, var(--ink) 52%, transparent);
+      }
+      .btn.lit .half {
+        color: var(--ink);
+      }
+      .btn .half.pull {
+        background: color-mix(in srgb, #fff 55%, #d8d1bf);
+        border-bottom: 1.2px solid color-mix(in srgb, var(--ink) 40%, transparent);
+      }
+      .btn .half.push {
+        background: #ddd6c4;
+      }
+      .btn.lit {
+        box-shadow:
+          0 0 0 4px color-mix(in srgb, var(--hue) 45%, #fff),
+          var(--shadow-sm);
+      }
+      .btn.holding {
+        box-shadow:
+          0 0 0 5px color-mix(in srgb, var(--hue) 55%, #fff),
+          0 0 18px color-mix(in srgb, var(--hue) 55%, transparent),
+          var(--shadow-sm);
+      }
+      .holdspark {
+        position: absolute;
+        z-index: 10;
+        border-radius: 50%;
+        pointer-events: none;
+        background: radial-gradient(
+          ellipse at center,
+          color-mix(in srgb, var(--hue) 80%, #fff) 0%,
+          color-mix(in srgb, var(--hue) 40%, transparent) 55%,
+          transparent 75%
+        );
+      }
+      .kblabel {
+        position: absolute;
+        z-index: 7;
+        font-family: var(--mono);
+        font-size: 0.56rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink);
+        opacity: 0.5;
+      }
+      .kbnum {
+        position: absolute;
+        z-index: 6;
+        font-family: var(--mono);
+        font-weight: 700;
+        color: color-mix(in srgb, var(--ink) 50%, transparent);
+        transform: translate(-50%, -50%);
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+        pointer-events: none;
+      }
 
-  select('f20');
-  let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>select(curKey),150);});
-})();
-</script>
+      .caption {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .caption b {
+        color: var(--text);
+        font-weight: 700;
+      }
+      .notes {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+      }
+      .card {
+        background: var(--panel);
+        border: 1.5px solid var(--rule);
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .card .k {
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .card b {
+        font-family: var(--display);
+        font-size: 1rem;
+      }
+      .card p {
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .btn {
+          transition: none;
+        }
+      }
+    </style>
 
-</body></html>
+    <div class="wrap">
+      <header>
+        <p class="eyebrow">Concertina Hero · falling notes, animated</p>
+        <h1>Notes in motion</h1>
+        <p class="lede">
+          Live playfield, not a still. Watch a note drop, snap off cleanly right at the hit line,
+          and watch every button light the moment its note appears up top.
+        </p>
+      </header>
+
+      <div class="controls">
+        <div class="ctl">
+          <span class="ctl-l">Buttons</span>
+          <div class="seg" id="seg">
+            <button data-k="f7">7</button>
+            <button data-k="f10">10</button>
+            <button data-k="f20" class="on">20</button>
+            <button data-k="f30">30</button>
+          </div>
+        </div>
+        <button class="btnpill" id="pause">❚❚ Pause</button>
+        <div class="legend">
+          <span><i class="swatch push"></i> push (solid)</span>
+          <span><i class="swatch pull"></i> pull (striped)</span>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="ghud">
+          <span class="quit">‹ Quit</span>
+          <div class="np">
+            <span class="np-label">Now Playing</span
+            ><span class="np-name" id="song">The Kesh Jig</span>
+          </div>
+          <div class="stats">
+            <div class="stat"><span>Score</span><b id="score">0</b></div>
+            <div class="stat"><span>Accuracy</span><b>93%</b></div>
+            <div class="stat combo"><span>Combo</span><b id="combo">0×</b></div>
+          </div>
+        </div>
+        <div class="field" id="stage" style="height: 560px"></div>
+      </div>
+
+      <div class="notes">
+        <div class="card">
+          <span class="k">1 · at the line</span><b>Notes cut off at the line</b>
+          <p>
+            A falling note is clipped hard at the hit line — a clean, flat edge, nothing shows past
+            it. That crisp cut makes the exact hit moment easy to read, classic rhythm-game style.
+          </p>
+        </div>
+        <div class="card">
+          <span class="k">2 · mirrored hands</span><b>Right hand is a mirror</b>
+          <p>
+            The two hands mirror across the bellows divider, the way they sit on the real
+            instrument: the left hand's stagger leans one way, the right hand's leans the other.
+            Switch to 10, 20 or 30 to see it.
+          </p>
+        </div>
+        <div class="card">
+          <span class="k">3 · keys stay visible</span><b>Every incoming key lights up</b>
+          <p>
+            The moment a note appears at the top, its target button lights with the note's colour
+            and letters — so you can find the key long before the note lands, not just as it
+            arrives.
+          </p>
+        </div>
+      </div>
+
+      <p class="caption">
+        <b>Reading it:</b> each horizontal band is one beat; a note's height is how long to hold. A
+        tall bar feeds through the hit line as you hold it — the button glows and a spark sits on
+        the line while points build for the fraction you actually sustain.
+      </p>
+    </div>
+
+    <script>
+      ;(() => {
+        const RAINBOW = ['--c0', '--c1', '--c2', '--c3', '--c4', '--c5', '--c6']
+        const COOL = ['--l0', '--l1', '--l2', '--l3', '--l4'],
+          WARM = ['--r0', '--r1', '--r2', '--r3', '--r4']
+        const NOTES7 = [
+          ['D', 'C'],
+          ['F', 'E'],
+          ['A', 'G'],
+          ['B', 'C'],
+          ['D', 'E'],
+          ['F', 'G'],
+          ['A', 'B'],
+        ]
+        const NOTES3 = {
+          left: [
+            [
+              ['C#', 'A#'],
+              ['G#', 'D#'],
+              ['E', 'C'],
+              ['A', 'F'],
+              ['B', 'G'],
+            ],
+            [
+              ['A', 'G'],
+              ['D', 'B'],
+              ['F', 'D'],
+              ['A', 'G'],
+              ['C', 'B'],
+            ],
+            [
+              ['D', 'C'],
+              ['G', 'E'],
+              ['B', 'G'],
+              ['D', 'C'],
+              ['F', 'E'],
+            ],
+          ],
+          right: [
+            [
+              ['D#', 'A#'],
+              ['G#', 'F'],
+              ['C', 'A'],
+              ['E', 'C'],
+              ['A', 'F'],
+            ],
+            [
+              ['B', 'G'],
+              ['D', 'C'],
+              ['F', 'E'],
+              ['A', 'G'],
+              ['B', 'C'],
+            ],
+            [
+              ['F', 'D'],
+              ['A', 'G'],
+              ['C', 'B'],
+              ['E', 'D'],
+              ['F', 'G'],
+            ],
+          ],
+        }
+        const rowMap = { 1: [1], 2: [0, 2], 3: [0, 1, 2] }
+        const shadeExpr = (row, R) =>
+          R === 1
+            ? 'var(--hue)'
+            : row === 0
+              ? 'color-mix(in srgb, var(--hue) 82%, #000)'
+              : row === R - 1
+                ? 'color-mix(in srgb, var(--hue) 58%, #fff)'
+                : 'var(--hue)'
+        const fillExpr = (row, R, pull) => {
+          const s = shadeExpr(row, R)
+          return pull
+            ? `repeating-linear-gradient(-45deg, ${s} 0 7px, color-mix(in srgb, ${s} 55%, #fff) 7px 14px)`
+            : s
+        }
+        const noteNames = (cfg, hand, row, c) =>
+          cfg.palette === 'rainbow' ? NOTES7[c] : NOTES3[hand][rowMap[cfg.R][row]][c]
+        const hueVar = (cfg, hand, c) =>
+          cfg.palette === 'rainbow' ? RAINBOW[c] : hand === 0 ? COOL[c] : WARM[c]
+        // buttons numbered left-to-right across the screen, top row first (1..N).
+        // the right hand is mirrored, so its on-screen order runs c=cols-1 .. 0.
+        const noteNumber = (cfg, hand, row, c) => {
+          const cols = cfg.cols
+          if (cfg.hands === 1) return c + 1
+          const base = row * (2 * cols)
+          return hand === 'left' ? base + c + 1 : base + cols + (cols - 1 - c) + 1
+        }
+
+        const el = (cls) => {
+          const d = document.createElement('div')
+          d.className = cls
+          return d
+        }
+        const B = 8 // beats visible above the line
+        const LOOP = 16 // the note stream repeats every LOOP beats
+        const BPM = 94,
+          BPS = BPM / 60
+
+        // right hand mirrors: reflect local x within the hand's own width
+        function handGeom(handIdx, W, H, cfg, mirror) {
+          const { R, cols, bs: BS, colGap, rowGapY, kbH } = cfg
+          const handW = cfg.hands === 1 ? W : W / 2,
+            xOff = cfg.hands === 1 ? 0 : handIdx * (W / 2)
+          const clusterW = (cols - 1) * colGap + (R >= 2 ? colGap / 2 : 0)
+          const originX = (handW - clusterW) / 2
+          const q = colGap * (cfg.splitFrac || 0.2)
+          const kbTop = H - kbH,
+            rowsSpan = (R - 1) * rowGapY,
+            startY = kbTop + (kbH - (rowsSpan + BS)) / 2 + BS / 2
+          const refl = (lx) => (mirror ? handW - lx : lx)
+          const bxL = (row, c) => originX + c * colGap + (row === 1 ? colGap / 2 : 0)
+          const laneL = (c) => originX + c * colGap
+          const nxL = (row, c, split) => {
+            if (R === 1) return bxL(row, c)
+            if (row === 1) return bxL(1, c)
+            if (R === 2) return laneL(c)
+            if (split) return laneL(c) + (row === 0 ? -q : q)
+            return laneL(c)
+          }
+          const bx = (row, c) => xOff + refl(bxL(row, c))
+          const by = (row, c) => startY + row * rowGapY
+          const nx = (row, c, split) => xOff + refl(nxL(row, c, split))
+          return { BS, colGap, q, bx, by, nx, R, cols }
+        }
+
+        function grid(field, W, H, kbH) {
+          const strikeY = H - kbH - 12,
+            FH = strikeY,
+            sec = FH / B
+          for (let k = 0; k < B; k++)
+            if (k % 2 === 0) {
+              const b = el('band')
+              b.style.top = strikeY - (k + 1) * sec + 'px'
+              b.style.height = sec + 'px'
+              field.appendChild(b)
+            }
+          for (let k = 0; k <= B; k++) {
+            const y = strikeY - k * sec
+            const l = el('beat' + (k % 4 === 0 ? ' bar' : ''))
+            l.style.top = y + 'px'
+            field.appendChild(l)
+            if (k > 0) {
+              const t = el('btick')
+              t.style.top = y + 'px'
+              t.textContent = k
+              field.appendChild(t)
+            }
+          }
+          const glow = el('strikeglow')
+          glow.style.top = strikeY - sec * 0.5 + 'px'
+          glow.style.height = sec * 0.5 + 'px'
+          field.appendChild(glow)
+          const s = el('strike')
+          s.style.top = strikeY + 'px'
+          field.appendChild(s)
+          const sl = el('strikelabel')
+          sl.style.top = strikeY + 'px'
+          sl.textContent = 'hit'
+          field.appendChild(sl)
+          return { strikeY, sec }
+        }
+
+        function buildSize(cfg) {
+          const field = document.getElementById('stage')
+          field.innerHTML = ''
+          const W = field.clientWidth || 1000,
+            H = field.clientHeight
+          const { strikeY, sec } = grid(field, W, H, cfg.kbH)
+          if (cfg.hands === 2) {
+            field.appendChild(el('divider'))
+          }
+
+          const trackLayer = el('')
+          trackLayer.style.cssText = 'position:absolute;inset:0;'
+          field.appendChild(trackLayer)
+          const noteLayer = el('')
+          noteLayer.style.cssText = 'position:absolute;inset:0;'
+          field.appendChild(noteLayer)
+          const sparkLayer = el('')
+          sparkLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;'
+
+          // keyboard (persistent buttons, blank until lit)
+          const btnLayer = el('')
+          btnLayer.style.cssText = 'position:absolute;inset:0;'
+          field.appendChild(btnLayer)
+          field.appendChild(sparkLayer)
+          const geoms = {},
+            keyMap = new Map()
+          const hands =
+            cfg.hands === 1
+              ? [['single', 0, false]]
+              : [
+                  ['left', 0, false],
+                  ['right', 1, true],
+                ]
+          hands.forEach(([hand, idx, mirror]) => {
+            const hk = hand === 'single' ? 'left' : hand
+            const g = handGeom(idx, W, H, cfg, mirror)
+            geoms[hand] = { g, hk }
+            for (let row = 0; row < g.R; row++)
+              for (let c = 0; c < g.cols; c++) {
+                const x = g.bx(row, c),
+                  y = g.by(row, c)
+                const b = el('btn')
+                b.style.left = x - g.BS / 2 + 'px'
+                b.style.top = y - g.BS / 2 + 'px'
+                b.style.width = g.BS + 'px'
+                b.style.height = g.BS + 'px'
+                b.style.setProperty('--hue', `var(${hueVar(cfg, hk, c)})`)
+                const ph = el('half pull'),
+                  pu = el('half push')
+                // letters are always on the key; the highlight comes and goes with the lane
+                const [pull, push] = noteNames(cfg, hk, row, c),
+                  fs = g.BS * 0.3 + 'px'
+                ph.textContent = pull
+                pu.textContent = push
+                ph.style.fontSize = fs
+                pu.style.fontSize = fs
+                b.appendChild(ph)
+                b.appendChild(pu)
+                btnLayer.appendChild(b)
+                // button number, sitting just below the key
+                const numEl = el('kbnum')
+                numEl.textContent = noteNumber(cfg, hand, row, c)
+                const NUMOFF = Math.max(9, (cfg.rowGapY - g.BS) / 2)
+                numEl.style.left = x + 'px'
+                numEl.style.top = y + g.BS / 2 + NUMOFF + 'px'
+                numEl.style.fontSize = Math.max(8, g.BS * 0.28) + 'px'
+                btnLayer.appendChild(numEl)
+                keyMap.set(hand + '|' + row + '|' + c, { b, pull: ph, push: pu, x, y, row, c, hk })
+              }
+          })
+          if (cfg.hands === 2) {
+            const ll = el('kblabel')
+            ll.style.left = '14px'
+            ll.style.top = strikeY + 10 + 'px'
+            ll.textContent = 'Left'
+            field.appendChild(ll)
+            const rl = el('kblabel')
+            rl.style.right = '14px'
+            rl.style.top = strikeY + 10 + 'px'
+            rl.textContent = 'Right'
+            field.appendChild(rl)
+          }
+          return {
+            cfg,
+            W,
+            H,
+            strikeY,
+            sec,
+            trackLayer,
+            noteLayer,
+            sparkLayer,
+            geoms,
+            keyMap,
+            pool: new Map(),
+            sparkPool: new Map(),
+          }
+        }
+
+        function makeNote() {
+          const note = el('note'),
+            track = el('track')
+          note.innerHTML = `<div class="nub"></div><div class="head"></div>`
+          return {
+            note,
+            track,
+            head: note.querySelector('.head'),
+            dir: null,
+            wid: null,
+            letter: null,
+          }
+        }
+
+        function render(st, t) {
+          const {
+            cfg,
+            strikeY,
+            sec,
+            trackLayer,
+            noteLayer,
+            sparkLayer,
+            geoms,
+            keyMap,
+            pool,
+            sparkPool,
+          } = st
+
+          // gather visible note instances from the looping stream
+          const vis = []
+          cfg.stream.forEach((n, i) => {
+            const kc = Math.round((t - n.beat) / LOOP)
+            for (let k = kc - 1; k <= kc + 1; k++) {
+              const d = n.beat + k * LOOP - t
+              if (d <= B + 0.5 && d >= -(n.h + 1.3)) vis.push(Object.assign({}, n, { i, k, d }))
+            }
+          })
+
+          // which keys to light: nearest incoming note per key, plus a holding flag
+          const lit = new Map()
+          vis.forEach((v) => {
+            const key = v.hand + '|' + v.row + '|' + v.c
+            const holding = v.d <= 0.12 && v.d >= -v.h - 0.05
+            let cur = lit.get(key)
+            if (!cur) {
+              lit.set(key, { d: v.d, dir: v.dir, holding })
+            } else {
+              if (v.d < cur.d) {
+                cur.d = v.d
+                cur.dir = v.dir
+              }
+              cur.holding = cur.holding || holding
+            }
+          })
+
+          // notes
+          const seen = new Set()
+          vis.forEach((v) => {
+            const { g, hk } = geoms[v.hand]
+            const x = g.nx(v.row, v.c, !!v.split),
+              wid = g.BS * (v.split ? 0.6 : 0.82)
+            const headY = strikeY - v.d * sec,
+              hgt = v.h * sec,
+              topY = headY - hgt
+            const hue = `var(${hueVar(cfg, hk, v.c)})`
+            const uid = v.i + ':' + v.k
+            let rec = pool.get(uid)
+            if (!rec) {
+              rec = makeNote()
+              pool.set(uid, rec)
+              noteLayer.appendChild(rec.note)
+              trackLayer.appendChild(rec.track)
+            }
+            const tr = rec.track
+            tr.style.setProperty('--hue', hue)
+            tr.style.left = x - wid / 2 + 'px'
+            tr.style.width = wid + 'px'
+            tr.style.top = '4px'
+            tr.style.height = strikeY - 4 + 'px'
+            const nEl = rec.note
+            nEl.style.setProperty('--hue', hue)
+            nEl.style.left = x - wid / 2 + 'px'
+            nEl.style.width = wid + 'px'
+            nEl.style.top = topY + 'px'
+            nEl.style.height = hgt + 'px'
+            nEl.style.background = fillExpr(v.row, g.R, v.dir === 'pull')
+            const [pull, push] = noteNames(cfg, hk, v.row, v.c),
+              name = v.dir === 'pull' ? pull : push,
+              arw = v.dir === 'pull' ? '▲' : '▼',
+              showLetter = wid > 24
+            if (rec.dir !== v.dir || rec.wid !== wid) {
+              rec.head.innerHTML = `<span class="arw">${arw}</span>${showLetter ? name : ''}`
+              rec.head.style.fontSize = wid * 0.42 + 'px'
+              rec.dir = v.dir
+              rec.wid = wid
+            }
+            rec.head.style.height = Math.min(hgt, g.BS * 0.8) + 'px'
+            // clip the note hard at the hit line — nothing shows past it
+            const lineLocal = strikeY - topY
+            let m = 'none'
+            if (lineLocal < hgt) {
+              const p = Math.max(lineLocal, 0)
+              m = `linear-gradient(to bottom,#000 ${p}px,transparent ${p}px)`
+            }
+            nEl.style.webkitMaskImage = m
+            nEl.style.maskImage = m
+            const holdingThis = v.d <= 0.12 && v.d >= -v.h - 0.05
+            nEl.classList.toggle('held', holdingThis)
+            seen.add(uid)
+          })
+          for (const [uid, rec] of pool) {
+            if (!seen.has(uid)) {
+              rec.note.remove()
+              rec.track.remove()
+              pool.delete(uid)
+            }
+          }
+
+          // keyboard: light every key that has a note on the board
+          const sparkSeen = new Set()
+          keyMap.forEach((rec, keyid) => {
+            const info = lit.get(keyid),
+              b = rec.b
+            if (info) {
+              b.classList.add('lit')
+              b.classList.toggle('holding', !!info.holding)
+              // colour the half that matches the incoming direction; letters are already there
+              rec.pull.style.background = info.dir === 'pull' ? fillExpr(rec.row, cfg.R, true) : ''
+              rec.push.style.background = info.dir === 'push' ? fillExpr(rec.row, cfg.R, false) : ''
+              if (info.holding) {
+                let sp = sparkPool.get(keyid)
+                if (!sp) {
+                  sp = el('holdspark')
+                  sparkLayer.appendChild(sp)
+                  sparkPool.set(keyid, sp)
+                }
+                const sw = cfg.bs * 1.7,
+                  sh = cfg.bs * 0.55
+                sp.style.setProperty('--hue', `var(${hueVar(cfg, rec.hk, rec.c)})`)
+                sp.style.left = rec.x - sw / 2 + 'px'
+                sp.style.top = strikeY - sh / 2 + 'px'
+                sp.style.width = sw + 'px'
+                sp.style.height = sh + 'px'
+                sparkSeen.add(keyid)
+              }
+            } else {
+              b.classList.remove('lit', 'holding')
+              rec.pull.style.background = ''
+              rec.push.style.background = ''
+            }
+          })
+          for (const [id, sp] of sparkPool) {
+            if (!sparkSeen.has(id)) {
+              sp.remove()
+              sparkPool.delete(id)
+            }
+          }
+        }
+
+        // --- note streams (repeat every LOOP=16 beats) ---
+        const S = (hand, row, c, dir, beat, h, split) => ({
+          hand,
+          row,
+          c,
+          dir,
+          beat,
+          h,
+          split: !!split,
+        })
+        const CONFIGS = {
+          f7: {
+            hands: 1,
+            R: 1,
+            cols: 7,
+            palette: 'rainbow',
+            bs: 46,
+            colGap: 118,
+            rowGapY: 0,
+            kbH: 118,
+            song: 'Twinkle, Twinkle',
+            stream: [
+              S('single', 0, 0, 'pull', 0, 1),
+              S('single', 0, 2, 'push', 1, 1),
+              S('single', 0, 4, 'pull', 2, 2),
+              S('single', 0, 1, 'push', 4, 1),
+              S('single', 0, 3, 'pull', 5, 1),
+              S('single', 0, 5, 'push', 6, 1),
+              S('single', 0, 6, 'pull', 7, 1),
+              S('single', 0, 3, 'push', 8, 2),
+              S('single', 0, 0, 'pull', 10, 1),
+              S('single', 0, 2, 'push', 11, 1),
+              S('single', 0, 4, 'pull', 12, 1),
+              S('single', 0, 6, 'push', 13, 1),
+              S('single', 0, 1, 'pull', 14, 2),
+            ],
+          },
+          f10: {
+            hands: 2,
+            R: 1,
+            cols: 5,
+            palette: 'hands',
+            bs: 42,
+            colGap: 92,
+            rowGapY: 0,
+            kbH: 120,
+            song: 'Row Your Boat',
+            stream: [
+              S('left', 0, 1, 'pull', 0, 1),
+              S('right', 0, 4, 'push', 1, 1),
+              S('left', 0, 3, 'push', 2, 2),
+              S('right', 0, 0, 'pull', 3, 1),
+              S('right', 0, 2, 'push', 4, 2),
+              S('left', 0, 0, 'pull', 5, 1),
+              S('right', 0, 3, 'pull', 7, 1),
+              S('left', 0, 4, 'push', 8, 1),
+              S('right', 0, 1, 'push', 9, 1),
+              S('left', 0, 2, 'pull', 10, 2),
+              S('right', 0, 4, 'pull', 11, 2),
+              S('left', 0, 1, 'push', 13, 1),
+              S('right', 0, 0, 'push', 14, 1),
+            ],
+          },
+          f20: {
+            hands: 2,
+            R: 2,
+            cols: 5,
+            palette: 'hands',
+            bs: 38,
+            colGap: 92,
+            rowGapY: 58,
+            kbH: 192,
+            song: 'The Kesh Jig',
+            stream: [
+              S('left', 0, 2, 'pull', 0, 1),
+              S('right', 1, 1, 'push', 1, 1),
+              S('left', 1, 2, 'push', 2, 2),
+              S('right', 0, 3, 'pull', 3, 2),
+              S('left', 0, 0, 'pull', 4, 1),
+              S('right', 1, 4, 'push', 5, 1),
+              S('left', 1, 3, 'push', 6, 1),
+              S('right', 0, 0, 'pull', 7, 1),
+              S('left', 0, 4, 'pull', 8, 2),
+              S('right', 1, 2, 'pull', 9, 2),
+              S('left', 1, 1, 'pull', 11, 1),
+              S('right', 0, 2, 'push', 12, 1),
+              S('left', 0, 3, 'push', 13, 1),
+              S('right', 1, 0, 'pull', 14, 1),
+            ],
+          },
+          f30: {
+            hands: 2,
+            R: 3,
+            cols: 5,
+            palette: 'hands',
+            bs: 34,
+            colGap: 88,
+            rowGapY: 54,
+            kbH: 196,
+            splitFrac: 0.18,
+            song: 'The Kesh Jig',
+            stream: [
+              S('left', 0, 0, 'pull', 0, 1),
+              S('left', 1, 1, 'push', 1, 2),
+              S('right', 1, 2, 'push', 2, 1),
+              S('left', 0, 3, 'push', 3, 1),
+              S('right', 2, 0, 'pull', 4, 3),
+              S('left', 0, 2, 'pull', 5, 1, true),
+              S('left', 2, 2, 'push', 5, 1, true),
+              S('right', 0, 4, 'pull', 6, 1),
+              S('left', 1, 4, 'pull', 7, 2),
+              S('right', 1, 3, 'push', 8, 1),
+              S('right', 0, 1, 'push', 9, 1, true),
+              S('right', 2, 1, 'pull', 9, 1, true),
+              S('left', 2, 0, 'push', 10, 1),
+              S('right', 2, 3, 'pull', 11, 1),
+              S('left', 0, 4, 'pull', 12, 1),
+              S('right', 0, 0, 'push', 13, 1),
+              S('left', 1, 2, 'push', 14, 1),
+            ],
+          },
+        }
+
+        let st = null,
+          curKey = 'f20',
+          songBeats = 0,
+          lastTs = 0,
+          playing = true
+        const scoreEl = document.getElementById('score'),
+          comboEl = document.getElementById('combo'),
+          songEl = document.getElementById('song')
+
+        function loop(now) {
+          if (lastTs && playing) songBeats += ((now - lastTs) / 1000) * BPS
+          lastTs = now
+          if (st) render(st, songBeats)
+          // playful HUD counters
+          if (playing) {
+            const beats = Math.floor(songBeats)
+            scoreEl.textContent = (beats * 130 + 40).toLocaleString()
+            comboEl.textContent = (beats % 18) + 1 + '×'
+          }
+          requestAnimationFrame(loop)
+        }
+        requestAnimationFrame(loop)
+
+        function select(key) {
+          curKey = key
+          const cfg = CONFIGS[key]
+          st = buildSize(cfg)
+          songEl.textContent = cfg.song
+          document
+            .querySelectorAll('#seg button')
+            .forEach((b) => b.classList.toggle('on', b.dataset.k === key))
+        }
+        document.getElementById('seg').addEventListener('click', (e) => {
+          const b = e.target.closest('button')
+          if (b) select(b.dataset.k)
+        })
+        const pause = document.getElementById('pause')
+        pause.addEventListener('click', () => {
+          playing = !playing
+          pause.textContent = playing ? '❚❚ Pause' : '▶ Play'
+        })
+
+        select('f20')
+        let rt
+        addEventListener('resize', () => {
+          clearTimeout(rt)
+          rt = setTimeout(() => select(curKey), 150)
+        })
+      })()
+    </script>
+  </body>
+</html>

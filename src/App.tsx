@@ -5,7 +5,7 @@ import { withLeadIn, type Song } from '#data/songs'
 import { getActiveInstrument, setActiveInstrument, type InstrumentSize } from '#data/instrument'
 import { applyActivePreset } from '#data/presets'
 import type { GameResult } from '#hooks/useGameEngine'
-import Start from '#screens/Start/Start'
+import Start, { type StartSections } from '#screens/Start/Start'
 import Game from '#screens/Game/Game'
 import Results from '#screens/Results/Results'
 import ScreenGuard from '#modals/ScreenGuard/ScreenGuard'
@@ -35,6 +35,16 @@ export default function App() {
   const [micEnabled, setMicEnabled] = useState(false) // play via microphone
   const [result, setResult] = useState<GameResult | null>(null)
   const [runId, setRunId] = useState(0) // bump to force a fresh Game mount
+
+  // Start-screen section open states — kept here so they persist while Start is
+  // unmounted during a game and restore on return.
+  const [startSections, setStartSections] = useState<StartSections>({
+    howto: false,
+    songs: true,
+    settings: false,
+  })
+  const toggleStartSection = (section: keyof StartSections, open: boolean) =>
+    setStartSections((s) => ({ ...s, [section]: open }))
 
   // The active instrument (a global setting): drives geometry/colours/tuning, and
   // gates which songs are playable.
@@ -96,6 +106,8 @@ export default function App() {
             onMicChange={setMicEnabled}
             instrumentSize={instrumentSize}
             onInstrumentChange={changeInstrument}
+            sections={startSections}
+            onSectionToggle={toggleStartSection}
           />
         )}
 

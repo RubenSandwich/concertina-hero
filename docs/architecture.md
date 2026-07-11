@@ -43,6 +43,8 @@ src/
     UploadButton/         button + hidden file input that parses a JSON upload
     NoteCard/             one falling note card (arrow + name), sized/placed by Game
     Keyboard/             the drawn anglo keyboard: three button states, tap input
+    HowToPlay/            compact how-to: a falling note → a pressed button, push & pull
+                          (shown on Start and in the pause overlay)
   ui/screens/
     Start/                how-to, song list, settings (instrument, speed, wait,
                           keyboard/mic, preset)

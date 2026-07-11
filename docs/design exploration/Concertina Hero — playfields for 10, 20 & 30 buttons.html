@@ -1,988 +1,1777 @@
-<!doctype html><html><head><!-- frame-runtime --><base href="/_f/1783697255-5b69/"><script>window.__FRAME_PREAMBLE={"capabilities":{"downloads":"downloads.DUzXFHNF.js","mcp":"mcp.Djj5DQjZ.js","self":"self.DqF_PxOe.js"},"transforms":"_transforms.DYk1Ltlh.js"}</script><script>(function(){"use strict";const X="modulepreload",Y=function(e){return"/"+e},Z={},U=function(t,n,u){let o=Promise.resolve();function i(f){const a=new Event("vite:preloadError",{cancelable:!0});if(a.payload=f,window.dispatchEvent(a),!a.defaultPrevented)throw f}return o.then(f=>{for(const a of f||[])a.status==="rejected"&&i(a.reason);return t().catch(i)})},D=["light","dark","system"];function $(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_init;return t!=null&&typeof t=="object"}function q(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_theme;if(t==null||typeof t!="object")return!1;const n=t.theme;return typeof n=="string"&&D.includes(n)}function M(e){if(window===top||e.type==="auxclick"&&e.button!==1)return;const t=e.composedPath?e.composedPath():[e.target];let n=null;for(let f=0;f<t.length;f++){const a=t[f];if(a&&a.matches&&a.matches("a[href],area[href]")){n=a;break}}if(!n&&e.target&&e.target.closest&&(n=e.target.closest("a[href],area[href]")),!n)return;const u=n.getAttribute("href");if(!u)return;let o,i;try{o=new URL(u,document.baseURI),i=new URL(document.baseURI).origin}catch{return}(o.protocol==="http:"||o.protocol==="https:")&&o.origin!==i&&(e.preventDefault(),parent.postMessage({__frame_nav:!0,url:o.href},"*"))}const L={};function y(e){if(window===top)return;const t=Date.now();t-(L[e]||0)<500||(L[e]=t,parent.postMessage({__frame_engaged:!0,kind:e},"*"))}const F=2e3,T=["wheel","touchstart","touchmove","keydown","pointerdown"];let k=0;function B(e){e.isTrusted&&(k=Date.now())}function z(){addEventListener("click",M,!0),addEventListener("auxclick",M,!0)}function W(){for(let e=0;e<T.length;e++)addEventListener(T[e],B,{capture:!0,passive:!0});addEventListener("scroll",e=>{e.isTrusted&&Date.now()-k<F&&y("scroll")},{capture:!0,passive:!0}),addEventListener("pointermove",e=>{e.isTrusted&&y("pointer")},{capture:!0,passive:!0}),addEventListener("click",e=>{e.isTrusted&&y("click")},{capture:!0,passive:!0})}function x(e,t,n){const u=[...t.values()].filter(o=>o.targets.some(i=>i.startsWith(e+".")));return{wrap(o,i){const f=`${e}.${o}`,a=u.filter(s=>s.targets.includes(f));return a.length===0?(...s)=>{try{return i(...s)}catch(d){return Promise.reject(d)}}:(...s)=>{let d=s;for(const c of a){const l=c.module.parameters;if(l)try{d=l(d)}catch{return Promise.reject({code:"transform_error",id:c.id,scope:e,message:"parameters transform failed"})}}let m;try{m=i(...d)}catch(c){m=Promise.reject(c)}return m.then(c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.returns;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"returns"}),c}}return c},c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.throws;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"throws"}),Promise.reject(c)}}return Promise.reject(c)})}}}}function H(e,t,n,u=()=>{}){const o=new Set(e.changes??[]),i=new Map;for(const f of o){const a=t[f];a&&i.set(f,a)}return{contract:e.contract,changes:o,flags:new Set(e.flags??[]),capabilities:e.capabilities??{},transforms:i,shellOrigin:n.shellOrigin,mount:n.mount,pipe:f=>x(f,i,u)}}(function(){const e=Object.defineProperty,t=globalThis,n=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let u=0;for(let o=0;o<n.length;o++){const i=n[o];try{e(t,i,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[i]}catch{}try{e(t,i,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[i]=="function"&&u++}if(u&&window!==top)try{parent.postMessage({__frame_rtc_lockdown_failed:u},"*")}catch{}})();const K=1e4,G=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function J(e){for(const t of G)if(t.endsWith(":*"))try{const n=new URL(e);if(`${n.protocol}//${n.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}const w=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities??{}}),E=window.__FRAME_PREAMBLE?.transforms,C=/^[\w.-]+\.js$/,V=/^[a-z][a-z0-9_-]{0,63}$/;let A=null,g=null;function P(e,t,n){try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!0,enumerable:!0})}catch{}}}let R=!1;function N(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,R=!0):R&&(delete t.dataset.theme,t.style.colorScheme="",R=!1)}const _=new Map;function Q(e,t){const n=_.get(e);if(!n)return;Object.assign(n.impl,t),n.impl.__settled=()=>Promise.reject({code:"capability_removed",message:`${e}: method not in this runtime`});const u=n.queue;n.queue=[];for(const o of u){const i=t[o.method];i?i(...o.args).then(o.resolve,o.reject):o.reject({code:"capability_removed",message:`${e}.${o.method} is not in this runtime`})}}function O(e,t){const n=_.get(e);if(!n)return;n.impl.__settled=()=>Promise.reject(t);const u=n.queue;n.queue=[];for(const o of u)o.reject(t)}const j=Object.getOwnPropertyDescriptor(window,"claude");if(window!==top&&!(j&&j.writable===!1)){z(),W();const e=j?.value??{};P(window,"claude",e);const t=s=>{const d={impl:Object.create(null),queue:[]};_.set(s,d);const m=new Proxy(d.impl,{get:(c,l)=>{if(typeof l=="string"&&!(l==="then"||l==="toJSON"||l==="valueOf"))return l==="toString"?Object.prototype.toString:(...h)=>{const p=c[l]??c.__settled;return p?p(...h):new Promise((b,S)=>{d.queue.push({method:l,args:h,resolve:b,reject:S})})}},set:()=>!1});P(e,s,m)};for(const s of Object.keys(w)){if(e[s]!==void 0){P(e,s,e[s]);continue}t(s)}let n=null,u=null,o=0;const i=s=>{s.source!==parent||!J(s.origin)||$(s.data)&&(n=s.data.__frame_init,g=s.origin,removeEventListener("message",i),clearTimeout(o),u?.())};addEventListener("message",i),parent.postMessage({__frame_connect:!0},"*");const f=new Promise(s=>{u=s,o=setTimeout(()=>{removeEventListener("message",i),s()},K)}),a=document.readyState==="loading"?new Promise(s=>document.addEventListener("DOMContentLoaded",()=>s(),{once:!0})):Promise.resolve();f.then(async()=>{if(!n||!g){for(const r of _.keys())O(r,{code:"not_granted",message:"frame initialization did not arrive - capability unavailable"});return}N(n.theme);const s=g;addEventListener("message",r=>{r.source!==parent||r.origin!==s||q(r.data)&&N(r.data.__frame_theme.theme)});const d=r=>U(()=>import("/_runtime/"+r),void 0),m=Object.keys(n.capabilities??{});for(const r of m)Object.hasOwn(w,r)||V.test(r)&&e[r]===void 0&&(t(r),O(r,{code:"capability_disabled",message:"capability not in this runtime generation"}));const c=m.filter(r=>Object.hasOwn(w,r)).map(r=>[r,w[r]]).filter(r=>typeof r[1]=="string"&&C.test(r[1])),[l,...h]=await Promise.allSettled([E&&C.test(E)?d(E):Promise.resolve({}),...c.map(([,r])=>d(r))]),p=g;A=H(n,l.status==="fulfilled"&&l.value?.TRANSFORMS||{},{shellOrigin:p,mount:Q},r=>parent.postMessage({__frame_cap_telemetry:r},p));const b=r=>parent.postMessage({__frame_cap_telemetry:{kind:"cap-load-error",cap:r}},p),S=A;h.forEach((r,v)=>{const I=c[v][0];if(r.status!=="fulfilled"){b(I);return}try{r.value?.install?.(S)}catch{b(I)}});for(const[r,v]of _)v.queue.length===0&&Object.keys(v.impl).length>0||O(r,{code:m.includes(r)?"capability_disabled":"not_granted",message:"capability not available in this session"});await a,parent.postMessage({__frame_ready:!0},g)})}})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
-<title>Concertina Hero — playfields for 10, 20 & 30 buttons</title>
-<style>
-  :root {
-    /* Borrowed from the game's own tokens (src/index.css) */
-    --ink: #3a2a20;
-    --paper: #fffbef;
-    --cream: #fff3d0;
-    --felt: #f6ead0;
+<!doctype html>
+<html>
+  <head>
+    <!-- frame-runtime -->
+    <base href="/_f/1783697255-5b69/" />
+    <script>
+      window.__FRAME_PREAMBLE = {
+        capabilities: {
+          downloads: 'downloads.DUzXFHNF.js',
+          mcp: 'mcp.Djj5DQjZ.js',
+          self: 'self.DqF_PxOe.js',
+        },
+        transforms: '_transforms.DYk1Ltlh.js',
+      }
+    </script>
+    <script>
+      ;(function () {
+        'use strict'
+        const X = 'modulepreload',
+          Y = function (e) {
+            return '/' + e
+          },
+          Z = {},
+          U = function (t, n, u) {
+            let o = Promise.resolve()
+            function i(f) {
+              const a = new Event('vite:preloadError', { cancelable: !0 })
+              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+            }
+            return o.then((f) => {
+              for (const a of f || []) a.status === 'rejected' && i(a.reason)
+              return t().catch(i)
+            })
+          },
+          D = ['light', 'dark', 'system']
+        function $(e) {
+          if (e == null || typeof e != 'object') return !1
+          const t = e.__frame_init
+          return t != null && typeof t == 'object'
+        }
+        function q(e) {
+          if (e == null || typeof e != 'object') return !1
+          const t = e.__frame_theme
+          if (t == null || typeof t != 'object') return !1
+          const n = t.theme
+          return typeof n == 'string' && D.includes(n)
+        }
+        function M(e) {
+          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          const t = e.composedPath ? e.composedPath() : [e.target]
+          let n = null
+          for (let f = 0; f < t.length; f++) {
+            const a = t[f]
+            if (a && a.matches && a.matches('a[href],area[href]')) {
+              n = a
+              break
+            }
+          }
+          if (
+            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+          )
+            return
+          const u = n.getAttribute('href')
+          if (!u) return
+          let o, i
+          try {
+            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+          } catch {
+            return
+          }
+          ;(o.protocol === 'http:' || o.protocol === 'https:') &&
+            o.origin !== i &&
+            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+        }
+        const L = {}
+        function y(e) {
+          if (window === top) return
+          const t = Date.now()
+          t - (L[e] || 0) < 500 ||
+            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+        }
+        const F = 2e3,
+          T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
+        let k = 0
+        function B(e) {
+          e.isTrusted && (k = Date.now())
+        }
+        function z() {
+          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+        }
+        function W() {
+          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          ;(addEventListener(
+            'scroll',
+            (e) => {
+              e.isTrusted && Date.now() - k < F && y('scroll')
+            },
+            { capture: !0, passive: !0 },
+          ),
+            addEventListener(
+              'pointermove',
+              (e) => {
+                e.isTrusted && y('pointer')
+              },
+              { capture: !0, passive: !0 },
+            ),
+            addEventListener(
+              'click',
+              (e) => {
+                e.isTrusted && y('click')
+              },
+              { capture: !0, passive: !0 },
+            ))
+        }
+        function x(e, t, n) {
+          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          return {
+            wrap(o, i) {
+              const f = `${e}.${o}`,
+                a = u.filter((s) => s.targets.includes(f))
+              return a.length === 0
+                ? (...s) => {
+                    try {
+                      return i(...s)
+                    } catch (d) {
+                      return Promise.reject(d)
+                    }
+                  }
+                : (...s) => {
+                    let d = s
+                    for (const c of a) {
+                      const l = c.module.parameters
+                      if (l)
+                        try {
+                          d = l(d)
+                        } catch {
+                          return Promise.reject({
+                            code: 'transform_error',
+                            id: c.id,
+                            scope: e,
+                            message: 'parameters transform failed',
+                          })
+                        }
+                    }
+                    let m
+                    try {
+                      m = i(...d)
+                    } catch (c) {
+                      m = Promise.reject(c)
+                    }
+                    return m.then(
+                      (c) => {
+                        for (let l = a.length - 1; l >= 0; l--) {
+                          const h = a[l],
+                            p = h.module.returns
+                          if (p)
+                            try {
+                              c = p(c)
+                            } catch {
+                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                            }
+                        }
+                        return c
+                      },
+                      (c) => {
+                        for (let l = a.length - 1; l >= 0; l--) {
+                          const h = a[l],
+                            p = h.module.throws
+                          if (p)
+                            try {
+                              c = p(c)
+                            } catch {
+                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                            }
+                        }
+                        return Promise.reject(c)
+                      },
+                    )
+                  }
+            },
+          }
+        }
+        function H(e, t, n, u = () => {}) {
+          const o = new Set(e.changes ?? []),
+            i = new Map()
+          for (const f of o) {
+            const a = t[f]
+            a && i.set(f, a)
+          }
+          return {
+            contract: e.contract,
+            changes: o,
+            flags: new Set(e.flags ?? []),
+            capabilities: e.capabilities ?? {},
+            transforms: i,
+            shellOrigin: n.shellOrigin,
+            mount: n.mount,
+            pipe: (f) => x(f, i, u),
+          }
+        }
+        ;(function () {
+          const e = Object.defineProperty,
+            t = globalThis,
+            n = [
+              'RTCPeerConnection',
+              'webkitRTCPeerConnection',
+              'RTCDataChannel',
+              'RTCIceCandidate',
+              'RTCSessionDescription',
+              'RTCRtpSender',
+              'RTCRtpReceiver',
+            ]
+          let u = 0
+          for (let o = 0; o < n.length; o++) {
+            const i = n[o]
+            try {
+              e(t, i, { value: void 0, writable: !1, configurable: !1 })
+            } catch {
+              try {
+                delete t[i]
+              } catch {}
+              try {
+                e(t, i, { value: void 0, writable: !1, configurable: !0 })
+              } catch {}
+            }
+            typeof t[i] == 'function' && u++
+          }
+          if (u && window !== top)
+            try {
+              parent.postMessage({ __frame_rtc_lockdown_failed: u }, '*')
+            } catch {}
+        })()
+        const K = 1e4,
+          G = Object.freeze([
+            ...(window.__FRAME_PREAMBLE?.origins ?? [
+              'https://claude.ai',
+              'https://preview.claude.ai',
+            ]),
+          ])
+        function J(e) {
+          for (const t of G)
+            if (t.endsWith(':*'))
+              try {
+                const n = new URL(e)
+                if (`${n.protocol}//${n.hostname}:*` === t) return !0
+              } catch {}
+            else if (e === t) return !0
+          return !1
+        }
+        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+          E = window.__FRAME_PREAMBLE?.transforms,
+          C = /^[\w.-]+\.js$/,
+          V = /^[a-z][a-z0-9_-]{0,63}$/
+        let A = null,
+          g = null
+        function P(e, t, n) {
+          try {
+            Object.defineProperty(e, t, {
+              value: n,
+              writable: !1,
+              configurable: !1,
+              enumerable: !0,
+            })
+          } catch {
+            try {
+              Object.defineProperty(e, t, {
+                value: n,
+                writable: !1,
+                configurable: !0,
+                enumerable: !0,
+              })
+            } catch {}
+          }
+        }
+        let R = !1
+        function N(e) {
+          const t = document.documentElement
+          e === 'light' || e === 'dark'
+            ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
+            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+        }
+        const _ = new Map()
+        function Q(e, t) {
+          const n = _.get(e)
+          if (!n) return
+          ;(Object.assign(n.impl, t),
+            (n.impl.__settled = () =>
+              Promise.reject({
+                code: 'capability_removed',
+                message: `${e}: method not in this runtime`,
+              })))
+          const u = n.queue
+          n.queue = []
+          for (const o of u) {
+            const i = t[o.method]
+            i
+              ? i(...o.args).then(o.resolve, o.reject)
+              : o.reject({
+                  code: 'capability_removed',
+                  message: `${e}.${o.method} is not in this runtime`,
+                })
+          }
+        }
+        function O(e, t) {
+          const n = _.get(e)
+          if (!n) return
+          n.impl.__settled = () => Promise.reject(t)
+          const u = n.queue
+          n.queue = []
+          for (const o of u) o.reject(t)
+        }
+        const j = Object.getOwnPropertyDescriptor(window, 'claude')
+        if (window !== top && !(j && j.writable === !1)) {
+          ;(z(), W())
+          const e = j?.value ?? {}
+          P(window, 'claude', e)
+          const t = (s) => {
+            const d = { impl: Object.create(null), queue: [] }
+            _.set(s, d)
+            const m = new Proxy(d.impl, {
+              get: (c, l) => {
+                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                  return l === 'toString'
+                    ? Object.prototype.toString
+                    : (...h) => {
+                        const p = c[l] ?? c.__settled
+                        return p
+                          ? p(...h)
+                          : new Promise((b, S) => {
+                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                            })
+                      }
+              },
+              set: () => !1,
+            })
+            P(e, s, m)
+          }
+          for (const s of Object.keys(w)) {
+            if (e[s] !== void 0) {
+              P(e, s, e[s])
+              continue
+            }
+            t(s)
+          }
+          let n = null,
+            u = null,
+            o = 0
+          const i = (s) => {
+            s.source !== parent ||
+              !J(s.origin) ||
+              ($(s.data) &&
+                ((n = s.data.__frame_init),
+                (g = s.origin),
+                removeEventListener('message', i),
+                clearTimeout(o),
+                u?.()))
+          }
+          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          const f = new Promise((s) => {
+              ;((u = s),
+                (o = setTimeout(() => {
+                  ;(removeEventListener('message', i), s())
+                }, K)))
+            }),
+            a =
+              document.readyState === 'loading'
+                ? new Promise((s) =>
+                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                  )
+                : Promise.resolve()
+          f.then(async () => {
+            if (!n || !g) {
+              for (const r of _.keys())
+                O(r, {
+                  code: 'not_granted',
+                  message: 'frame initialization did not arrive - capability unavailable',
+                })
+              return
+            }
+            N(n.theme)
+            const s = g
+            addEventListener('message', (r) => {
+              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+            })
+            const d = (r) => U(() => import('/_runtime/' + r), void 0),
+              m = Object.keys(n.capabilities ?? {})
+            for (const r of m)
+              Object.hasOwn(w, r) ||
+                (V.test(r) &&
+                  e[r] === void 0 &&
+                  (t(r),
+                  O(r, {
+                    code: 'capability_disabled',
+                    message: 'capability not in this runtime generation',
+                  })))
+            const c = m
+                .filter((r) => Object.hasOwn(w, r))
+                .map((r) => [r, w[r]])
+                .filter((r) => typeof r[1] == 'string' && C.test(r[1])),
+              [l, ...h] = await Promise.allSettled([
+                E && C.test(E) ? d(E) : Promise.resolve({}),
+                ...c.map(([, r]) => d(r)),
+              ]),
+              p = g
+            A = H(
+              n,
+              (l.status === 'fulfilled' && l.value?.TRANSFORMS) || {},
+              { shellOrigin: p, mount: Q },
+              (r) => parent.postMessage({ __frame_cap_telemetry: r }, p),
+            )
+            const b = (r) =>
+                parent.postMessage(
+                  { __frame_cap_telemetry: { kind: 'cap-load-error', cap: r } },
+                  p,
+                ),
+              S = A
+            h.forEach((r, v) => {
+              const I = c[v][0]
+              if (r.status !== 'fulfilled') {
+                b(I)
+                return
+              }
+              try {
+                r.value?.install?.(S)
+              } catch {
+                b(I)
+              }
+            })
+            for (const [r, v] of _)
+              (v.queue.length === 0 && Object.keys(v.impl).length > 0) ||
+                O(r, {
+                  code: m.includes(r) ? 'capability_disabled' : 'not_granted',
+                  message: 'capability not available in this session',
+                })
+            ;(await a, parent.postMessage({ __frame_ready: !0 }, g))
+          })
+        }
+      })()
+    </script>
+    <!-- /frame-runtime -->
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #faf9f5;
+        color: #141413;
+      }
+      img {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Concertina Hero — playfields for 10, 20 & 30 buttons</title>
+    <style>
+      :root {
+        /* Borrowed from the game's own tokens (src/index.css) */
+        --ink: #3a2a20;
+        --paper: #fffbef;
+        --cream: #fff3d0;
+        --felt: #f6ead0;
 
-    /* Left hand: cool. Right hand: warm. One hue per column. */
-    --l1: #2ec4b6; --l2: #4cc9f0; --l3: #7aa5f0; --l4: #b892ff; --l5: #8ac926;
-    --r1: #ff5d5d; --r2: #ff924c; --r3: #ffd23f; --r4: #ff8fce; --r5: #e2705a;
+        /* Left hand: cool. Right hand: warm. One hue per column. */
+        --l1: #2ec4b6;
+        --l2: #4cc9f0;
+        --l3: #7aa5f0;
+        --l4: #b892ff;
+        --l5: #8ac926;
+        --r1: #ff5d5d;
+        --r2: #ff924c;
+        --r3: #ffd23f;
+        --r4: #ff8fce;
+        --r5: #e2705a;
 
-    /* Page chrome — warm brown-grey, biased toward the ink, not neutral grey */
-    --ground: #fdf7ea;
-    --panel: #fffdf7;
-    --text: #33241b;
-    --muted: #7a6455;
-    --rule: #e2d3bd;
-    --accent: #b5461f;
+        /* Page chrome — warm brown-grey, biased toward the ink, not neutral grey */
+        --ground: #fdf7ea;
+        --panel: #fffdf7;
+        --text: #33241b;
+        --muted: #7a6455;
+        --rule: #e2d3bd;
+        --accent: #b5461f;
 
-    --display: ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand',
-      'Trebuchet MS', system-ui, sans-serif;
-    --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+        --display:
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
+          system-ui, sans-serif;
+        --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 
-    --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
-    --shadow: 5px 6px 0 rgba(58, 42, 32, 0.18);
-  }
+        --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
+        --shadow: 5px 6px 0 rgba(58, 42, 32, 0.18);
+      }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --ground: #22190f;
-      --panel: #2c2115;
-      --text: #f6e9d6;
-      --muted: #b39c86;
-      --rule: #4a3a29;
-      --accent: #ff9a6c;
-    }
-  }
-  :root[data-theme='dark'] {
-    --ground: #22190f;
-    --panel: #2c2115;
-    --text: #f6e9d6;
-    --muted: #b39c86;
-    --rule: #4a3a29;
-    --accent: #ff9a6c;
-  }
-  :root[data-theme='light'] {
-    --ground: #fdf7ea;
-    --panel: #fffdf7;
-    --text: #33241b;
-    --muted: #7a6455;
-    --rule: #e2d3bd;
-    --accent: #b5461f;
-  }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ground: #22190f;
+          --panel: #2c2115;
+          --text: #f6e9d6;
+          --muted: #b39c86;
+          --rule: #4a3a29;
+          --accent: #ff9a6c;
+        }
+      }
+      :root[data-theme='dark'] {
+        --ground: #22190f;
+        --panel: #2c2115;
+        --text: #f6e9d6;
+        --muted: #b39c86;
+        --rule: #4a3a29;
+        --accent: #ff9a6c;
+      }
+      :root[data-theme='light'] {
+        --ground: #fdf7ea;
+        --panel: #fffdf7;
+        --text: #33241b;
+        --muted: #7a6455;
+        --rule: #e2d3bd;
+        --accent: #b5461f;
+      }
 
-  * { box-sizing: border-box; }
+      * {
+        box-sizing: border-box;
+      }
 
-  body {
-    margin: 0;
-    background: var(--ground);
-    color: var(--text);
-    font-family: var(--body);
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--text);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
 
-  .wrap {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 56px 24px 96px;
-    display: flex;
-    flex-direction: column;
-    gap: 56px;
-  }
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 56px 24px 96px;
+        display: flex;
+        flex-direction: column;
+        gap: 56px;
+      }
 
-  /* ---------- type ---------- */
-  h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
-  h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.05; }
-  h2 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.01em; }
-  h3 { font-size: 1.05rem; font-weight: 700; }
-  p { margin: 0; max-width: 68ch; }
+      /* ---------- type ---------- */
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        text-wrap: balance;
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(2rem, 4.6vw, 3.1rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+      h2 {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      h3 {
+        font-size: 1.05rem;
+        font-weight: 700;
+      }
+      p {
+        margin: 0;
+        max-width: 68ch;
+      }
 
-  .eyebrow {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .lede { font-size: 1.1rem; color: var(--muted); max-width: 62ch; }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .lede {
+        font-size: 1.1rem;
+        color: var(--muted);
+        max-width: 62ch;
+      }
 
-  code, .k {
-    font-family: var(--mono);
-    font-size: 0.86em;
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    color: var(--accent);
-    padding: 0.08em 0.36em;
-    border-radius: 4px;
-  }
+      code,
+      .k {
+        font-family: var(--mono);
+        font-size: 0.86em;
+        background: color-mix(in srgb, var(--accent) 12%, transparent);
+        color: var(--accent);
+        padding: 0.08em 0.36em;
+        border-radius: 4px;
+      }
 
-  header .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
-  .chip {
-    font-family: var(--mono);
-    font-size: 0.74rem;
-    letter-spacing: 0.06em;
-    border: 1.5px solid var(--rule);
-    border-radius: 999px;
-    padding: 5px 11px;
-    color: var(--muted);
-  }
+      header .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      .chip {
+        font-family: var(--mono);
+        font-size: 0.74rem;
+        letter-spacing: 0.06em;
+        border: 1.5px solid var(--rule);
+        border-radius: 999px;
+        padding: 5px 11px;
+        color: var(--muted);
+      }
 
-  section { display: flex; flex-direction: column; gap: 18px; }
-  .rule { height: 1px; background: var(--rule); border: 0; margin: 0; }
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .rule {
+        height: 1px;
+        background: var(--rule);
+        border: 0;
+        margin: 0;
+      }
 
-  /* ---------- concept blocks ---------- */
-  .concept { display: flex; flex-direction: column; gap: 18px; }
-  .concept__head { display: flex; flex-direction: column; gap: 6px; }
-  .verdict {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
-  }
-  .verdict div {
-    border: 1.5px solid var(--rule);
-    border-radius: 10px;
-    padding: 12px 14px;
-    background: var(--panel);
-  }
-  .verdict strong {
-    display: block;
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 5px;
-  }
-  .verdict p { font-size: 0.93rem; }
+      /* ---------- concept blocks ---------- */
+      .concept {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .concept__head {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .verdict {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+      .verdict div {
+        border: 1.5px solid var(--rule);
+        border-radius: 10px;
+        padding: 12px 14px;
+        background: var(--panel);
+      }
+      .verdict strong {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 5px;
+      }
+      .verdict p {
+        font-size: 0.93rem;
+      }
 
-  /* ---------- the playfield mock ---------- */
-  /* Deliberately stays "paper" in both themes: it is a picture of the game. */
-  .stage {
-    background: linear-gradient(#cfeaf7, #f3e2c2);
-    border: 4px solid var(--ink);
-    border-radius: 18px 22px 16px 24px;
-    box-shadow: var(--shadow);
-    padding: 12px;
-    overflow-x: auto;
-  }
-  .field {
-    background: var(--paper);
-    border: 3px solid var(--ink);
-    border-radius: 12px;
-    padding: 8px;
-    position: relative;
-    min-width: 620px;
-  }
+      /* ---------- the playfield mock ---------- */
+      /* Deliberately stays "paper" in both themes: it is a picture of the game. */
+      .stage {
+        background: linear-gradient(#cfeaf7, #f3e2c2);
+        border: 4px solid var(--ink);
+        border-radius: 18px 22px 16px 24px;
+        box-shadow: var(--shadow);
+        padding: 12px;
+        overflow-x: auto;
+      }
+      .field {
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        padding: 8px;
+        position: relative;
+        min-width: 620px;
+      }
 
-  .lane {
-    position: relative;
-    height: 36px;
-    border-radius: 8px;
-    margin-bottom: 6px;
-    background: color-mix(in srgb, var(--lane) 16%, var(--paper));
-    display: flex;
-    align-items: center;
-  }
-  .lane:last-child { margin-bottom: 0; }
+      .lane {
+        position: relative;
+        height: 36px;
+        border-radius: 8px;
+        margin-bottom: 6px;
+        background: color-mix(in srgb, var(--lane) 16%, var(--paper));
+        display: flex;
+        align-items: center;
+      }
+      .lane:last-child {
+        margin-bottom: 0;
+      }
 
-  .tag {
-    position: absolute;
-    left: 6px;
-    width: 46px;
-    height: 26px;
-    display: grid;
-    place-items: center;
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    color: var(--ink);
-    background: var(--lane);
-    border: 2px solid var(--ink);
-    border-radius: 7px;
-    z-index: 3;
-  }
+      .tag {
+        position: absolute;
+        left: 6px;
+        width: 46px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        font-weight: 700;
+        color: var(--ink);
+        background: var(--lane);
+        border: 2px solid var(--ink);
+        border-radius: 7px;
+        z-index: 3;
+      }
 
-  .hitline {
-    position: absolute;
-    top: 6px; bottom: 6px;
-    width: 0;
-    border-left: 3px dashed color-mix(in srgb, var(--ink) 55%, transparent);
-    z-index: 2;
-  }
+      .hitline {
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        width: 0;
+        border-left: 3px dashed color-mix(in srgb, var(--ink) 55%, transparent);
+        z-index: 2;
+      }
 
-  /* a note card */
-  .card {
-    position: absolute;
-    top: 3px; bottom: 3px;
-    border: 3px solid var(--ink);
-    border-radius: 9px 11px 8px 12px;
-    background: var(--lane);
-    box-shadow: var(--shadow-sm);
-    display: grid;
-    place-items: center;
-    font-family: var(--display);
-    font-weight: 800;
-    font-size: 0.85rem;
-    color: var(--ink);
-    z-index: 1;
-  }
-  .card.pull {
-    background: repeating-linear-gradient(
-      -45deg,
-      var(--lane) 0 7px,
-      color-mix(in srgb, var(--lane) 50%, #fff) 7px 14px
-    );
-  }
-  .card .dir { font-size: 0.7rem; opacity: 0.75; margin-right: 3px; }
+      /* a note card */
+      .card {
+        position: absolute;
+        top: 3px;
+        bottom: 3px;
+        border: 3px solid var(--ink);
+        border-radius: 9px 11px 8px 12px;
+        background: var(--lane);
+        box-shadow: var(--shadow-sm);
+        display: grid;
+        place-items: center;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 0.85rem;
+        color: var(--ink);
+        z-index: 1;
+      }
+      .card.pull {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--lane) 0 7px,
+          color-mix(in srgb, var(--lane) 50%, #fff) 7px 14px
+        );
+      }
+      .card .dir {
+        font-size: 0.7rem;
+        opacity: 0.75;
+        margin-right: 3px;
+      }
 
-  .handbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink);
-    opacity: 0.72;
-    margin: 2px 0 6px;
-  }
-  .handbar::after { content: ''; flex: 1; height: 2px; background: color-mix(in srgb, var(--ink) 22%, transparent); }
-  .gutter { height: 10px; }
+      .handbar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink);
+        opacity: 0.72;
+        margin: 2px 0 6px;
+      }
+      .handbar::after {
+        content: '';
+        flex: 1;
+        height: 2px;
+        background: color-mix(in srgb, var(--ink) 22%, transparent);
+      }
+      .gutter {
+        height: 10px;
+      }
 
-  /* ---------- concept B: falling columns ---------- */
-  .fall {
-    background: var(--paper);
-    border: 3px solid var(--ink);
-    border-radius: 12px;
-    padding: 8px;
-    min-width: 620px;
-    position: relative;
-    height: 260px;
-    display: flex;
-    gap: 14px;
-  }
-  .hand { display: flex; gap: 4px; flex: 1; position: relative; }
-  .col {
-    flex: 1;
-    border-radius: 6px;
-    background: color-mix(in srgb, var(--lane) 16%, var(--paper));
-    position: relative;
-  }
-  .col .cap {
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 22px;
-    background: var(--lane);
-    border: 2px solid var(--ink);
-    border-radius: 5px;
-    display: grid;
-    place-items: center;
-    font-family: var(--mono);
-    font-size: 0.55rem;
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .fcard {
-    position: absolute;
-    left: 2px; right: 2px;
-    height: 26px;
-    border: 2.5px solid var(--ink);
-    border-radius: 6px;
-    background: var(--lane);
-    box-shadow: 2px 3px 0 rgba(58,42,32,0.2);
-  }
-  .fcard.pull {
-    background: repeating-linear-gradient(-45deg, var(--lane) 0 6px, color-mix(in srgb, var(--lane) 50%, #fff) 6px 12px);
-  }
-  .fall .hitrow {
-    position: absolute;
-    left: 8px; right: 8px;
-    bottom: 30px;
-    border-top: 3px dashed color-mix(in srgb, var(--ink) 55%, transparent);
-    z-index: 2;
-  }
-  .split {
-    width: 3px;
-    background: repeating-linear-gradient(var(--ink) 0 6px, transparent 6px 12px);
-    opacity: 0.35;
-    border-radius: 2px;
-  }
+      /* ---------- concept B: falling columns ---------- */
+      .fall {
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        padding: 8px;
+        min-width: 620px;
+        position: relative;
+        height: 260px;
+        display: flex;
+        gap: 14px;
+      }
+      .hand {
+        display: flex;
+        gap: 4px;
+        flex: 1;
+        position: relative;
+      }
+      .col {
+        flex: 1;
+        border-radius: 6px;
+        background: color-mix(in srgb, var(--lane) 16%, var(--paper));
+        position: relative;
+      }
+      .col .cap {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 22px;
+        background: var(--lane);
+        border: 2px solid var(--ink);
+        border-radius: 5px;
+        display: grid;
+        place-items: center;
+        font-family: var(--mono);
+        font-size: 0.55rem;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .fcard {
+        position: absolute;
+        left: 2px;
+        right: 2px;
+        height: 26px;
+        border: 2.5px solid var(--ink);
+        border-radius: 6px;
+        background: var(--lane);
+        box-shadow: 2px 3px 0 rgba(58, 42, 32, 0.2);
+      }
+      .fcard.pull {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--lane) 0 6px,
+          color-mix(in srgb, var(--lane) 50%, #fff) 6px 12px
+        );
+      }
+      .fall .hitrow {
+        position: absolute;
+        left: 8px;
+        right: 8px;
+        bottom: 30px;
+        border-top: 3px dashed color-mix(in srgb, var(--ink) 55%, transparent);
+        z-index: 2;
+      }
+      .split {
+        width: 3px;
+        background: repeating-linear-gradient(var(--ink) 0 6px, transparent 6px 12px);
+        opacity: 0.35;
+        border-radius: 2px;
+      }
 
-  /* ---------- concept C: keypad ---------- */
-  .board {
-    background: var(--paper);
-    border: 3px solid var(--ink);
-    border-radius: 12px;
-    padding: 14px;
-    min-width: 620px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .strip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--felt);
-    border: 2.5px solid var(--ink);
-    border-radius: 9px;
-    padding: 7px;
-    overflow: hidden;
-  }
-  .beat {
-    flex: 0 0 auto;
-    min-width: 62px;
-    height: 40px;
-    border: 2.5px solid var(--ink);
-    border-radius: 7px;
-    background: var(--cream);
-    display: grid;
-    place-items: center;
-    font-family: var(--mono);
-    font-size: 0.66rem;
-    font-weight: 700;
-    color: var(--ink);
-    opacity: 0.55;
-  }
-  .beat.now { opacity: 1; background: #fff; box-shadow: 0 0 0 3px var(--r3); transform: scale(1.06); }
-  .beat.rest { color: var(--muted); letter-spacing: 0.1em; }
+      /* ---------- concept C: keypad ---------- */
+      .board {
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        padding: 14px;
+        min-width: 620px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .strip {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--felt);
+        border: 2.5px solid var(--ink);
+        border-radius: 9px;
+        padding: 7px;
+        overflow: hidden;
+      }
+      .beat {
+        flex: 0 0 auto;
+        min-width: 62px;
+        height: 40px;
+        border: 2.5px solid var(--ink);
+        border-radius: 7px;
+        background: var(--cream);
+        display: grid;
+        place-items: center;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        font-weight: 700;
+        color: var(--ink);
+        opacity: 0.55;
+      }
+      .beat.now {
+        opacity: 1;
+        background: #fff;
+        box-shadow: 0 0 0 3px var(--r3);
+        transform: scale(1.06);
+      }
+      .beat.rest {
+        color: var(--muted);
+        letter-spacing: 0.1em;
+      }
 
-  .hands { display: flex; gap: 26px; justify-content: center; flex-wrap: wrap; }
-  .keypad { display: flex; flex-direction: column; gap: 7px; }
-  .keyrow { display: flex; gap: 7px; }
-  .key {
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    border: 2.5px solid var(--ink);
-    background: linear-gradient(#f2f0e6 0 50%, #ddd8c8 50% 100%);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1px;
-    font-family: var(--display);
-    font-weight: 800;
-    font-size: 0.62rem;
-    color: var(--ink);
-    box-shadow: var(--shadow-sm);
-  }
-  .key::after {
-    content: '';
-    position: absolute;
-    left: 5px; right: 5px; top: 50%;
-    height: 1.5px;
-    background: color-mix(in srgb, var(--ink) 40%, transparent);
-  }
-  .key .up { line-height: 1; }
-  .key .dn { line-height: 1; }
-  .key.lit { background: var(--lane); box-shadow: 0 0 0 4px color-mix(in srgb, var(--lane) 45%, #fff), var(--shadow-sm); }
-  .key.lit.pullnow { background: repeating-linear-gradient(-45deg, var(--lane) 0 6px, color-mix(in srgb, var(--lane) 50%, #fff) 6px 12px); }
-  .handlabel {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink);
-    opacity: 0.6;
-    text-align: center;
-  }
+      .hands {
+        display: flex;
+        gap: 26px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .keypad {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .keyrow {
+        display: flex;
+        gap: 7px;
+      }
+      .key {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 2.5px solid var(--ink);
+        background: linear-gradient(#f2f0e6 0 50%, #ddd8c8 50% 100%);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1px;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 0.62rem;
+        color: var(--ink);
+        box-shadow: var(--shadow-sm);
+      }
+      .key::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 50%;
+        height: 1.5px;
+        background: color-mix(in srgb, var(--ink) 40%, transparent);
+      }
+      .key .up {
+        line-height: 1;
+      }
+      .key .dn {
+        line-height: 1;
+      }
+      .key.lit {
+        background: var(--lane);
+        box-shadow:
+          0 0 0 4px color-mix(in srgb, var(--lane) 45%, #fff),
+          var(--shadow-sm);
+      }
+      .key.lit.pullnow {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--lane) 0 6px,
+          color-mix(in srgb, var(--lane) 50%, #fff) 6px 12px
+        );
+      }
+      .handlabel {
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink);
+        opacity: 0.6;
+        text-align: center;
+      }
 
-  /* ---------- concept D: row badge ---------- */
-  .badge {
-    position: absolute;
-    left: 5px;
-    width: 15px; height: 15px;
-    border: 2px solid var(--ink);
-    border-radius: 50%;
-    background: #fff;
-  }
-  .badge.b { background: color-mix(in srgb, var(--ink) 45%, #fff); }
-  .badge.c { background: var(--ink); }
+      /* ---------- concept D: row badge ---------- */
+      .badge {
+        position: absolute;
+        left: 5px;
+        width: 15px;
+        height: 15px;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        background: #fff;
+      }
+      .badge.b {
+        background: color-mix(in srgb, var(--ink) 45%, #fff);
+      }
+      .badge.c {
+        background: var(--ink);
+      }
 
-  /* ---------- vocabulary ---------- */
-  .vocab {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 18px;
-  }
-  .swatches { display: flex; flex-direction: column; gap: 7px; }
-  .ramp { display: flex; align-items: center; gap: 7px; }
-  .sw {
-    width: 34px; height: 26px;
-    border: 2px solid var(--ink);
-    border-radius: 6px;
-    background: var(--lane);
-  }
-  .sw.a { background: color-mix(in srgb, var(--lane) 45%, #fff); }
-  .sw.c { background: color-mix(in srgb, var(--lane) 78%, #000); }
-  .ramp span { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
+      /* ---------- vocabulary ---------- */
+      .vocab {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+      }
+      .swatches {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .ramp {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .sw {
+        width: 34px;
+        height: 26px;
+        border: 2px solid var(--ink);
+        border-radius: 6px;
+        background: var(--lane);
+      }
+      .sw.a {
+        background: color-mix(in srgb, var(--lane) 45%, #fff);
+      }
+      .sw.c {
+        background: color-mix(in srgb, var(--lane) 78%, #000);
+      }
+      .ramp span {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
 
-  /* ---------- table ---------- */
-  .tablewrap { overflow-x: auto; }
-  table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 0.92rem; }
-  th, td { text-align: left; padding: 11px 12px; border-bottom: 1px solid var(--rule); vertical-align: top; }
-  th {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 600;
-  }
-  td.num { font-variant-numeric: tabular-nums; font-family: var(--mono); }
-  .yes { color: #2f7a1f; font-weight: 700; }
-  .no { color: #b5461f; font-weight: 700; }
-  @media (prefers-color-scheme: dark) { .yes { color: #9ede73; } .no { color: #ff9a6c; } }
-  :root[data-theme='dark'] .yes { color: #9ede73; }
-  :root[data-theme='dark'] .no { color: #ff9a6c; }
+      /* ---------- table ---------- */
+      .tablewrap {
+        overflow-x: auto;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 620px;
+        font-size: 0.92rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 11px 12px;
+        border-bottom: 1px solid var(--rule);
+        vertical-align: top;
+      }
+      th {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+      }
+      td.num {
+        font-variant-numeric: tabular-nums;
+        font-family: var(--mono);
+      }
+      .yes {
+        color: #2f7a1f;
+        font-weight: 700;
+      }
+      .no {
+        color: #b5461f;
+        font-weight: 700;
+      }
+      @media (prefers-color-scheme: dark) {
+        .yes {
+          color: #9ede73;
+        }
+        .no {
+          color: #ff9a6c;
+        }
+      }
+      :root[data-theme='dark'] .yes {
+        color: #9ede73;
+      }
+      :root[data-theme='dark'] .no {
+        color: #ff9a6c;
+      }
 
-  ul { margin: 0; padding-left: 1.15em; max-width: 68ch; }
-  li { margin-bottom: 7px; }
+      ul {
+        margin: 0;
+        padding-left: 1.15em;
+        max-width: 68ch;
+      }
+      li {
+        margin-bottom: 7px;
+      }
 
-  .caption { font-size: 0.84rem; color: var(--muted); font-style: italic; }
+      .caption {
+        font-size: 0.84rem;
+        color: var(--muted);
+        font-style: italic;
+      }
 
-  /* ---------- motion ---------- */
-  @keyframes drift { from { transform: translateX(9px); } to { transform: translateX(-9px); } }
-  .card, .fcard { animation: drift 2.6s ease-in-out infinite alternate; }
-  .fcard { animation-name: driftY; }
-  @keyframes driftY { from { transform: translateY(-7px); } to { transform: translateY(7px); } }
-  @media (prefers-reduced-motion: reduce) {
-    .card, .fcard { animation: none; }
-    .beat.now { transform: none; }
-  }
-</style>
+      /* ---------- motion ---------- */
+      @keyframes drift {
+        from {
+          transform: translateX(9px);
+        }
+        to {
+          transform: translateX(-9px);
+        }
+      }
+      .card,
+      .fcard {
+        animation: drift 2.6s ease-in-out infinite alternate;
+      }
+      .fcard {
+        animation-name: driftY;
+      }
+      @keyframes driftY {
+        from {
+          transform: translateY(-7px);
+        }
+        to {
+          transform: translateY(7px);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .card,
+        .fcard {
+          animation: none;
+        }
+        .beat.now {
+          transform: none;
+        }
+      }
+    </style>
 
-<div class="wrap">
-
-  <header>
-    <p class="eyebrow">Concertina Hero · playfield exploration</p>
-    <h1>Room for 30 buttons</h1>
-    <p class="lede">
-      Four ways the game screen could grow past its seven toy buttons — to a 10, 20, or
-      30-button anglo, where half the instrument sits under each hand.
-    </p>
-    <div class="chips">
-      <span class="chip">10 buttons · 1 row</span>
-      <span class="chip">20 buttons · 2 rows</span>
-      <span class="chip">30 buttons · 3 rows</span>
-      <span class="chip">mockups only · nothing built</span>
-    </div>
-  </header>
-
-  <hr class="rule" />
-
-  <section>
-    <p class="eyebrow">The shape of the problem</p>
-    <h2>Seven lanes became thirty</h2>
-    <p>
-      Today every button owns a horizontal lane, and a lane needs roughly 40 pixels to stay
-      readable. That works at seven. At thirty it wants 1,400 pixels of height, so the naïve
-      scale-up is off the table — the layout has to change shape, not just stretch.
-    </p>
-    <p>
-      A real anglo is not a flat list of buttons. It is <strong>two hands × N rows × 5
-      columns</strong>, and each button already carries two notes — one on the push, one on
-      the pull. The cards encode that already: solid for push, striped for pull. So the new
-      axes are <em>hand</em>, <em>column</em> and <em>row</em>. Every mockup below is a
-      different answer to where those three go.
-    </p>
-
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Instrument</th>
-            <th>Per hand</th>
-            <th class="num">Buttons</th>
-            <th class="num">Notes</th>
-            <th class="num">Lanes today</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Toy (current)</td><td>—</td><td class="num">7</td><td class="num">14</td><td class="num">7</td></tr>
-          <tr><td>10-button anglo</td><td>1 row × 5</td><td class="num">10</td><td class="num">20</td><td class="num">10</td></tr>
-          <tr><td>20-button anglo</td><td>2 rows × 5</td><td class="num">20</td><td class="num">40</td><td class="num">20</td></tr>
-          <tr><td>30-button anglo</td><td>3 rows × 5</td><td class="num">30</td><td class="num">60</td><td class="num">30</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <section>
-    <p class="eyebrow">Shared vocabulary</p>
-    <h2>One chip per button, three ways</h2>
-    <p>
-      Three of the four concepts lean on the same encoding, so it is worth naming once. It
-      gives thirty visually distinct buttons without thirty arbitrary colours.
-    </p>
-
-    <div class="vocab">
-      <div>
-        <h3>Hand → colour family</h3>
-        <p style="font-size:0.93rem">
-          Left hand cool, right hand warm. You can tell at a glance which hand a note wants
-          before you read anything else.
+    <div class="wrap">
+      <header>
+        <p class="eyebrow">Concertina Hero · playfield exploration</p>
+        <h1>Room for 30 buttons</h1>
+        <p class="lede">
+          Four ways the game screen could grow past its seven toy buttons — to a 10, 20, or
+          30-button anglo, where half the instrument sits under each hand.
         </p>
-        <div class="swatches" style="margin-top:10px">
-          <div class="ramp">
-            <span class="sw" style="--lane:var(--l1)"></span>
-            <span class="sw" style="--lane:var(--l2)"></span>
-            <span class="sw" style="--lane:var(--l3)"></span>
-            <span class="sw" style="--lane:var(--l4)"></span>
-            <span class="sw" style="--lane:var(--l5)"></span>
-            <span>left</span>
-          </div>
-          <div class="ramp">
-            <span class="sw" style="--lane:var(--r1)"></span>
-            <span class="sw" style="--lane:var(--r2)"></span>
-            <span class="sw" style="--lane:var(--r3)"></span>
-            <span class="sw" style="--lane:var(--r4)"></span>
-            <span class="sw" style="--lane:var(--r5)"></span>
-            <span>right</span>
-          </div>
+        <div class="chips">
+          <span class="chip">10 buttons · 1 row</span>
+          <span class="chip">20 buttons · 2 rows</span>
+          <span class="chip">30 buttons · 3 rows</span>
+          <span class="chip">mockups only · nothing built</span>
         </div>
-      </div>
+      </header>
 
-      <div>
-        <h3>Column → hue, row → shade</h3>
-        <p style="font-size:0.93rem">
-          Five hues across, three shades deep. Light is the inner row, dark the outer — the
-          same order your fingers reach.
+      <hr class="rule" />
+
+      <section>
+        <p class="eyebrow">The shape of the problem</p>
+        <h2>Seven lanes became thirty</h2>
+        <p>
+          Today every button owns a horizontal lane, and a lane needs roughly 40 pixels to stay
+          readable. That works at seven. At thirty it wants 1,400 pixels of height, so the naïve
+          scale-up is off the table — the layout has to change shape, not just stretch.
         </p>
-        <div class="swatches" style="margin-top:10px">
-          <div class="ramp">
-            <span class="sw a" style="--lane:var(--r2)"></span>
-            <span class="sw" style="--lane:var(--r2)"></span>
-            <span class="sw c" style="--lane:var(--r2)"></span>
-            <span>row a · b · c</span>
-          </div>
-          <div class="ramp">
-            <span class="sw a" style="--lane:var(--l2)"></span>
-            <span class="sw" style="--lane:var(--l2)"></span>
-            <span class="sw c" style="--lane:var(--l2)"></span>
-            <span>same, left hand</span>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h3>Bellows → fill</h3>
-        <p style="font-size:0.93rem">
-          Unchanged. Solid paper is a push, striped is a pull. The button says which finger,
-          the fill says which way the bellows go.
+        <p>
+          A real anglo is not a flat list of buttons. It is
+          <strong>two hands × N rows × 5 columns</strong>, and each button already carries two notes
+          — one on the push, one on the pull. The cards encode that already: solid for push, striped
+          for pull. So the new axes are <em>hand</em>, <em>column</em> and <em>row</em>. Every
+          mockup below is a different answer to where those three go.
         </p>
-        <div class="swatches" style="margin-top:10px">
-          <div class="ramp">
-            <span class="sw" style="--lane:var(--r1)"></span>
-            <span>push</span>
-            <span class="sw" style="--lane:var(--r1); background: repeating-linear-gradient(-45deg, var(--r1) 0 6px, color-mix(in srgb, var(--r1) 50%, #fff) 6px 12px)"></span>
-            <span>pull</span>
-          </div>
+
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Instrument</th>
+                <th>Per hand</th>
+                <th class="num">Buttons</th>
+                <th class="num">Notes</th>
+                <th class="num">Lanes today</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Toy (current)</td>
+                <td>—</td>
+                <td class="num">7</td>
+                <td class="num">14</td>
+                <td class="num">7</td>
+              </tr>
+              <tr>
+                <td>10-button anglo</td>
+                <td>1 row × 5</td>
+                <td class="num">10</td>
+                <td class="num">20</td>
+                <td class="num">10</td>
+              </tr>
+              <tr>
+                <td>20-button anglo</td>
+                <td>2 rows × 5</td>
+                <td class="num">20</td>
+                <td class="num">40</td>
+                <td class="num">20</td>
+              </tr>
+              <tr>
+                <td>30-button anglo</td>
+                <td>3 rows × 5</td>
+                <td class="num">30</td>
+                <td class="num">60</td>
+                <td class="num">30</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-      </div>
-    </div>
+      </section>
 
-    <p class="caption">
-      A button is then named by position: <code>L2b</code> is left hand, second column,
-      middle row. Charts would read <code>+L2b</code> / <code>-R5a</code> instead of today's
-      <code>+3</code> / <code>-3</code>.
-    </p>
-  </section>
+      <hr class="rule" />
 
-  <hr class="rule" />
+      <section>
+        <p class="eyebrow">Shared vocabulary</p>
+        <h2>One chip per button, three ways</h2>
+        <p>
+          Three of the four concepts lean on the same encoding, so it is worth naming once. It gives
+          thirty visually distinct buttons without thirty arbitrary colours.
+        </p>
 
-  <!-- ============ CONCEPT A ============ -->
-  <section class="concept">
-    <div class="concept__head">
-      <p class="eyebrow">Concept 01 · least change</p>
-      <h2>Live Lanes</h2>
-      <p>
-        Keep everything exactly as it is, but only draw a lane for the buttons the song
-        actually touches. A tune using nine buttons gets nine lanes, bracketed into a left-hand
-        block and a right-hand block. The instrument can have thirty; the screen never does.
-      </p>
-    </div>
-
-    <div class="stage">
-      <div class="field">
-        <div class="hitline" style="left: 17%"></div>
-
-        <div class="handbar">Left hand</div>
-        <div class="lane" style="--lane:var(--l1)">
-          <span class="tag">L1b</span>
-          <span class="card" style="--lane:var(--l1); left: 30%; width: 15%"><span class="dir">▼</span>G</span>
-          <span class="card pull" style="--lane:var(--l1); left: 62%; width: 15%"><span class="dir">▲</span>A</span>
-        </div>
-        <div class="lane" style="--lane:var(--l3)">
-          <span class="tag">L3a</span>
-          <span class="card" style="--lane:var(--l3); left: 47%; width: 15%"><span class="dir">▼</span>C</span>
-        </div>
-        <div class="lane" style="--lane:var(--l5)">
-          <span class="tag">L5b</span>
-          <span class="card pull" style="--lane:var(--l5); left: 79%; width: 15%"><span class="dir">▲</span>D</span>
-        </div>
-
-        <div class="gutter"></div>
-        <div class="handbar">Right hand</div>
-        <div class="lane" style="--lane:var(--r1)">
-          <span class="tag">R1a</span>
-          <span class="card" style="--lane:var(--r1); left: 17%; width: 15%"><span class="dir">▼</span>E</span>
-        </div>
-        <div class="lane" style="--lane:var(--r3)">
-          <span class="tag">R3b</span>
-          <span class="card pull" style="--lane:var(--r3); left: 30%; width: 15%"><span class="dir">▲</span>F</span>
-          <span class="card" style="--lane:var(--r3); left: 62%; width: 15%"><span class="dir">▼</span>G</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="verdict">
-      <div>
-        <strong>Reads well</strong>
-        <p>Nothing about the game changes. Same scroll, same cards, same timing. The hand
-          bracket teaches you which side to reach for.</p>
-      </div>
-      <div>
-        <strong>Costs</strong>
-        <p>Lane count shifts between songs, so muscle memory does too. A busy 30-button tune
-          using twenty buttons is still twenty lanes.</p>
-      </div>
-      <div>
-        <strong>Best for</strong>
-        <p>Shipping something next week. It is the only concept that needs no new interaction
-          model at all.</p>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- ============ CONCEPT B ============ -->
-  <section class="concept">
-    <div class="concept__head">
-      <p class="eyebrow">Concept 02 · rotate the world</p>
-      <h2>Falling Columns</h2>
-      <p>
-        Turn the playfield ninety degrees. Notes fall from the top onto a row of button caps
-        at the bottom, one thin column per button, with the two hands split by a gutter down
-        the middle — the same gap that exists on the real instrument. Screens are wider than
-        they are tall, so thirty columns fit where thirty lanes never could.
-      </p>
-    </div>
-
-    <div class="stage">
-      <div class="fall">
-        <div class="hitrow"></div>
-
-        <div class="hand">
-          <div class="col" style="--lane:var(--l1)"><span class="fcard" style="--lane:var(--l1); top:24px"></span><span class="cap">L1a</span></div>
-          <div class="col" style="--lane:var(--l1)"><span class="cap">L1b</span></div>
-          <div class="col" style="--lane:var(--l2)"><span class="fcard pull" style="--lane:var(--l2); top:96px"></span><span class="cap">L2a</span></div>
-          <div class="col" style="--lane:var(--l2)"><span class="cap">L2b</span></div>
-          <div class="col" style="--lane:var(--l3)"><span class="fcard" style="--lane:var(--l3); top:150px"></span><span class="cap">L3a</span></div>
-          <div class="col" style="--lane:var(--l3)"><span class="cap">L3b</span></div>
-          <div class="col" style="--lane:var(--l4)"><span class="fcard pull" style="--lane:var(--l4); top:56px"></span><span class="cap">L4a</span></div>
-          <div class="col" style="--lane:var(--l4)"><span class="cap">L4b</span></div>
-          <div class="col" style="--lane:var(--l5)"><span class="cap">L5a</span></div>
-          <div class="col" style="--lane:var(--l5)"><span class="fcard" style="--lane:var(--l5); top:186px"></span><span class="cap">L5b</span></div>
-        </div>
-
-        <div class="split"></div>
-
-        <div class="hand">
-          <div class="col" style="--lane:var(--r1)"><span class="fcard" style="--lane:var(--r1); top:130px"></span><span class="cap">R1a</span></div>
-          <div class="col" style="--lane:var(--r1)"><span class="cap">R1b</span></div>
-          <div class="col" style="--lane:var(--r2)"><span class="cap">R2a</span></div>
-          <div class="col" style="--lane:var(--r2)"><span class="fcard pull" style="--lane:var(--r2); top:40px"></span><span class="cap">R2b</span></div>
-          <div class="col" style="--lane:var(--r3)"><span class="fcard" style="--lane:var(--r3); top:186px"></span><span class="cap">R3a</span></div>
-          <div class="col" style="--lane:var(--r3)"><span class="cap">R3b</span></div>
-          <div class="col" style="--lane:var(--r4)"><span class="cap">R4a</span></div>
-          <div class="col" style="--lane:var(--r4)"><span class="fcard pull" style="--lane:var(--r4); top:100px"></span><span class="cap">R4b</span></div>
-          <div class="col" style="--lane:var(--r5)"><span class="fcard" style="--lane:var(--r5); top:20px"></span><span class="cap">R5a</span></div>
-          <div class="col" style="--lane:var(--r5)"><span class="cap">R5b</span></div>
-        </div>
-      </div>
-    </div>
-    <p class="caption">Shown at 20 buttons. At 30 the same field carries three columns per hue instead of two.</p>
-
-    <div class="verdict">
-      <div>
-        <strong>Reads well</strong>
-        <p>Every button visible at all times, so the layout is stable across songs. Columns
-          sit in the same left-to-right order as your fingers.</p>
-      </div>
-      <div>
-        <strong>Costs</strong>
-        <p>The largest rewrite: geometry, hit line, ribbon and cards all flip. Note names get
-          cramped in a 30-pixel column, so cards lean on colour instead of text.</p>
-      </div>
-      <div>
-        <strong>Best for</strong>
-        <p>Players who already read Guitar Hero or Rock Band. It is the familiar idiom for
-          many columns.</p>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- ============ CONCEPT C ============ -->
-  <section class="concept">
-    <div class="concept__head">
-      <p class="eyebrow">Concept 03 · look like the instrument</p>
-      <h2>Keypad Reader</h2>
-      <p>
-        Stop pretending the buttons are lanes. Draw the concertina as it actually is — two
-        keypads, each button a circle split pull-over-push, exactly like a fingering chart —
-        and light up what to press. The upcoming beats ride a strip above, so you still see
-        what's coming, but the screen is a picture of your hands rather than a highway.
-      </p>
-    </div>
-
-    <div class="stage">
-      <div class="board">
-        <div class="strip">
-          <span class="beat now">L3a ▼</span>
-          <span class="beat">R1b ▲</span>
-          <span class="beat rest">rest</span>
-          <span class="beat">R3a ▼ + R5a ▼</span>
-          <span class="beat">L2b ▲</span>
-          <span class="beat">L2b ▼</span>
-          <span class="beat rest">rest</span>
-          <span class="beat">R1b ▼</span>
-        </div>
-
-        <div class="hands">
+        <div class="vocab">
           <div>
-            <div class="keypad">
-              <div class="keyrow">
-                <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                <span class="key"><span class="up">D</span><span class="dn">B</span></span>
-                <span class="key lit" style="--lane:var(--l3)"><span class="up">F</span><span class="dn">D</span></span>
-                <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                <span class="key"><span class="up">C</span><span class="dn">B</span></span>
+            <h3>Hand → colour family</h3>
+            <p style="font-size: 0.93rem">
+              Left hand cool, right hand warm. You can tell at a glance which hand a note wants
+              before you read anything else.
+            </p>
+            <div class="swatches" style="margin-top: 10px">
+              <div class="ramp">
+                <span class="sw" style="--lane: var(--l1)"></span>
+                <span class="sw" style="--lane: var(--l2)"></span>
+                <span class="sw" style="--lane: var(--l3)"></span>
+                <span class="sw" style="--lane: var(--l4)"></span>
+                <span class="sw" style="--lane: var(--l5)"></span>
+                <span>left</span>
               </div>
-              <div class="keyrow">
-                <span class="key"><span class="up">D</span><span class="dn">C</span></span>
-                <span class="key"><span class="up">G</span><span class="dn">E</span></span>
-                <span class="key"><span class="up">B</span><span class="dn">G</span></span>
-                <span class="key"><span class="up">D</span><span class="dn">C</span></span>
-                <span class="key"><span class="up">F</span><span class="dn">E</span></span>
+              <div class="ramp">
+                <span class="sw" style="--lane: var(--r1)"></span>
+                <span class="sw" style="--lane: var(--r2)"></span>
+                <span class="sw" style="--lane: var(--r3)"></span>
+                <span class="sw" style="--lane: var(--r4)"></span>
+                <span class="sw" style="--lane: var(--r5)"></span>
+                <span>right</span>
               </div>
             </div>
-            <p class="handlabel" style="margin-top:8px">Left</p>
           </div>
 
           <div>
-            <div class="keypad">
-              <div class="keyrow">
-                <span class="key"><span class="up">B</span><span class="dn">G</span></span>
-                <span class="key"><span class="up">D</span><span class="dn">C</span></span>
-                <span class="key"><span class="up">F</span><span class="dn">E</span></span>
-                <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                <span class="key"><span class="up">B</span><span class="dn">C</span></span>
+            <h3>Column → hue, row → shade</h3>
+            <p style="font-size: 0.93rem">
+              Five hues across, three shades deep. Light is the inner row, dark the outer — the same
+              order your fingers reach.
+            </p>
+            <div class="swatches" style="margin-top: 10px">
+              <div class="ramp">
+                <span class="sw a" style="--lane: var(--r2)"></span>
+                <span class="sw" style="--lane: var(--r2)"></span>
+                <span class="sw c" style="--lane: var(--r2)"></span>
+                <span>row a · b · c</span>
               </div>
-              <div class="keyrow">
-                <span class="key"><span class="up">F</span><span class="dn">D</span></span>
-                <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                <span class="key"><span class="up">C</span><span class="dn">B</span></span>
-                <span class="key"><span class="up">E</span><span class="dn">D</span></span>
-                <span class="key"><span class="up">F</span><span class="dn">G</span></span>
+              <div class="ramp">
+                <span class="sw a" style="--lane: var(--l2)"></span>
+                <span class="sw" style="--lane: var(--l2)"></span>
+                <span class="sw c" style="--lane: var(--l2)"></span>
+                <span>same, left hand</span>
               </div>
             </div>
-            <p class="handlabel" style="margin-top:8px">Right</p>
+          </div>
+
+          <div>
+            <h3>Bellows → fill</h3>
+            <p style="font-size: 0.93rem">
+              Unchanged. Solid paper is a push, striped is a pull. The button says which finger, the
+              fill says which way the bellows go.
+            </p>
+            <div class="swatches" style="margin-top: 10px">
+              <div class="ramp">
+                <span class="sw" style="--lane: var(--r1)"></span>
+                <span>push</span>
+                <span
+                  class="sw"
+                  style="
+                    --lane: var(--r1);
+                    background: repeating-linear-gradient(
+                      -45deg,
+                      var(--r1) 0 6px,
+                      color-mix(in srgb, var(--r1) 50%, #fff) 6px 12px
+                    );
+                  "
+                ></span>
+                <span>pull</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <p class="caption">
-      Note names are illustrative — the real pairs come from the tuning preset. The lit key
-      shows a push (solid); a pull would light with the striped fill.
-    </p>
 
-    <div class="verdict">
-      <div>
-        <strong>Reads well</strong>
-        <p>Scales to any button count for free, and teaches the instrument rather than the
-          game. A chord is simply several lit circles.</p>
-      </div>
-      <div>
-        <strong>Costs</strong>
-        <p>Loses the approach — you feel the beat arrive rather than watch it travel, so the
-          timing windows have to carry more weight.</p>
-      </div>
-      <div>
-        <strong>Best for</strong>
-        <p>A practice or learn mode. Possibly the right home for <span class="k">wait for
-          correct note</span>, which already pauses on each note.</p>
-      </div>
-    </div>
-  </section>
+        <p class="caption">
+          A button is then named by position: <code>L2b</code> is left hand, second column, middle
+          row. Charts would read <code>+L2b</code> / <code>-R5a</code> instead of today's
+          <code>+3</code> / <code>-3</code>.
+        </p>
+      </section>
 
-  <hr class="rule" />
+      <hr class="rule" />
 
-  <!-- ============ CONCEPT D ============ -->
-  <section class="concept">
-    <div class="concept__head">
-      <p class="eyebrow">Concept 04 · constant screen</p>
-      <h2>Row-Coded Columns</h2>
-      <p>
-        Ten lanes, always: five columns for the left hand, five for the right. The row is not
-        a lane at all — it rides on the card, as a shade and a small pip. A 10, 20 or 30-button
-        instrument all produce exactly the same screen, so the layout never moves under you.
-      </p>
-    </div>
-
-    <div class="stage">
-      <div class="field">
-        <div class="hitline" style="left: 17%"></div>
-
-        <div class="handbar">Left hand · columns 1–5</div>
-        <div class="lane" style="--lane:var(--l2)">
-          <span class="tag">L2</span>
-          <span class="card" style="--lane:var(--l2); left: 30%; width: 15%">
-            <span class="badge a"></span><span class="dir">▼</span>G
-          </span>
-          <span class="card pull" style="--lane:var(--l2); left: 68%; width: 15%; --lane:color-mix(in srgb, var(--l2) 78%, #000)">
-            <span class="badge c"></span><span class="dir">▲</span>A
-          </span>
-        </div>
-        <div class="lane" style="--lane:var(--l4)">
-          <span class="tag">L4</span>
-          <span class="card" style="--lane:var(--l4); left: 47%; width: 15%">
-            <span class="badge b"></span><span class="dir">▼</span>C
-          </span>
+      <!-- ============ CONCEPT A ============ -->
+      <section class="concept">
+        <div class="concept__head">
+          <p class="eyebrow">Concept 01 · least change</p>
+          <h2>Live Lanes</h2>
+          <p>
+            Keep everything exactly as it is, but only draw a lane for the buttons the song actually
+            touches. A tune using nine buttons gets nine lanes, bracketed into a left-hand block and
+            a right-hand block. The instrument can have thirty; the screen never does.
+          </p>
         </div>
 
-        <div class="gutter"></div>
-        <div class="handbar">Right hand · columns 1–5</div>
-        <div class="lane" style="--lane:var(--r1)">
-          <span class="tag">R1</span>
-          <span class="card pull" style="--lane:var(--r1); left: 17%; width: 15%">
-            <span class="badge b"></span><span class="dir">▲</span>E
-          </span>
+        <div class="stage">
+          <div class="field">
+            <div class="hitline" style="left: 17%"></div>
+
+            <div class="handbar">Left hand</div>
+            <div class="lane" style="--lane: var(--l1)">
+              <span class="tag">L1b</span>
+              <span class="card" style="--lane: var(--l1); left: 30%; width: 15%"
+                ><span class="dir">▼</span>G</span
+              >
+              <span class="card pull" style="--lane: var(--l1); left: 62%; width: 15%"
+                ><span class="dir">▲</span>A</span
+              >
+            </div>
+            <div class="lane" style="--lane: var(--l3)">
+              <span class="tag">L3a</span>
+              <span class="card" style="--lane: var(--l3); left: 47%; width: 15%"
+                ><span class="dir">▼</span>C</span
+              >
+            </div>
+            <div class="lane" style="--lane: var(--l5)">
+              <span class="tag">L5b</span>
+              <span class="card pull" style="--lane: var(--l5); left: 79%; width: 15%"
+                ><span class="dir">▲</span>D</span
+              >
+            </div>
+
+            <div class="gutter"></div>
+            <div class="handbar">Right hand</div>
+            <div class="lane" style="--lane: var(--r1)">
+              <span class="tag">R1a</span>
+              <span class="card" style="--lane: var(--r1); left: 17%; width: 15%"
+                ><span class="dir">▼</span>E</span
+              >
+            </div>
+            <div class="lane" style="--lane: var(--r3)">
+              <span class="tag">R3b</span>
+              <span class="card pull" style="--lane: var(--r3); left: 30%; width: 15%"
+                ><span class="dir">▲</span>F</span
+              >
+              <span class="card" style="--lane: var(--r3); left: 62%; width: 15%"
+                ><span class="dir">▼</span>G</span
+              >
+            </div>
+          </div>
         </div>
-        <div class="lane" style="--lane:var(--r3)">
-          <span class="tag">R3</span>
-          <span class="card" style="--lane:var(--r3); left: 55%; width: 15%">
-            <span class="badge a"></span><span class="dir">▼</span>G
-          </span>
+
+        <div class="verdict">
+          <div>
+            <strong>Reads well</strong>
+            <p>
+              Nothing about the game changes. Same scroll, same cards, same timing. The hand bracket
+              teaches you which side to reach for.
+            </p>
+          </div>
+          <div>
+            <strong>Costs</strong>
+            <p>
+              Lane count shifts between songs, so muscle memory does too. A busy 30-button tune
+              using twenty buttons is still twenty lanes.
+            </p>
+          </div>
+          <div>
+            <strong>Best for</strong>
+            <p>
+              Shipping something next week. It is the only concept that needs no new interaction
+              model at all.
+            </p>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ============ CONCEPT B ============ -->
+      <section class="concept">
+        <div class="concept__head">
+          <p class="eyebrow">Concept 02 · rotate the world</p>
+          <h2>Falling Columns</h2>
+          <p>
+            Turn the playfield ninety degrees. Notes fall from the top onto a row of button caps at
+            the bottom, one thin column per button, with the two hands split by a gutter down the
+            middle — the same gap that exists on the real instrument. Screens are wider than they
+            are tall, so thirty columns fit where thirty lanes never could.
+          </p>
+        </div>
+
+        <div class="stage">
+          <div class="fall">
+            <div class="hitrow"></div>
+
+            <div class="hand">
+              <div class="col" style="--lane: var(--l1)">
+                <span class="fcard" style="--lane: var(--l1); top: 24px"></span
+                ><span class="cap">L1a</span>
+              </div>
+              <div class="col" style="--lane: var(--l1)"><span class="cap">L1b</span></div>
+              <div class="col" style="--lane: var(--l2)">
+                <span class="fcard pull" style="--lane: var(--l2); top: 96px"></span
+                ><span class="cap">L2a</span>
+              </div>
+              <div class="col" style="--lane: var(--l2)"><span class="cap">L2b</span></div>
+              <div class="col" style="--lane: var(--l3)">
+                <span class="fcard" style="--lane: var(--l3); top: 150px"></span
+                ><span class="cap">L3a</span>
+              </div>
+              <div class="col" style="--lane: var(--l3)"><span class="cap">L3b</span></div>
+              <div class="col" style="--lane: var(--l4)">
+                <span class="fcard pull" style="--lane: var(--l4); top: 56px"></span
+                ><span class="cap">L4a</span>
+              </div>
+              <div class="col" style="--lane: var(--l4)"><span class="cap">L4b</span></div>
+              <div class="col" style="--lane: var(--l5)"><span class="cap">L5a</span></div>
+              <div class="col" style="--lane: var(--l5)">
+                <span class="fcard" style="--lane: var(--l5); top: 186px"></span
+                ><span class="cap">L5b</span>
+              </div>
+            </div>
+
+            <div class="split"></div>
+
+            <div class="hand">
+              <div class="col" style="--lane: var(--r1)">
+                <span class="fcard" style="--lane: var(--r1); top: 130px"></span
+                ><span class="cap">R1a</span>
+              </div>
+              <div class="col" style="--lane: var(--r1)"><span class="cap">R1b</span></div>
+              <div class="col" style="--lane: var(--r2)"><span class="cap">R2a</span></div>
+              <div class="col" style="--lane: var(--r2)">
+                <span class="fcard pull" style="--lane: var(--r2); top: 40px"></span
+                ><span class="cap">R2b</span>
+              </div>
+              <div class="col" style="--lane: var(--r3)">
+                <span class="fcard" style="--lane: var(--r3); top: 186px"></span
+                ><span class="cap">R3a</span>
+              </div>
+              <div class="col" style="--lane: var(--r3)"><span class="cap">R3b</span></div>
+              <div class="col" style="--lane: var(--r4)"><span class="cap">R4a</span></div>
+              <div class="col" style="--lane: var(--r4)">
+                <span class="fcard pull" style="--lane: var(--r4); top: 100px"></span
+                ><span class="cap">R4b</span>
+              </div>
+              <div class="col" style="--lane: var(--r5)">
+                <span class="fcard" style="--lane: var(--r5); top: 20px"></span
+                ><span class="cap">R5a</span>
+              </div>
+              <div class="col" style="--lane: var(--r5)"><span class="cap">R5b</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">
+          Shown at 20 buttons. At 30 the same field carries three columns per hue instead of two.
+        </p>
+
+        <div class="verdict">
+          <div>
+            <strong>Reads well</strong>
+            <p>
+              Every button visible at all times, so the layout is stable across songs. Columns sit
+              in the same left-to-right order as your fingers.
+            </p>
+          </div>
+          <div>
+            <strong>Costs</strong>
+            <p>
+              The largest rewrite: geometry, hit line, ribbon and cards all flip. Note names get
+              cramped in a 30-pixel column, so cards lean on colour instead of text.
+            </p>
+          </div>
+          <div>
+            <strong>Best for</strong>
+            <p>
+              Players who already read Guitar Hero or Rock Band. It is the familiar idiom for many
+              columns.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ============ CONCEPT C ============ -->
+      <section class="concept">
+        <div class="concept__head">
+          <p class="eyebrow">Concept 03 · look like the instrument</p>
+          <h2>Keypad Reader</h2>
+          <p>
+            Stop pretending the buttons are lanes. Draw the concertina as it actually is — two
+            keypads, each button a circle split pull-over-push, exactly like a fingering chart — and
+            light up what to press. The upcoming beats ride a strip above, so you still see what's
+            coming, but the screen is a picture of your hands rather than a highway.
+          </p>
+        </div>
+
+        <div class="stage">
+          <div class="board">
+            <div class="strip">
+              <span class="beat now">L3a ▼</span>
+              <span class="beat">R1b ▲</span>
+              <span class="beat rest">rest</span>
+              <span class="beat">R3a ▼ + R5a ▼</span>
+              <span class="beat">L2b ▲</span>
+              <span class="beat">L2b ▼</span>
+              <span class="beat rest">rest</span>
+              <span class="beat">R1b ▼</span>
+            </div>
+
+            <div class="hands">
+              <div>
+                <div class="keypad">
+                  <div class="keyrow">
+                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
+                    <span class="key"><span class="up">D</span><span class="dn">B</span></span>
+                    <span class="key lit" style="--lane: var(--l3)"
+                      ><span class="up">F</span><span class="dn">D</span></span
+                    >
+                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
+                    <span class="key"><span class="up">C</span><span class="dn">B</span></span>
+                  </div>
+                  <div class="keyrow">
+                    <span class="key"><span class="up">D</span><span class="dn">C</span></span>
+                    <span class="key"><span class="up">G</span><span class="dn">E</span></span>
+                    <span class="key"><span class="up">B</span><span class="dn">G</span></span>
+                    <span class="key"><span class="up">D</span><span class="dn">C</span></span>
+                    <span class="key"><span class="up">F</span><span class="dn">E</span></span>
+                  </div>
+                </div>
+                <p class="handlabel" style="margin-top: 8px">Left</p>
+              </div>
+
+              <div>
+                <div class="keypad">
+                  <div class="keyrow">
+                    <span class="key"><span class="up">B</span><span class="dn">G</span></span>
+                    <span class="key"><span class="up">D</span><span class="dn">C</span></span>
+                    <span class="key"><span class="up">F</span><span class="dn">E</span></span>
+                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
+                    <span class="key"><span class="up">B</span><span class="dn">C</span></span>
+                  </div>
+                  <div class="keyrow">
+                    <span class="key"><span class="up">F</span><span class="dn">D</span></span>
+                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
+                    <span class="key"><span class="up">C</span><span class="dn">B</span></span>
+                    <span class="key"><span class="up">E</span><span class="dn">D</span></span>
+                    <span class="key"><span class="up">F</span><span class="dn">G</span></span>
+                  </div>
+                </div>
+                <p class="handlabel" style="margin-top: 8px">Right</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">
+          Note names are illustrative — the real pairs come from the tuning preset. The lit key
+          shows a push (solid); a pull would light with the striped fill.
+        </p>
+
+        <div class="verdict">
+          <div>
+            <strong>Reads well</strong>
+            <p>
+              Scales to any button count for free, and teaches the instrument rather than the game.
+              A chord is simply several lit circles.
+            </p>
+          </div>
+          <div>
+            <strong>Costs</strong>
+            <p>
+              Loses the approach — you feel the beat arrive rather than watch it travel, so the
+              timing windows have to carry more weight.
+            </p>
+          </div>
+          <div>
+            <strong>Best for</strong>
+            <p>
+              A practice or learn mode. Possibly the right home for
+              <span class="k">wait for correct note</span>, which already pauses on each note.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ============ CONCEPT D ============ -->
+      <section class="concept">
+        <div class="concept__head">
+          <p class="eyebrow">Concept 04 · constant screen</p>
+          <h2>Row-Coded Columns</h2>
+          <p>
+            Ten lanes, always: five columns for the left hand, five for the right. The row is not a
+            lane at all — it rides on the card, as a shade and a small pip. A 10, 20 or 30-button
+            instrument all produce exactly the same screen, so the layout never moves under you.
+          </p>
+        </div>
+
+        <div class="stage">
+          <div class="field">
+            <div class="hitline" style="left: 17%"></div>
+
+            <div class="handbar">Left hand · columns 1–5</div>
+            <div class="lane" style="--lane: var(--l2)">
+              <span class="tag">L2</span>
+              <span class="card" style="--lane: var(--l2); left: 30%; width: 15%">
+                <span class="badge a"></span><span class="dir">▼</span>G
+              </span>
+              <span
+                class="card pull"
+                style="
+                  --lane: var(--l2);
+                  left: 68%;
+                  width: 15%;
+                  --lane: color-mix(in srgb, var(--l2) 78%, #000);
+                "
+              >
+                <span class="badge c"></span><span class="dir">▲</span>A
+              </span>
+            </div>
+            <div class="lane" style="--lane: var(--l4)">
+              <span class="tag">L4</span>
+              <span class="card" style="--lane: var(--l4); left: 47%; width: 15%">
+                <span class="badge b"></span><span class="dir">▼</span>C
+              </span>
+            </div>
+
+            <div class="gutter"></div>
+            <div class="handbar">Right hand · columns 1–5</div>
+            <div class="lane" style="--lane: var(--r1)">
+              <span class="tag">R1</span>
+              <span class="card pull" style="--lane: var(--r1); left: 17%; width: 15%">
+                <span class="badge b"></span><span class="dir">▲</span>E
+              </span>
+            </div>
+            <div class="lane" style="--lane: var(--r3)">
+              <span class="tag">R3</span>
+              <span class="card" style="--lane: var(--r3); left: 55%; width: 15%">
+                <span class="badge a"></span><span class="dir">▼</span>G
+              </span>
+            </div>
+          </div>
+        </div>
+        <p class="caption">
+          Pip: hollow = inner row, half = middle, filled = outer. The card's shade carries the same
+          information at a distance, before the pip is legible.
+        </p>
+
+        <div class="verdict">
+          <div>
+            <strong>Reads well</strong>
+            <p>
+              Ten lanes forever. Muscle memory transfers between songs and between instruments, and
+              it fits the screen we already have.
+            </p>
+          </div>
+          <div>
+            <strong>Costs</strong>
+            <p>
+              Row becomes a second thing to decode under time pressure. Two notes in the same column
+              on different rows collide in one lane.
+            </p>
+          </div>
+          <div>
+            <strong>Best for</strong>
+            <p>
+              Keeping the current game's feel while supporting the full instrument. The riskiest on
+              legibility, the cheapest on screen.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <p class="eyebrow">Side by side</p>
+        <h2>What each one costs</h2>
+        <div class="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th class="num">Lanes at 30 buttons</th>
+                <th>Layout stable across songs</th>
+                <th>Keeps the approach</th>
+                <th>Rewrite size</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Live Lanes</strong></td>
+                <td class="num">as many as the song uses</td>
+                <td><span class="no">no</span></td>
+                <td><span class="yes">yes</span></td>
+                <td>small</td>
+              </tr>
+              <tr>
+                <td><strong>Falling Columns</strong></td>
+                <td class="num">30 columns</td>
+                <td><span class="yes">yes</span></td>
+                <td><span class="yes">yes</span></td>
+                <td>large</td>
+              </tr>
+              <tr>
+                <td><strong>Keypad Reader</strong></td>
+                <td class="num">none</td>
+                <td><span class="yes">yes</span></td>
+                <td><span class="no">no</span></td>
+                <td>medium</td>
+              </tr>
+              <tr>
+                <td><strong>Row-Coded Columns</strong></td>
+                <td class="num">10 lanes</td>
+                <td><span class="yes">yes</span></td>
+                <td><span class="yes">yes</span></td>
+                <td>medium</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <p class="eyebrow">A wildcard, if we want one</p>
+        <h2>Bellows Split</h2>
+        <p>
+          Left-hand notes fly in from the left edge, right-hand notes from the right, and they meet
+          at a hit line down the middle of the screen — the bellows. It is the most
+          concertina-shaped idea on this page and the hardest to read, because your eye has to track
+          two opposing streams. Worth a paper sketch before anyone builds it.
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <p class="eyebrow">Before we pick one</p>
+        <h2>Questions that change the answer</h2>
+        <ul>
+          <li>
+            <strong>Does the seven-button toy stay the default?</strong> If yes, whatever we build
+            has to look right at seven buttons as well as thirty, which quietly rules against
+            Falling Columns.
+          </li>
+          <li>
+            <strong>What does a keyboard player press?</strong> Thirty buttons will not fit the
+            number row. Two hands of keys — <span class="k">Q W E R T</span> over
+            <span class="k">A S D F G</span> on the left, <span class="k">Y U I O P</span> over
+            <span class="k">H J K L ;</span> on the right — mirrors the instrument and matches every
+            layout here.
+          </li>
+          <li>
+            <strong>Do we show all buttons, or only the ones in the song?</strong> This is the real
+            fork. Everything else follows from it.
+          </li>
+          <li>
+            <strong>Chart notation.</strong> <code>+3</code> stops meaning anything on a 30-button.
+            <code>+L2b</code> is unambiguous but noisier to write, and every existing chart needs a
+            migration.
+          </li>
+          <li>
+            <strong>Mic mode is already ready for this.</strong> A 30-button anglo repeats the same
+            pitch in several places, and <code>aliasesOf</code> was built for exactly that — when
+            the mic hears a note, the game credits whichever button the chart is asking for.
+            Duplicated notes are a layout, not an ambiguity.
+          </li>
+        </ul>
+      </section>
     </div>
-    <p class="caption">
-      Pip: hollow = inner row, half = middle, filled = outer. The card's shade carries the
-      same information at a distance, before the pip is legible.
-    </p>
-
-    <div class="verdict">
-      <div>
-        <strong>Reads well</strong>
-        <p>Ten lanes forever. Muscle memory transfers between songs and between instruments,
-          and it fits the screen we already have.</p>
-      </div>
-      <div>
-        <strong>Costs</strong>
-        <p>Row becomes a second thing to decode under time pressure. Two notes in the same
-          column on different rows collide in one lane.</p>
-      </div>
-      <div>
-        <strong>Best for</strong>
-        <p>Keeping the current game's feel while supporting the full instrument. The riskiest
-          on legibility, the cheapest on screen.</p>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <section>
-    <p class="eyebrow">Side by side</p>
-    <h2>What each one costs</h2>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Concept</th>
-            <th class="num">Lanes at 30 buttons</th>
-            <th>Layout stable across songs</th>
-            <th>Keeps the approach</th>
-            <th>Rewrite size</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Live Lanes</strong></td>
-            <td class="num">as many as the song uses</td>
-            <td><span class="no">no</span></td>
-            <td><span class="yes">yes</span></td>
-            <td>small</td>
-          </tr>
-          <tr>
-            <td><strong>Falling Columns</strong></td>
-            <td class="num">30 columns</td>
-            <td><span class="yes">yes</span></td>
-            <td><span class="yes">yes</span></td>
-            <td>large</td>
-          </tr>
-          <tr>
-            <td><strong>Keypad Reader</strong></td>
-            <td class="num">none</td>
-            <td><span class="yes">yes</span></td>
-            <td><span class="no">no</span></td>
-            <td>medium</td>
-          </tr>
-          <tr>
-            <td><strong>Row-Coded Columns</strong></td>
-            <td class="num">10 lanes</td>
-            <td><span class="yes">yes</span></td>
-            <td><span class="yes">yes</span></td>
-            <td>medium</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <section>
-    <p class="eyebrow">A wildcard, if we want one</p>
-    <h2>Bellows Split</h2>
-    <p>
-      Left-hand notes fly in from the left edge, right-hand notes from the right, and they
-      meet at a hit line down the middle of the screen — the bellows. It is the most
-      concertina-shaped idea on this page and the hardest to read, because your eye has to
-      track two opposing streams. Worth a paper sketch before anyone builds it.
-    </p>
-  </section>
-
-  <hr class="rule" />
-
-  <section>
-    <p class="eyebrow">Before we pick one</p>
-    <h2>Questions that change the answer</h2>
-    <ul>
-      <li>
-        <strong>Does the seven-button toy stay the default?</strong> If yes, whatever we build
-        has to look right at seven buttons as well as thirty, which quietly rules against
-        Falling Columns.
-      </li>
-      <li>
-        <strong>What does a keyboard player press?</strong> Thirty buttons will not fit the
-        number row. Two hands of keys — <span class="k">Q W E R T</span> over
-        <span class="k">A S D F G</span> on the left, <span class="k">Y U I O P</span> over
-        <span class="k">H J K L ;</span> on the right — mirrors the instrument and matches
-        every layout here.
-      </li>
-      <li>
-        <strong>Do we show all buttons, or only the ones in the song?</strong> This is the
-        real fork. Everything else follows from it.
-      </li>
-      <li>
-        <strong>Chart notation.</strong> <code>+3</code> stops meaning anything on a
-        30-button. <code>+L2b</code> is unambiguous but noisier to write, and every existing
-        chart needs a migration.
-      </li>
-      <li>
-        <strong>Mic mode is already ready for this.</strong> A 30-button anglo repeats the
-        same pitch in several places, and <code>aliasesOf</code> was built for exactly that —
-        when the mic hears a note, the game credits whichever button the chart is asking for.
-        Duplicated notes are a layout, not an ambiguity.
-      </li>
-    </ul>
-  </section>
-
-</div>
-
-</body></html>
+  </body>
+</html>

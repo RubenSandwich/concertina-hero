@@ -1,463 +1,1521 @@
-<!doctype html><html><head><!-- frame-runtime --><base href="/_f/1783705574-d335/"><script>window.__FRAME_PREAMBLE={"capabilities":{"downloads":"downloads.DUzXFHNF.js","mcp":"mcp.Djj5DQjZ.js","self":"self.DqF_PxOe.js"},"transforms":"_transforms.DYk1Ltlh.js"}</script><script>(function(){"use strict";const X="modulepreload",Y=function(e){return"/"+e},Z={},U=function(t,n,u){let o=Promise.resolve();function i(f){const a=new Event("vite:preloadError",{cancelable:!0});if(a.payload=f,window.dispatchEvent(a),!a.defaultPrevented)throw f}return o.then(f=>{for(const a of f||[])a.status==="rejected"&&i(a.reason);return t().catch(i)})},D=["light","dark","system"];function $(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_init;return t!=null&&typeof t=="object"}function q(e){if(e==null||typeof e!="object")return!1;const t=e.__frame_theme;if(t==null||typeof t!="object")return!1;const n=t.theme;return typeof n=="string"&&D.includes(n)}function M(e){if(window===top||e.type==="auxclick"&&e.button!==1)return;const t=e.composedPath?e.composedPath():[e.target];let n=null;for(let f=0;f<t.length;f++){const a=t[f];if(a&&a.matches&&a.matches("a[href],area[href]")){n=a;break}}if(!n&&e.target&&e.target.closest&&(n=e.target.closest("a[href],area[href]")),!n)return;const u=n.getAttribute("href");if(!u)return;let o,i;try{o=new URL(u,document.baseURI),i=new URL(document.baseURI).origin}catch{return}(o.protocol==="http:"||o.protocol==="https:")&&o.origin!==i&&(e.preventDefault(),parent.postMessage({__frame_nav:!0,url:o.href},"*"))}const L={};function y(e){if(window===top)return;const t=Date.now();t-(L[e]||0)<500||(L[e]=t,parent.postMessage({__frame_engaged:!0,kind:e},"*"))}const F=2e3,T=["wheel","touchstart","touchmove","keydown","pointerdown"];let k=0;function B(e){e.isTrusted&&(k=Date.now())}function z(){addEventListener("click",M,!0),addEventListener("auxclick",M,!0)}function W(){for(let e=0;e<T.length;e++)addEventListener(T[e],B,{capture:!0,passive:!0});addEventListener("scroll",e=>{e.isTrusted&&Date.now()-k<F&&y("scroll")},{capture:!0,passive:!0}),addEventListener("pointermove",e=>{e.isTrusted&&y("pointer")},{capture:!0,passive:!0}),addEventListener("click",e=>{e.isTrusted&&y("click")},{capture:!0,passive:!0})}function x(e,t,n){const u=[...t.values()].filter(o=>o.targets.some(i=>i.startsWith(e+".")));return{wrap(o,i){const f=`${e}.${o}`,a=u.filter(s=>s.targets.includes(f));return a.length===0?(...s)=>{try{return i(...s)}catch(d){return Promise.reject(d)}}:(...s)=>{let d=s;for(const c of a){const l=c.module.parameters;if(l)try{d=l(d)}catch{return Promise.reject({code:"transform_error",id:c.id,scope:e,message:"parameters transform failed"})}}let m;try{m=i(...d)}catch(c){m=Promise.reject(c)}return m.then(c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.returns;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"returns"}),c}}return c},c=>{for(let l=a.length-1;l>=0;l--){const h=a[l],p=h.module.throws;if(p)try{c=p(c)}catch{return n({id:h.id,scope:e,leg:"throws"}),Promise.reject(c)}}return Promise.reject(c)})}}}}function H(e,t,n,u=()=>{}){const o=new Set(e.changes??[]),i=new Map;for(const f of o){const a=t[f];a&&i.set(f,a)}return{contract:e.contract,changes:o,flags:new Set(e.flags??[]),capabilities:e.capabilities??{},transforms:i,shellOrigin:n.shellOrigin,mount:n.mount,pipe:f=>x(f,i,u)}}(function(){const e=Object.defineProperty,t=globalThis,n=["RTCPeerConnection","webkitRTCPeerConnection","RTCDataChannel","RTCIceCandidate","RTCSessionDescription","RTCRtpSender","RTCRtpReceiver"];let u=0;for(let o=0;o<n.length;o++){const i=n[o];try{e(t,i,{value:void 0,writable:!1,configurable:!1})}catch{try{delete t[i]}catch{}try{e(t,i,{value:void 0,writable:!1,configurable:!0})}catch{}}typeof t[i]=="function"&&u++}if(u&&window!==top)try{parent.postMessage({__frame_rtc_lockdown_failed:u},"*")}catch{}})();const K=1e4,G=Object.freeze([...window.__FRAME_PREAMBLE?.origins??["https://claude.ai","https://preview.claude.ai"]]);function J(e){for(const t of G)if(t.endsWith(":*"))try{const n=new URL(e);if(`${n.protocol}//${n.hostname}:*`===t)return!0}catch{}else if(e===t)return!0;return!1}const w=Object.freeze({...window.__FRAME_PREAMBLE?.capabilities??{}}),E=window.__FRAME_PREAMBLE?.transforms,C=/^[\w.-]+\.js$/,V=/^[a-z][a-z0-9_-]{0,63}$/;let A=null,g=null;function P(e,t,n){try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!1,enumerable:!0})}catch{try{Object.defineProperty(e,t,{value:n,writable:!1,configurable:!0,enumerable:!0})}catch{}}}let R=!1;function N(e){const t=document.documentElement;e==="light"||e==="dark"?(t.dataset.theme=e,t.style.colorScheme=e,R=!0):R&&(delete t.dataset.theme,t.style.colorScheme="",R=!1)}const _=new Map;function Q(e,t){const n=_.get(e);if(!n)return;Object.assign(n.impl,t),n.impl.__settled=()=>Promise.reject({code:"capability_removed",message:`${e}: method not in this runtime`});const u=n.queue;n.queue=[];for(const o of u){const i=t[o.method];i?i(...o.args).then(o.resolve,o.reject):o.reject({code:"capability_removed",message:`${e}.${o.method} is not in this runtime`})}}function O(e,t){const n=_.get(e);if(!n)return;n.impl.__settled=()=>Promise.reject(t);const u=n.queue;n.queue=[];for(const o of u)o.reject(t)}const j=Object.getOwnPropertyDescriptor(window,"claude");if(window!==top&&!(j&&j.writable===!1)){z(),W();const e=j?.value??{};P(window,"claude",e);const t=s=>{const d={impl:Object.create(null),queue:[]};_.set(s,d);const m=new Proxy(d.impl,{get:(c,l)=>{if(typeof l=="string"&&!(l==="then"||l==="toJSON"||l==="valueOf"))return l==="toString"?Object.prototype.toString:(...h)=>{const p=c[l]??c.__settled;return p?p(...h):new Promise((b,S)=>{d.queue.push({method:l,args:h,resolve:b,reject:S})})}},set:()=>!1});P(e,s,m)};for(const s of Object.keys(w)){if(e[s]!==void 0){P(e,s,e[s]);continue}t(s)}let n=null,u=null,o=0;const i=s=>{s.source!==parent||!J(s.origin)||$(s.data)&&(n=s.data.__frame_init,g=s.origin,removeEventListener("message",i),clearTimeout(o),u?.())};addEventListener("message",i),parent.postMessage({__frame_connect:!0},"*");const f=new Promise(s=>{u=s,o=setTimeout(()=>{removeEventListener("message",i),s()},K)}),a=document.readyState==="loading"?new Promise(s=>document.addEventListener("DOMContentLoaded",()=>s(),{once:!0})):Promise.resolve();f.then(async()=>{if(!n||!g){for(const r of _.keys())O(r,{code:"not_granted",message:"frame initialization did not arrive - capability unavailable"});return}N(n.theme);const s=g;addEventListener("message",r=>{r.source!==parent||r.origin!==s||q(r.data)&&N(r.data.__frame_theme.theme)});const d=r=>U(()=>import("/_runtime/"+r),void 0),m=Object.keys(n.capabilities??{});for(const r of m)Object.hasOwn(w,r)||V.test(r)&&e[r]===void 0&&(t(r),O(r,{code:"capability_disabled",message:"capability not in this runtime generation"}));const c=m.filter(r=>Object.hasOwn(w,r)).map(r=>[r,w[r]]).filter(r=>typeof r[1]=="string"&&C.test(r[1])),[l,...h]=await Promise.allSettled([E&&C.test(E)?d(E):Promise.resolve({}),...c.map(([,r])=>d(r))]),p=g;A=H(n,l.status==="fulfilled"&&l.value?.TRANSFORMS||{},{shellOrigin:p,mount:Q},r=>parent.postMessage({__frame_cap_telemetry:r},p));const b=r=>parent.postMessage({__frame_cap_telemetry:{kind:"cap-load-error",cap:r}},p),S=A;h.forEach((r,v)=>{const I=c[v][0];if(r.status!=="fulfilled"){b(I);return}try{r.value?.install?.(S)}catch{b(I)}});for(const[r,v]of _)v.queue.length===0&&Object.keys(v.impl).length>0||O(r,{code:m.includes(r)?"capability_disabled":"not_granted",message:"capability not available in this session"});await a,parent.postMessage({__frame_ready:!0},g)})}})();</script><!-- /frame-runtime --><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
-<title>Concertina Hero — Keyfall (Falling Columns, round 2)</title>
-<style>
-  :root {
-    --ink: #3a2a20;
-    --paper: #fffbef;
-    --cream: #fff3d0;
-    --felt: #efe0c4;
-
-    /* left hand — cool, one hue per column */
-    --l0: #2ec4b6; --l1: #4cc9f0; --l2: #5b8def; --l3: #8f7bf0; --l4: #8ac926;
-    /* right hand — warm */
-    --r0: #ff5d5d; --r1: #ff924c; --r2: #ffb63a; --r3: #ffd23f; --r4: #ff8fce;
-
-    --ground: #fdf7ea;
-    --panel: #fffdf7;
-    --text: #33241b;
-    --muted: #7a6455;
-    --rule: #e2d3bd;
-    --accent: #b5461f;
-
-    --display: ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand',
-      'Trebuchet MS', system-ui, sans-serif;
-    --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
-
-    --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
-    --shadow: 5px 6px 0 rgba(58, 42, 32, 0.16);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root { --ground:#22190f; --panel:#2c2115; --text:#f6e9d6; --muted:#b39c86; --rule:#4a3a29; --accent:#ff9a6c; }
-  }
-  :root[data-theme='dark'] { --ground:#22190f; --panel:#2c2115; --text:#f6e9d6; --muted:#b39c86; --rule:#4a3a29; --accent:#ff9a6c; }
-  :root[data-theme='light'] { --ground:#fdf7ea; --panel:#fffdf7; --text:#33241b; --muted:#7a6455; --rule:#e2d3bd; --accent:#b5461f; }
-
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--ground); color:var(--text); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
-  .wrap { max-width:1060px; margin:0 auto; padding:56px 24px 96px; display:flex; flex-direction:column; gap:52px; }
-
-  h1,h2,h3 { font-family:var(--display); text-wrap:balance; margin:0; }
-  h1 { font-size:clamp(2rem,4.6vw,3.15rem); font-weight:800; letter-spacing:-0.02em; line-height:1.05; }
-  h2 { font-size:1.55rem; font-weight:800; letter-spacing:-0.01em; }
-  h3 { font-size:1.02rem; font-weight:700; }
-  p { margin:0; max-width:68ch; }
-  .eyebrow { font-family:var(--mono); font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); }
-  .lede { font-size:1.1rem; color:var(--muted); max-width:62ch; }
-  code,.k { font-family:var(--mono); font-size:0.85em; background:color-mix(in srgb, var(--accent) 12%, transparent); color:var(--accent); padding:0.08em 0.36em; border-radius:4px; }
-  section { display:flex; flex-direction:column; gap:18px; }
-  .rule { height:1px; background:var(--rule); border:0; margin:0; }
-  .caption { font-size:0.84rem; color:var(--muted); font-style:italic; }
-  .chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:18px; }
-  .chip { font-family:var(--mono); font-size:0.74rem; letter-spacing:0.05em; border:1.5px solid var(--rule); border-radius:999px; padding:5px 11px; color:var(--muted); }
-
-  /* ---------- the stage ---------- */
-  .stage { background:linear-gradient(#cfeaf7,#f3e2c2); border:4px solid var(--ink); border-radius:18px 22px 16px 24px; box-shadow:var(--shadow); padding:10px; overflow-x:auto; overflow-y:hidden; }
-  .hud { height:34px; margin-bottom:8px; border:3px solid var(--ink); border-radius:9px; background:var(--cream);
-         display:flex; align-items:center; justify-content:space-between; padding:0 12px; font-family:var(--display); font-weight:800; color:var(--ink); }
-  .hud small { font-family:var(--mono); font-weight:400; font-size:0.66rem; letter-spacing:0.1em; opacity:0.6; }
-
-  .field { position:relative; background:var(--paper); border:3px solid var(--ink); border-radius:12px; overflow:hidden; }
-  .divider { position:absolute; top:8px; bottom:8px; left:50%; width:3px; transform:translateX(-50%);
-             background:repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px); opacity:0.4; z-index:5; }
-  .divlabel { position:absolute; left:50%; transform:translateX(-50%); top:6px; z-index:6;
-              font-family:var(--mono); font-size:0.54rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink); opacity:0.45; background:var(--paper); padding:1px 6px; border-radius:5px; }
-
-  .hand { position:absolute; top:0; bottom:0; width:50%; }
-  .hand.left { left:0; } .hand.right { right:0; }
-
-  /* a rising track behind a button */
-  .track { position:absolute; border-radius:8px 8px 0 0; z-index:1;
-           background:linear-gradient(to bottom, transparent, color-mix(in srgb, var(--lane) 24%, transparent) 30%, color-mix(in srgb, var(--lane) 30%, transparent)); }
-  .track.guide { background:color-mix(in srgb, var(--ink) 5%, transparent); }
-
-  /* strike line variant */
-  .strike { position:absolute; height:0; border-top:3px dashed color-mix(in srgb, var(--ink) 55%, transparent); z-index:4; }
-
-  /* a physical button */
-  .btn { position:absolute; border:2.5px solid var(--ink); border-radius:50%; z-index:3; overflow:hidden;
-         box-shadow:var(--shadow-sm); background:#e9e3d4;
-         display:flex; flex-direction:column; }
-  .btn .half { flex:1; display:grid; place-items:center; font-family:var(--display); font-weight:800; color:var(--ink); }
-  .btn .half.pull { background:color-mix(in srgb, #fff 55%, #d8d1bf); border-bottom:1.5px solid color-mix(in srgb, var(--ink) 40%, transparent); }
-  .btn .half.push { background:#ddd6c4; }
-  .btn.lit { background:var(--lane); box-shadow:0 0 0 4px color-mix(in srgb, var(--lane) 45%, #fff), var(--shadow-sm); border-color:var(--ink); }
-  .btn.lit .half.target { background:var(--lane); }
-  .btn.lit .half.target.pullfill { background:repeating-linear-gradient(-45deg, var(--lane) 0 6px, color-mix(in srgb, var(--lane) 50%, #fff) 6px 12px); }
-
-  /* a falling note pill */
-  .pill { position:absolute; border:2.5px solid var(--ink); border-radius:9px; z-index:2;
-          background:var(--lane); box-shadow:2px 3px 0 rgba(58,42,32,0.18);
-          display:grid; place-items:center; font-family:var(--display); font-weight:800; color:var(--ink); }
-  .pill.pull { background:repeating-linear-gradient(-45deg, var(--lane) 0 7px, color-mix(in srgb, var(--lane) 50%, #fff) 7px 14px); }
-
-  @keyframes fall { from { transform:translateY(var(--from)); } to { transform:translateY(var(--to)); } }
-  .anim { animation:fall var(--dur) linear infinite; }
-  @media (prefers-reduced-motion: reduce) { .anim { animation:none; transform:translateY(var(--rest)); } }
-
-  /* ---------- variant grid ---------- */
-  .duo { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:20px; }
-  .study { display:flex; flex-direction:column; gap:10px; }
-  .study h3 { display:flex; align-items:baseline; gap:8px; }
-  .study h3 .pin { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent); border:1.5px solid color-mix(in srgb,var(--accent) 40%, transparent); border-radius:5px; padding:1px 6px; }
-  .study p { font-size:0.9rem; color:var(--muted); }
-  .study .stage { padding:7px; }
-  .study .hud { display:none; }
-
-  .verdict { display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:14px; }
-  .verdict div { border:1.5px solid var(--rule); border-radius:10px; padding:12px 14px; background:var(--panel); }
-  .verdict strong { display:block; font-family:var(--mono); font-size:0.66rem; letter-spacing:0.11em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
-  .verdict p { font-size:0.92rem; }
-
-  /* anatomy diagram */
-  .anatomy { display:flex; gap:26px; flex-wrap:wrap; align-items:center; background:var(--panel); border:1.5px solid var(--rule); border-radius:12px; padding:20px; }
-  .bigbtn { width:96px; height:96px; border:3px solid var(--ink); border-radius:50%; overflow:hidden; display:flex; flex-direction:column; flex:0 0 auto; box-shadow:var(--shadow-sm); }
-  .bigbtn .half { flex:1; display:grid; place-items:center; font-family:var(--display); font-weight:800; font-size:1.3rem; color:var(--ink); }
-  .bigbtn .pull { background:repeating-linear-gradient(-45deg, var(--r1) 0 8px, color-mix(in srgb,var(--r1) 50%,#fff) 8px 16px); border-bottom:2px solid var(--ink); }
-  .bigbtn .push { background:var(--r1); }
-  .legend { display:flex; flex-direction:column; gap:8px; font-size:0.92rem; }
-  .legend .row { display:flex; align-items:center; gap:10px; }
-  .legend .dot { width:16px; height:16px; border:2px solid var(--ink); border-radius:4px; flex:0 0 auto; }
-
-  ul { margin:0; padding-left:1.15em; max-width:68ch; } li { margin-bottom:8px; }
-  .tablewrap { overflow-x:auto; }
-  table { border-collapse:collapse; width:100%; min-width:560px; font-size:0.92rem; }
-  th,td { text-align:left; padding:10px 12px; border-bottom:1px solid var(--rule); vertical-align:top; }
-  th { font-family:var(--mono); font-size:0.67rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); font-weight:600; }
-</style>
-
-<div class="wrap">
-  <header>
-    <p class="eyebrow">Concertina Hero · Falling Columns · round 2</p>
-    <h1>Keyfall</h1>
-    <p class="lede">
-      Your mockup fused two of the concepts: keep the real anglo keyboard on the floor of the
-      playfield, and drop each note straight down onto the exact button it wants. Here it is
-      built out at 30 buttons, then four decisions worth settling.
-    </p>
-    <div class="chips">
-      <span class="chip">30 buttons · 3 rows × 5 × 2 hands</span>
-      <span class="chip">keyboard is the hit zone</span>
-      <span class="chip">bellows split down the middle</span>
-    </div>
-  </header>
-
-  <hr class="rule" />
-
-  <!-- HERO -->
-  <section>
-    <p class="eyebrow">The idea, built out</p>
-    <h2>The instrument is the bottom of the screen</h2>
-    <p>
-      Both hands sit in their true staggered positions, divided by the bellows. A note falls
-      down a coloured track and lands on its button — the top half lights for a pull, the
-      bottom half for a push. Buttons with nothing coming stay grey, so a busy 30-button tune
-      only ever lights the handful of buttons in play.
-    </p>
-    <div class="stage">
-      <div class="hud"><span>Now Playing · The Kesh Jig</span><small>score 4,820 · ○○○ 12x</small></div>
-      <div class="field" id="hero" style="height:470px"></div>
-    </div>
-    <p class="caption">Animated to show the fall. Note names are illustrative; the real pairs come from the tuning preset.</p>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- ITERATION A: track visibility -->
-  <section>
-    <p class="eyebrow">Decision 01</p>
-    <h2>Do the empty buttons show their tracks?</h2>
-    <p>
-      Thirty faint guide lines make the field busy, but they hold every button in a fixed
-      spatial slot so your eye learns where each one lives. Lighting only the active tracks
-      is calmer and matches your sketch, at the cost of the field looking different every bar.
-    </p>
-    <div class="duo">
-      <div class="study">
-        <h3><span class="pin">A</span> Active only</h3>
-        <p>Only buttons with an incoming note draw a track. Quietest; closest to the mockup.</p>
-        <div class="stage"><div class="field" id="visA" style="height:300px"></div></div>
-      </div>
-      <div class="study">
-        <h3><span class="pin">B</span> All guides</h3>
-        <p>Every button trails a faint guide; active ones light up over it. Busier, but spatially stable.</p>
-        <div class="stage"><div class="field" id="visB" style="height:300px"></div></div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- ITERATION B: timing anchor -->
-  <section>
-    <p class="eyebrow">Decision 02 · the crux</p>
-    <h2>Where does timing happen?</h2>
-    <p>
-      Your buttons sit at different heights, so if every note lands on its own button, notes on
-      the back row travel farther than the front row — the hit point moves around the screen.
-      The alternative is a single strike line just above the keyboard, with the keys below as a
-      live map of which finger to move. It keeps timing in one place but breaks the "land on the
-      button" feeling.
-    </p>
-    <div class="duo">
-      <div class="study">
-        <h3><span class="pin">A</span> Land on the button</h3>
-        <p>The button is the hit zone, wherever it sits. Truest to the instrument; timing target roams.</p>
-        <div class="stage"><div class="field" id="anchorA" style="height:300px"></div></div>
-      </div>
-      <div class="study">
-        <h3><span class="pin">B</span> Shared strike line</h3>
-        <p>All notes hit one line; the keyboard below just shows which button lit. Steady timing; less physical.</p>
-        <div class="stage"><div class="field" id="anchorB" style="height:300px"></div></div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- ITERATION C: button anatomy / push-pull -->
-  <section>
-    <p class="eyebrow">Decision 03</p>
-    <h2>Push and pull on one button</h2>
-    <p>
-      Each button carries two notes. Following your instrument sketch, the pull note sits on the
-      top half and the push on the bottom. A falling pill already says its direction two ways —
-      striped for pull, solid for push — and it lights the matching half as it lands, so the
-      bellows direction reads before you even parse the letter.
-    </p>
-    <div class="anatomy">
-      <div class="bigbtn">
-        <div class="half pull">A</div>
-        <div class="half push">G</div>
-      </div>
-      <div class="legend">
-        <div class="row"><span class="dot" style="background:repeating-linear-gradient(-45deg,var(--r1) 0 5px,#fff 5px 10px)"></span> <strong>Top · pull</strong> — striped, draw the bellows out</div>
-        <div class="row"><span class="dot" style="background:var(--r1)"></span> <strong>Bottom · push</strong> — solid, squeeze in</div>
-        <div class="row"><span class="dot" style="border-style:dashed; background:transparent"></span> The whole button is one target; only the played half fills.</div>
-      </div>
-    </div>
-    <p class="caption">A chord is several buttons lit at once — same as today, just more of them.</p>
-  </section>
-
-  <hr class="rule" />
-
-  <!-- ITERATION D: colour -->
-  <section>
-    <p class="eyebrow">Decision 04</p>
-    <h2>What the colours mean</h2>
-    <p>
-      Your mockup used a different colour per falling note so you can track them apart. That
-      works, but a fixed scheme teaches the layout: <strong>hand sets the temperature</strong> —
-      left cool, right warm — and <strong>column sets the hue</strong>, five across each hand.
-      Then a note's colour tells you which hand and roughly which finger before it lands.
-    </p>
-    <div class="duo">
-      <div class="study">
-        <h3><span class="pin">A</span> Fixed by position</h3>
-        <p>Colour = hand + column. The same button is always the same colour, every song.</p>
-        <div class="stage"><div class="field" id="colA" style="height:280px"></div></div>
-      </div>
-      <div class="study">
-        <h3><span class="pin">B</span> Cycling per note</h3>
-        <p>Colour just keeps adjacent notes distinct (your mockup). Simpler, teaches nothing.</p>
-        <div class="stage"><div class="field" id="colB" style="height:280px"></div></div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
-  <section>
-    <p class="eyebrow">Still open</p>
-    <h2>Questions this round raises</h2>
-    <ul>
-      <li><strong>The staggered-track problem.</strong> Real anglo columns aren't evenly spaced, so tracks from neighbouring buttons can sit close together. We either keep true physical spacing (authentic, occasionally cramped) or snap tracks to an even grid and let only the button shapes hint at the stagger.</li>
-      <li><strong>How tall is the keyboard zone?</strong> The more room the keys take, the shorter the fall — less warning time. There's a trade between "looks like the instrument" and "I can see it coming".</li>
-      <li><strong>Back-row reachability.</strong> If timing lands on the button (02·A), back-row notes need a longer track and therefore start earlier. Might actually be fine — it mirrors the extra reach — but it needs playtesting.</li>
-      <li><strong>Keyboard keys.</strong> 30 buttons won't fit the number row. Two 3×5 blocks — left hand on <span class="k">Q-T / A-G / Z-B</span>, right on <span class="k">Y-P / H-;  / N-/</span> — mirror the on-screen hands.</li>
-    </ul>
-  </section>
-</div>
-
-<script>
-(() => {
-  const L = ['--l0','--l1','--l2','--l3','--l4'];
-  const R = ['--r0','--r1','--r2','--r3','--r4'];
-
-  // Illustrative note pairs [row][col] = {pull, push}
-  const NOTES = {
-    left: [
-      [['C#','A#'],['G#','D#'],['E','C'],['A','F'],['B','G']],
-      [['A','G'],['D','B'],['F','D'],['A','G'],['C','B']],
-      [['D','C'],['G','E'],['B','G'],['D','C'],['F','E']],
-    ],
-    right: [
-      [['D#','A#'],['G#','F'],['C','A'],['E','C'],['A','F']],
-      [['B','G'],['D','C'],['F','E'],['A','G'],['B','C']],
-      [['F','D'],['A','G'],['C','B'],['E','D'],['F','G']],
-    ],
-  };
-
-  // Geometry for one hand panel of width W, height H.
-  function layout(W, H, opts) {
-    const cols = 5, rows = 3;
-    const BS = opts.bs;                         // button size
-    const colGap = (W - 2*opts.padX - cols*BS) / (cols - 1);
-    const arc = [opts.arc, opts.arc*0.4, 0, opts.arc*0.4, opts.arc]; // U: middle highest
-    const kbTop = H - opts.kbH;                 // top of keyboard zone
-    const rowGap = (opts.kbH - 2*opts.padY - rows*BS) / (rows - 1);
-    const cx = c => opts.padX + c*(BS+colGap) + BS/2;
-    const cy = r => (opts.mirror ? // mirror not used
-                     0 : 0) + kbTop + opts.padY + r*(BS+rowGap) + BS/2;
-    return { cols, rows, BS, cx, cy: (r,c) => cy(r) + arc[c] };
-  }
-
-  function buildHand(host, hand, W, H, cfg) {
-    const g = layout(W, H, cfg);
-    const vars = hand === 'left' ? L : R;
-    const frag = document.createDocumentFragment();
-
-    // active lookup
-    const active = new Map();
-    (cfg.active[hand] || []).forEach(n => active.set(n.r+'-'+n.c, n));
-
-    for (let r = 0; r < g.rows; r++) {
-      for (let c = 0; c < g.cols; c++) {
-        const x = g.cx(c), y = g.cy(r, c);
-        const on = active.get(r+'-'+c);
-        const laneVar = cfg.colour === 'cycle'
-          ? cfgCycle(hand, r, c)
-          : vars[c];
-
-        // guide track
-        if (cfg.guides && !on) {
-          const t = document.createElement('div');
-          t.className = 'track guide';
-          t.style.left = (x - g.BS*0.34) + 'px';
-          t.style.width = (g.BS*0.68) + 'px';
-          t.style.top = '6px';
-          t.style.height = (y - 6) + 'px';
-          frag.appendChild(t);
-        }
-
-        // active track + falling pill
-        if (on) {
-          const strikeY = cfg.anchor === 'line' ? (H - cfg.kbH - 12) : y;
-          const t = document.createElement('div');
-          t.className = 'track';
-          t.style.setProperty('--lane', `var(${laneVar})`);
-          t.style.left = (x - g.BS*0.40) + 'px';
-          t.style.width = (g.BS*0.80) + 'px';
-          t.style.top = '4px';
-          t.style.height = (strikeY - 4) + 'px';
-          frag.appendChild(t);
-
-          const pill = document.createElement('div');
-          pill.className = 'pill' + (on.dir === 'pull' ? ' pull' : '');
-          pill.style.setProperty('--lane', `var(${laneVar})`);
-          const pw = g.BS*0.92, ph = g.BS*0.66;
-          pill.style.width = pw + 'px';
-          pill.style.height = ph + 'px';
-          pill.style.left = (x - pw/2) + 'px';
-          pill.style.fontSize = (g.BS*0.34) + 'px';
-          pill.textContent = (on.dir === 'pull' ? '▲' : '▼') + on.name;
-          // fall animation from top to (strikeY - ph)
-          const endTop = strikeY - ph - (cfg.anchor === 'line' ? 2 : g.BS*0.1);
-          pill.style.top = '0px';
-          pill.style.setProperty('--from', (-ph - 10) + 'px');
-          pill.style.setProperty('--to', endTop + 'px');
-          pill.style.setProperty('--rest', (endTop*(on.prog ?? 0.5)) + 'px');
-          pill.style.setProperty('--dur', (cfg.dur || 3.4) + 's');
-          if (cfg.animate) {
-            pill.classList.add('anim');
-            pill.style.animationDelay = (-(on.prog ?? 0.5) * (cfg.dur||3.4)) + 's';
-          } else {
-            pill.style.transform = `translateY(${endTop*(on.prog ?? 0.5)}px)`;
-          }
-          frag.appendChild(pill);
-        }
-
-        // strike-line map dims non-target buttons
-        const b = document.createElement('div');
-        b.className = 'btn' + (on ? ' lit' : '');
-        if (on) b.style.setProperty('--lane', `var(${laneVar})`);
-        b.style.left = (x - g.BS/2) + 'px';
-        b.style.top = (y - g.BS/2) + 'px';
-        b.style.width = g.BS + 'px';
-        b.style.height = g.BS + 'px';
-        const fs = (g.BS*0.32) + 'px';
-        const [pull, push] = NOTES[hand][r][c];
-        const tgtPull = on && on.dir === 'pull';
-        const tgtPush = on && on.dir === 'push';
-        // Only the lit buttons show their letters — grey buttons are position, not reading.
-        const pl = on ? pull : '', ps = on ? push : '';
-        b.innerHTML =
-          `<div class="half pull${tgtPull?' target pullfill':''}" style="font-size:${fs}">${pl}</div>`+
-          `<div class="half push${tgtPush?' target':''}" style="font-size:${fs}">${ps}</div>`;
-        frag.appendChild(b);
+<!doctype html>
+<html>
+  <head>
+    <!-- frame-runtime -->
+    <base href="/_f/1783705574-d335/" />
+    <script>
+      window.__FRAME_PREAMBLE = {
+        capabilities: {
+          downloads: 'downloads.DUzXFHNF.js',
+          mcp: 'mcp.Djj5DQjZ.js',
+          self: 'self.DqF_PxOe.js',
+        },
+        transforms: '_transforms.DYk1Ltlh.js',
       }
-    }
+    </script>
+    <script>
+      ;(function () {
+        'use strict'
+        const X = 'modulepreload',
+          Y = function (e) {
+            return '/' + e
+          },
+          Z = {},
+          U = function (t, n, u) {
+            let o = Promise.resolve()
+            function i(f) {
+              const a = new Event('vite:preloadError', { cancelable: !0 })
+              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+            }
+            return o.then((f) => {
+              for (const a of f || []) a.status === 'rejected' && i(a.reason)
+              return t().catch(i)
+            })
+          },
+          D = ['light', 'dark', 'system']
+        function $(e) {
+          if (e == null || typeof e != 'object') return !1
+          const t = e.__frame_init
+          return t != null && typeof t == 'object'
+        }
+        function q(e) {
+          if (e == null || typeof e != 'object') return !1
+          const t = e.__frame_theme
+          if (t == null || typeof t != 'object') return !1
+          const n = t.theme
+          return typeof n == 'string' && D.includes(n)
+        }
+        function M(e) {
+          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          const t = e.composedPath ? e.composedPath() : [e.target]
+          let n = null
+          for (let f = 0; f < t.length; f++) {
+            const a = t[f]
+            if (a && a.matches && a.matches('a[href],area[href]')) {
+              n = a
+              break
+            }
+          }
+          if (
+            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+          )
+            return
+          const u = n.getAttribute('href')
+          if (!u) return
+          let o, i
+          try {
+            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+          } catch {
+            return
+          }
+          ;(o.protocol === 'http:' || o.protocol === 'https:') &&
+            o.origin !== i &&
+            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+        }
+        const L = {}
+        function y(e) {
+          if (window === top) return
+          const t = Date.now()
+          t - (L[e] || 0) < 500 ||
+            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+        }
+        const F = 2e3,
+          T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
+        let k = 0
+        function B(e) {
+          e.isTrusted && (k = Date.now())
+        }
+        function z() {
+          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+        }
+        function W() {
+          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          ;(addEventListener(
+            'scroll',
+            (e) => {
+              e.isTrusted && Date.now() - k < F && y('scroll')
+            },
+            { capture: !0, passive: !0 },
+          ),
+            addEventListener(
+              'pointermove',
+              (e) => {
+                e.isTrusted && y('pointer')
+              },
+              { capture: !0, passive: !0 },
+            ),
+            addEventListener(
+              'click',
+              (e) => {
+                e.isTrusted && y('click')
+              },
+              { capture: !0, passive: !0 },
+            ))
+        }
+        function x(e, t, n) {
+          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          return {
+            wrap(o, i) {
+              const f = `${e}.${o}`,
+                a = u.filter((s) => s.targets.includes(f))
+              return a.length === 0
+                ? (...s) => {
+                    try {
+                      return i(...s)
+                    } catch (d) {
+                      return Promise.reject(d)
+                    }
+                  }
+                : (...s) => {
+                    let d = s
+                    for (const c of a) {
+                      const l = c.module.parameters
+                      if (l)
+                        try {
+                          d = l(d)
+                        } catch {
+                          return Promise.reject({
+                            code: 'transform_error',
+                            id: c.id,
+                            scope: e,
+                            message: 'parameters transform failed',
+                          })
+                        }
+                    }
+                    let m
+                    try {
+                      m = i(...d)
+                    } catch (c) {
+                      m = Promise.reject(c)
+                    }
+                    return m.then(
+                      (c) => {
+                        for (let l = a.length - 1; l >= 0; l--) {
+                          const h = a[l],
+                            p = h.module.returns
+                          if (p)
+                            try {
+                              c = p(c)
+                            } catch {
+                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                            }
+                        }
+                        return c
+                      },
+                      (c) => {
+                        for (let l = a.length - 1; l >= 0; l--) {
+                          const h = a[l],
+                            p = h.module.throws
+                          if (p)
+                            try {
+                              c = p(c)
+                            } catch {
+                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                            }
+                        }
+                        return Promise.reject(c)
+                      },
+                    )
+                  }
+            },
+          }
+        }
+        function H(e, t, n, u = () => {}) {
+          const o = new Set(e.changes ?? []),
+            i = new Map()
+          for (const f of o) {
+            const a = t[f]
+            a && i.set(f, a)
+          }
+          return {
+            contract: e.contract,
+            changes: o,
+            flags: new Set(e.flags ?? []),
+            capabilities: e.capabilities ?? {},
+            transforms: i,
+            shellOrigin: n.shellOrigin,
+            mount: n.mount,
+            pipe: (f) => x(f, i, u),
+          }
+        }
+        ;(function () {
+          const e = Object.defineProperty,
+            t = globalThis,
+            n = [
+              'RTCPeerConnection',
+              'webkitRTCPeerConnection',
+              'RTCDataChannel',
+              'RTCIceCandidate',
+              'RTCSessionDescription',
+              'RTCRtpSender',
+              'RTCRtpReceiver',
+            ]
+          let u = 0
+          for (let o = 0; o < n.length; o++) {
+            const i = n[o]
+            try {
+              e(t, i, { value: void 0, writable: !1, configurable: !1 })
+            } catch {
+              try {
+                delete t[i]
+              } catch {}
+              try {
+                e(t, i, { value: void 0, writable: !1, configurable: !0 })
+              } catch {}
+            }
+            typeof t[i] == 'function' && u++
+          }
+          if (u && window !== top)
+            try {
+              parent.postMessage({ __frame_rtc_lockdown_failed: u }, '*')
+            } catch {}
+        })()
+        const K = 1e4,
+          G = Object.freeze([
+            ...(window.__FRAME_PREAMBLE?.origins ?? [
+              'https://claude.ai',
+              'https://preview.claude.ai',
+            ]),
+          ])
+        function J(e) {
+          for (const t of G)
+            if (t.endsWith(':*'))
+              try {
+                const n = new URL(e)
+                if (`${n.protocol}//${n.hostname}:*` === t) return !0
+              } catch {}
+            else if (e === t) return !0
+          return !1
+        }
+        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+          E = window.__FRAME_PREAMBLE?.transforms,
+          C = /^[\w.-]+\.js$/,
+          V = /^[a-z][a-z0-9_-]{0,63}$/
+        let A = null,
+          g = null
+        function P(e, t, n) {
+          try {
+            Object.defineProperty(e, t, {
+              value: n,
+              writable: !1,
+              configurable: !1,
+              enumerable: !0,
+            })
+          } catch {
+            try {
+              Object.defineProperty(e, t, {
+                value: n,
+                writable: !1,
+                configurable: !0,
+                enumerable: !0,
+              })
+            } catch {}
+          }
+        }
+        let R = !1
+        function N(e) {
+          const t = document.documentElement
+          e === 'light' || e === 'dark'
+            ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
+            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+        }
+        const _ = new Map()
+        function Q(e, t) {
+          const n = _.get(e)
+          if (!n) return
+          ;(Object.assign(n.impl, t),
+            (n.impl.__settled = () =>
+              Promise.reject({
+                code: 'capability_removed',
+                message: `${e}: method not in this runtime`,
+              })))
+          const u = n.queue
+          n.queue = []
+          for (const o of u) {
+            const i = t[o.method]
+            i
+              ? i(...o.args).then(o.resolve, o.reject)
+              : o.reject({
+                  code: 'capability_removed',
+                  message: `${e}.${o.method} is not in this runtime`,
+                })
+          }
+        }
+        function O(e, t) {
+          const n = _.get(e)
+          if (!n) return
+          n.impl.__settled = () => Promise.reject(t)
+          const u = n.queue
+          n.queue = []
+          for (const o of u) o.reject(t)
+        }
+        const j = Object.getOwnPropertyDescriptor(window, 'claude')
+        if (window !== top && !(j && j.writable === !1)) {
+          ;(z(), W())
+          const e = j?.value ?? {}
+          P(window, 'claude', e)
+          const t = (s) => {
+            const d = { impl: Object.create(null), queue: [] }
+            _.set(s, d)
+            const m = new Proxy(d.impl, {
+              get: (c, l) => {
+                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                  return l === 'toString'
+                    ? Object.prototype.toString
+                    : (...h) => {
+                        const p = c[l] ?? c.__settled
+                        return p
+                          ? p(...h)
+                          : new Promise((b, S) => {
+                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                            })
+                      }
+              },
+              set: () => !1,
+            })
+            P(e, s, m)
+          }
+          for (const s of Object.keys(w)) {
+            if (e[s] !== void 0) {
+              P(e, s, e[s])
+              continue
+            }
+            t(s)
+          }
+          let n = null,
+            u = null,
+            o = 0
+          const i = (s) => {
+            s.source !== parent ||
+              !J(s.origin) ||
+              ($(s.data) &&
+                ((n = s.data.__frame_init),
+                (g = s.origin),
+                removeEventListener('message', i),
+                clearTimeout(o),
+                u?.()))
+          }
+          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          const f = new Promise((s) => {
+              ;((u = s),
+                (o = setTimeout(() => {
+                  ;(removeEventListener('message', i), s())
+                }, K)))
+            }),
+            a =
+              document.readyState === 'loading'
+                ? new Promise((s) =>
+                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                  )
+                : Promise.resolve()
+          f.then(async () => {
+            if (!n || !g) {
+              for (const r of _.keys())
+                O(r, {
+                  code: 'not_granted',
+                  message: 'frame initialization did not arrive - capability unavailable',
+                })
+              return
+            }
+            N(n.theme)
+            const s = g
+            addEventListener('message', (r) => {
+              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+            })
+            const d = (r) => U(() => import('/_runtime/' + r), void 0),
+              m = Object.keys(n.capabilities ?? {})
+            for (const r of m)
+              Object.hasOwn(w, r) ||
+                (V.test(r) &&
+                  e[r] === void 0 &&
+                  (t(r),
+                  O(r, {
+                    code: 'capability_disabled',
+                    message: 'capability not in this runtime generation',
+                  })))
+            const c = m
+                .filter((r) => Object.hasOwn(w, r))
+                .map((r) => [r, w[r]])
+                .filter((r) => typeof r[1] == 'string' && C.test(r[1])),
+              [l, ...h] = await Promise.allSettled([
+                E && C.test(E) ? d(E) : Promise.resolve({}),
+                ...c.map(([, r]) => d(r)),
+              ]),
+              p = g
+            A = H(
+              n,
+              (l.status === 'fulfilled' && l.value?.TRANSFORMS) || {},
+              { shellOrigin: p, mount: Q },
+              (r) => parent.postMessage({ __frame_cap_telemetry: r }, p),
+            )
+            const b = (r) =>
+                parent.postMessage(
+                  { __frame_cap_telemetry: { kind: 'cap-load-error', cap: r } },
+                  p,
+                ),
+              S = A
+            h.forEach((r, v) => {
+              const I = c[v][0]
+              if (r.status !== 'fulfilled') {
+                b(I)
+                return
+              }
+              try {
+                r.value?.install?.(S)
+              } catch {
+                b(I)
+              }
+            })
+            for (const [r, v] of _)
+              (v.queue.length === 0 && Object.keys(v.impl).length > 0) ||
+                O(r, {
+                  code: m.includes(r) ? 'capability_disabled' : 'not_granted',
+                  message: 'capability not available in this session',
+                })
+            ;(await a, parent.postMessage({ __frame_ready: !0 }, g))
+          })
+        }
+      })()
+    </script>
+    <!-- /frame-runtime -->
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        font:
+          14px -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        background: #faf9f5;
+        color: #141413;
+      }
+      img {
+        max-width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <title>Concertina Hero — Keyfall (Falling Columns, round 2)</title>
+    <style>
+      :root {
+        --ink: #3a2a20;
+        --paper: #fffbef;
+        --cream: #fff3d0;
+        --felt: #efe0c4;
 
-    // strike line
-    if (cfg.anchor === 'line') {
-      const s = document.createElement('div');
-      s.className = 'strike';
-      s.style.left = '8px'; s.style.right = '8px';
-      s.style.top = (H - cfg.kbH - 12) + 'px';
-      host.appendChild(s);
-    }
-    host.appendChild(frag);
-  }
+        /* left hand — cool, one hue per column */
+        --l0: #2ec4b6;
+        --l1: #4cc9f0;
+        --l2: #5b8def;
+        --l3: #8f7bf0;
+        --l4: #8ac926;
+        /* right hand — warm */
+        --r0: #ff5d5d;
+        --r1: #ff924c;
+        --r2: #ffb63a;
+        --r3: #ffd23f;
+        --r4: #ff8fce;
 
-  const CYCLE = ['--r0','--l1','--r3','--l0','--r4','--l3'];
-  let ci = 0;
-  function cfgCycle() { return CYCLE[(ci++) % CYCLE.length]; }
+        --ground: #fdf7ea;
+        --panel: #fffdf7;
+        --text: #33241b;
+        --muted: #7a6455;
+        --rule: #e2d3bd;
+        --accent: #b5461f;
 
-  function build(id, cfg) {
-    const field = document.getElementById(id);
-    if (!field) return;
-    const W = field.clientWidth || 640, H = field.clientHeight;
-    field.innerHTML = '';
-    const div = document.createElement('div'); div.className = 'divider'; field.appendChild(div);
-    const dl = document.createElement('div'); dl.className = 'divlabel'; dl.textContent = 'bellows'; field.appendChild(dl);
-    const left = document.createElement('div'); left.className = 'hand left'; field.appendChild(left);
-    const right = document.createElement('div'); right.className = 'hand right'; field.appendChild(right);
-    ci = 0;
-    buildHand(left, 'left', W/2, H, cfg);
-    buildHand(right, 'right', W/2, H, cfg);
-  }
+        --display:
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
+          system-ui, sans-serif;
+        --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+        --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 
-  const base = { bs: 42, padX: 16, padY: 12, kbH: 210, arc: 8, animate: true };
-  const mini = { bs: 26, padX: 10, padY: 8, kbH: 118, arc: 7, animate: true, dur: 3.0 };
+        --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
+        --shadow: 5px 6px 0 rgba(58, 42, 32, 0.16);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --ground: #22190f;
+          --panel: #2c2115;
+          --text: #f6e9d6;
+          --muted: #b39c86;
+          --rule: #4a3a29;
+          --accent: #ff9a6c;
+        }
+      }
+      :root[data-theme='dark'] {
+        --ground: #22190f;
+        --panel: #2c2115;
+        --text: #f6e9d6;
+        --muted: #b39c86;
+        --rule: #4a3a29;
+        --accent: #ff9a6c;
+      }
+      :root[data-theme='light'] {
+        --ground: #fdf7ea;
+        --panel: #fffdf7;
+        --text: #33241b;
+        --muted: #7a6455;
+        --rule: #e2d3bd;
+        --accent: #b5461f;
+      }
 
-  const heroActive = {
-    left:  [ {r:1,c:0,dir:'pull',name:'A',prog:0.55}, {r:2,c:2,dir:'push',name:'G',prog:0.3}, {r:0,c:4,dir:'pull',name:'B',prog:0.72} ],
-    right: [ {r:1,c:1,dir:'push',name:'D',prog:0.44}, {r:2,c:3,dir:'pull',name:'E',prog:0.15}, {r:0,c:0,dir:'push',name:'A',prog:0.62} ],
-  };
-  build('hero', { ...base, active: heroActive, guides:false, anchor:'button', colour:'fixed' });
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--ground);
+        color: var(--text);
+        font-family: var(--body);
+        font-size: 16px;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      .wrap {
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 56px 24px 96px;
+        display: flex;
+        flex-direction: column;
+        gap: 52px;
+      }
 
-  const twoLeft  = { left:[{r:1,c:0,dir:'pull',name:'A',prog:0.5},{r:0,c:2,dir:'push',name:'C',prog:0.7}], right:[{r:2,c:1,dir:'push',name:'G',prog:0.3},{r:1,c:3,dir:'pull',name:'A',prog:0.55}] };
-  build('visA', { ...mini, active: twoLeft, guides:false, anchor:'button', colour:'fixed' });
-  build('visB', { ...mini, active: twoLeft, guides:true,  anchor:'button', colour:'fixed' });
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        text-wrap: balance;
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(2rem, 4.6vw, 3.15rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.05;
+      }
+      h2 {
+        font-size: 1.55rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      h3 {
+        font-size: 1.02rem;
+        font-weight: 700;
+      }
+      p {
+        margin: 0;
+        max-width: 68ch;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .lede {
+        font-size: 1.1rem;
+        color: var(--muted);
+        max-width: 62ch;
+      }
+      code,
+      .k {
+        font-family: var(--mono);
+        font-size: 0.85em;
+        background: color-mix(in srgb, var(--accent) 12%, transparent);
+        color: var(--accent);
+        padding: 0.08em 0.36em;
+        border-radius: 4px;
+      }
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .rule {
+        height: 1px;
+        background: var(--rule);
+        border: 0;
+        margin: 0;
+      }
+      .caption {
+        font-size: 0.84rem;
+        color: var(--muted);
+        font-style: italic;
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      .chip {
+        font-family: var(--mono);
+        font-size: 0.74rem;
+        letter-spacing: 0.05em;
+        border: 1.5px solid var(--rule);
+        border-radius: 999px;
+        padding: 5px 11px;
+        color: var(--muted);
+      }
 
-  build('anchorA', { ...mini, active: twoLeft, guides:false, anchor:'button', colour:'fixed' });
-  build('anchorB', { ...mini, active: twoLeft, guides:false, anchor:'line',   colour:'fixed' });
+      /* ---------- the stage ---------- */
+      .stage {
+        background: linear-gradient(#cfeaf7, #f3e2c2);
+        border: 4px solid var(--ink);
+        border-radius: 18px 22px 16px 24px;
+        box-shadow: var(--shadow);
+        padding: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      .hud {
+        height: 34px;
+        margin-bottom: 8px;
+        border: 3px solid var(--ink);
+        border-radius: 9px;
+        background: var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        font-family: var(--display);
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .hud small {
+        font-family: var(--mono);
+        font-weight: 400;
+        font-size: 0.66rem;
+        letter-spacing: 0.1em;
+        opacity: 0.6;
+      }
 
-  const colActive = { left:[{r:1,c:0,dir:'push',name:'G',prog:0.5},{r:1,c:2,dir:'pull',name:'F',prog:0.4},{r:0,c:4,dir:'push',name:'G',prog:0.62}], right:[{r:1,c:1,dir:'push',name:'D',prog:0.46},{r:2,c:3,dir:'pull',name:'E',prog:0.3}] };
-  build('colA', { ...mini, active: colActive, guides:false, anchor:'button', colour:'fixed' });
-  build('colB', { ...mini, active: colActive, guides:false, anchor:'button', colour:'cycle' });
+      .field {
+        position: relative;
+        background: var(--paper);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .divider {
+        position: absolute;
+        top: 8px;
+        bottom: 8px;
+        left: 50%;
+        width: 3px;
+        transform: translateX(-50%);
+        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        opacity: 0.4;
+        z-index: 5;
+      }
+      .divlabel {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 6px;
+        z-index: 6;
+        font-family: var(--mono);
+        font-size: 0.54rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink);
+        opacity: 0.45;
+        background: var(--paper);
+        padding: 1px 6px;
+        border-radius: 5px;
+      }
 
-  // rebuild on resize so geometry stays correct
-  let t; addEventListener('resize', () => { clearTimeout(t); t = setTimeout(() => {
-    build('hero', { ...base, active: heroActive, guides:false, anchor:'button', colour:'fixed' });
-    build('visA', { ...mini, active: twoLeft, guides:false, anchor:'button', colour:'fixed' });
-    build('visB', { ...mini, active: twoLeft, guides:true,  anchor:'button', colour:'fixed' });
-    build('anchorA', { ...mini, active: twoLeft, guides:false, anchor:'button', colour:'fixed' });
-    build('anchorB', { ...mini, active: twoLeft, guides:false, anchor:'line',   colour:'fixed' });
-    build('colA', { ...mini, active: colActive, guides:false, anchor:'button', colour:'fixed' });
-    build('colB', { ...mini, active: colActive, guides:false, anchor:'button', colour:'cycle' });
-  }, 150); });
-})();
-</script>
+      .hand {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 50%;
+      }
+      .hand.left {
+        left: 0;
+      }
+      .hand.right {
+        right: 0;
+      }
 
-</body></html>
+      /* a rising track behind a button */
+      .track {
+        position: absolute;
+        border-radius: 8px 8px 0 0;
+        z-index: 1;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          color-mix(in srgb, var(--lane) 24%, transparent) 30%,
+          color-mix(in srgb, var(--lane) 30%, transparent)
+        );
+      }
+      .track.guide {
+        background: color-mix(in srgb, var(--ink) 5%, transparent);
+      }
+
+      /* strike line variant */
+      .strike {
+        position: absolute;
+        height: 0;
+        border-top: 3px dashed color-mix(in srgb, var(--ink) 55%, transparent);
+        z-index: 4;
+      }
+
+      /* a physical button */
+      .btn {
+        position: absolute;
+        border: 2.5px solid var(--ink);
+        border-radius: 50%;
+        z-index: 3;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        background: #e9e3d4;
+        display: flex;
+        flex-direction: column;
+      }
+      .btn .half {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        font-family: var(--display);
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .btn .half.pull {
+        background: color-mix(in srgb, #fff 55%, #d8d1bf);
+        border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 40%, transparent);
+      }
+      .btn .half.push {
+        background: #ddd6c4;
+      }
+      .btn.lit {
+        background: var(--lane);
+        box-shadow:
+          0 0 0 4px color-mix(in srgb, var(--lane) 45%, #fff),
+          var(--shadow-sm);
+        border-color: var(--ink);
+      }
+      .btn.lit .half.target {
+        background: var(--lane);
+      }
+      .btn.lit .half.target.pullfill {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--lane) 0 6px,
+          color-mix(in srgb, var(--lane) 50%, #fff) 6px 12px
+        );
+      }
+
+      /* a falling note pill */
+      .pill {
+        position: absolute;
+        border: 2.5px solid var(--ink);
+        border-radius: 9px;
+        z-index: 2;
+        background: var(--lane);
+        box-shadow: 2px 3px 0 rgba(58, 42, 32, 0.18);
+        display: grid;
+        place-items: center;
+        font-family: var(--display);
+        font-weight: 800;
+        color: var(--ink);
+      }
+      .pill.pull {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--lane) 0 7px,
+          color-mix(in srgb, var(--lane) 50%, #fff) 7px 14px
+        );
+      }
+
+      @keyframes fall {
+        from {
+          transform: translateY(var(--from));
+        }
+        to {
+          transform: translateY(var(--to));
+        }
+      }
+      .anim {
+        animation: fall var(--dur) linear infinite;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .anim {
+          animation: none;
+          transform: translateY(var(--rest));
+        }
+      }
+
+      /* ---------- variant grid ---------- */
+      .duo {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 20px;
+      }
+      .study {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .study h3 {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+      }
+      .study h3 .pin {
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border: 1.5px solid color-mix(in srgb, var(--accent) 40%, transparent);
+        border-radius: 5px;
+        padding: 1px 6px;
+      }
+      .study p {
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+      .study .stage {
+        padding: 7px;
+      }
+      .study .hud {
+        display: none;
+      }
+
+      .verdict {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 14px;
+      }
+      .verdict div {
+        border: 1.5px solid var(--rule);
+        border-radius: 10px;
+        padding: 12px 14px;
+        background: var(--panel);
+      }
+      .verdict strong {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 5px;
+      }
+      .verdict p {
+        font-size: 0.92rem;
+      }
+
+      /* anatomy diagram */
+      .anatomy {
+        display: flex;
+        gap: 26px;
+        flex-wrap: wrap;
+        align-items: center;
+        background: var(--panel);
+        border: 1.5px solid var(--rule);
+        border-radius: 12px;
+        padding: 20px;
+      }
+      .bigbtn {
+        width: 96px;
+        height: 96px;
+        border: 3px solid var(--ink);
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        flex: 0 0 auto;
+        box-shadow: var(--shadow-sm);
+      }
+      .bigbtn .half {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.3rem;
+        color: var(--ink);
+      }
+      .bigbtn .pull {
+        background: repeating-linear-gradient(
+          -45deg,
+          var(--r1) 0 8px,
+          color-mix(in srgb, var(--r1) 50%, #fff) 8px 16px
+        );
+        border-bottom: 2px solid var(--ink);
+      }
+      .bigbtn .push {
+        background: var(--r1);
+      }
+      .legend {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.92rem;
+      }
+      .legend .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .legend .dot {
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--ink);
+        border-radius: 4px;
+        flex: 0 0 auto;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 1.15em;
+        max-width: 68ch;
+      }
+      li {
+        margin-bottom: 8px;
+      }
+      .tablewrap {
+        overflow-x: auto;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 560px;
+        font-size: 0.92rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--rule);
+        vertical-align: top;
+      }
+      th {
+        font-family: var(--mono);
+        font-size: 0.67rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 600;
+      }
+    </style>
+
+    <div class="wrap">
+      <header>
+        <p class="eyebrow">Concertina Hero · Falling Columns · round 2</p>
+        <h1>Keyfall</h1>
+        <p class="lede">
+          Your mockup fused two of the concepts: keep the real anglo keyboard on the floor of the
+          playfield, and drop each note straight down onto the exact button it wants. Here it is
+          built out at 30 buttons, then four decisions worth settling.
+        </p>
+        <div class="chips">
+          <span class="chip">30 buttons · 3 rows × 5 × 2 hands</span>
+          <span class="chip">keyboard is the hit zone</span>
+          <span class="chip">bellows split down the middle</span>
+        </div>
+      </header>
+
+      <hr class="rule" />
+
+      <!-- HERO -->
+      <section>
+        <p class="eyebrow">The idea, built out</p>
+        <h2>The instrument is the bottom of the screen</h2>
+        <p>
+          Both hands sit in their true staggered positions, divided by the bellows. A note falls
+          down a coloured track and lands on its button — the top half lights for a pull, the bottom
+          half for a push. Buttons with nothing coming stay grey, so a busy 30-button tune only ever
+          lights the handful of buttons in play.
+        </p>
+        <div class="stage">
+          <div class="hud">
+            <span>Now Playing · The Kesh Jig</span><small>score 4,820 · ○○○ 12x</small>
+          </div>
+          <div class="field" id="hero" style="height: 470px"></div>
+        </div>
+        <p class="caption">
+          Animated to show the fall. Note names are illustrative; the real pairs come from the
+          tuning preset.
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ITERATION A: track visibility -->
+      <section>
+        <p class="eyebrow">Decision 01</p>
+        <h2>Do the empty buttons show their tracks?</h2>
+        <p>
+          Thirty faint guide lines make the field busy, but they hold every button in a fixed
+          spatial slot so your eye learns where each one lives. Lighting only the active tracks is
+          calmer and matches your sketch, at the cost of the field looking different every bar.
+        </p>
+        <div class="duo">
+          <div class="study">
+            <h3><span class="pin">A</span> Active only</h3>
+            <p>Only buttons with an incoming note draw a track. Quietest; closest to the mockup.</p>
+            <div class="stage"><div class="field" id="visA" style="height: 300px"></div></div>
+          </div>
+          <div class="study">
+            <h3><span class="pin">B</span> All guides</h3>
+            <p>
+              Every button trails a faint guide; active ones light up over it. Busier, but spatially
+              stable.
+            </p>
+            <div class="stage"><div class="field" id="visB" style="height: 300px"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ITERATION B: timing anchor -->
+      <section>
+        <p class="eyebrow">Decision 02 · the crux</p>
+        <h2>Where does timing happen?</h2>
+        <p>
+          Your buttons sit at different heights, so if every note lands on its own button, notes on
+          the back row travel farther than the front row — the hit point moves around the screen.
+          The alternative is a single strike line just above the keyboard, with the keys below as a
+          live map of which finger to move. It keeps timing in one place but breaks the "land on the
+          button" feeling.
+        </p>
+        <div class="duo">
+          <div class="study">
+            <h3><span class="pin">A</span> Land on the button</h3>
+            <p>
+              The button is the hit zone, wherever it sits. Truest to the instrument; timing target
+              roams.
+            </p>
+            <div class="stage"><div class="field" id="anchorA" style="height: 300px"></div></div>
+          </div>
+          <div class="study">
+            <h3><span class="pin">B</span> Shared strike line</h3>
+            <p>
+              All notes hit one line; the keyboard below just shows which button lit. Steady timing;
+              less physical.
+            </p>
+            <div class="stage"><div class="field" id="anchorB" style="height: 300px"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ITERATION C: button anatomy / push-pull -->
+      <section>
+        <p class="eyebrow">Decision 03</p>
+        <h2>Push and pull on one button</h2>
+        <p>
+          Each button carries two notes. Following your instrument sketch, the pull note sits on the
+          top half and the push on the bottom. A falling pill already says its direction two ways —
+          striped for pull, solid for push — and it lights the matching half as it lands, so the
+          bellows direction reads before you even parse the letter.
+        </p>
+        <div class="anatomy">
+          <div class="bigbtn">
+            <div class="half pull">A</div>
+            <div class="half push">G</div>
+          </div>
+          <div class="legend">
+            <div class="row">
+              <span
+                class="dot"
+                style="
+                  background: repeating-linear-gradient(-45deg, var(--r1) 0 5px, #fff 5px 10px);
+                "
+              ></span>
+              <strong>Top · pull</strong> — striped, draw the bellows out
+            </div>
+            <div class="row">
+              <span class="dot" style="background: var(--r1)"></span>
+              <strong>Bottom · push</strong> — solid, squeeze in
+            </div>
+            <div class="row">
+              <span class="dot" style="border-style: dashed; background: transparent"></span> The
+              whole button is one target; only the played half fills.
+            </div>
+          </div>
+        </div>
+        <p class="caption">
+          A chord is several buttons lit at once — same as today, just more of them.
+        </p>
+      </section>
+
+      <hr class="rule" />
+
+      <!-- ITERATION D: colour -->
+      <section>
+        <p class="eyebrow">Decision 04</p>
+        <h2>What the colours mean</h2>
+        <p>
+          Your mockup used a different colour per falling note so you can track them apart. That
+          works, but a fixed scheme teaches the layout: <strong>hand sets the temperature</strong> —
+          left cool, right warm — and <strong>column sets the hue</strong>, five across each hand.
+          Then a note's colour tells you which hand and roughly which finger before it lands.
+        </p>
+        <div class="duo">
+          <div class="study">
+            <h3><span class="pin">A</span> Fixed by position</h3>
+            <p>Colour = hand + column. The same button is always the same colour, every song.</p>
+            <div class="stage"><div class="field" id="colA" style="height: 280px"></div></div>
+          </div>
+          <div class="study">
+            <h3><span class="pin">B</span> Cycling per note</h3>
+            <p>
+              Colour just keeps adjacent notes distinct (your mockup). Simpler, teaches nothing.
+            </p>
+            <div class="stage"><div class="field" id="colB" style="height: 280px"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <hr class="rule" />
+
+      <section>
+        <p class="eyebrow">Still open</p>
+        <h2>Questions this round raises</h2>
+        <ul>
+          <li>
+            <strong>The staggered-track problem.</strong> Real anglo columns aren't evenly spaced,
+            so tracks from neighbouring buttons can sit close together. We either keep true physical
+            spacing (authentic, occasionally cramped) or snap tracks to an even grid and let only
+            the button shapes hint at the stagger.
+          </li>
+          <li>
+            <strong>How tall is the keyboard zone?</strong> The more room the keys take, the shorter
+            the fall — less warning time. There's a trade between "looks like the instrument" and "I
+            can see it coming".
+          </li>
+          <li>
+            <strong>Back-row reachability.</strong> If timing lands on the button (02·A), back-row
+            notes need a longer track and therefore start earlier. Might actually be fine — it
+            mirrors the extra reach — but it needs playtesting.
+          </li>
+          <li>
+            <strong>Keyboard keys.</strong> 30 buttons won't fit the number row. Two 3×5 blocks —
+            left hand on <span class="k">Q-T / A-G / Z-B</span>, right on
+            <span class="k">Y-P / H-; / N-/</span> — mirror the on-screen hands.
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <script>
+      ;(() => {
+        const L = ['--l0', '--l1', '--l2', '--l3', '--l4']
+        const R = ['--r0', '--r1', '--r2', '--r3', '--r4']
+
+        // Illustrative note pairs [row][col] = {pull, push}
+        const NOTES = {
+          left: [
+            [
+              ['C#', 'A#'],
+              ['G#', 'D#'],
+              ['E', 'C'],
+              ['A', 'F'],
+              ['B', 'G'],
+            ],
+            [
+              ['A', 'G'],
+              ['D', 'B'],
+              ['F', 'D'],
+              ['A', 'G'],
+              ['C', 'B'],
+            ],
+            [
+              ['D', 'C'],
+              ['G', 'E'],
+              ['B', 'G'],
+              ['D', 'C'],
+              ['F', 'E'],
+            ],
+          ],
+          right: [
+            [
+              ['D#', 'A#'],
+              ['G#', 'F'],
+              ['C', 'A'],
+              ['E', 'C'],
+              ['A', 'F'],
+            ],
+            [
+              ['B', 'G'],
+              ['D', 'C'],
+              ['F', 'E'],
+              ['A', 'G'],
+              ['B', 'C'],
+            ],
+            [
+              ['F', 'D'],
+              ['A', 'G'],
+              ['C', 'B'],
+              ['E', 'D'],
+              ['F', 'G'],
+            ],
+          ],
+        }
+
+        // Geometry for one hand panel of width W, height H.
+        function layout(W, H, opts) {
+          const cols = 5,
+            rows = 3
+          const BS = opts.bs // button size
+          const colGap = (W - 2 * opts.padX - cols * BS) / (cols - 1)
+          const arc = [opts.arc, opts.arc * 0.4, 0, opts.arc * 0.4, opts.arc] // U: middle highest
+          const kbTop = H - opts.kbH // top of keyboard zone
+          const rowGap = (opts.kbH - 2 * opts.padY - rows * BS) / (rows - 1)
+          const cx = (c) => opts.padX + c * (BS + colGap) + BS / 2
+          const cy = (r) =>
+            (opts.mirror // mirror not used
+              ? 0
+              : 0) +
+            kbTop +
+            opts.padY +
+            r * (BS + rowGap) +
+            BS / 2
+          return { cols, rows, BS, cx, cy: (r, c) => cy(r) + arc[c] }
+        }
+
+        function buildHand(host, hand, W, H, cfg) {
+          const g = layout(W, H, cfg)
+          const vars = hand === 'left' ? L : R
+          const frag = document.createDocumentFragment()
+
+          // active lookup
+          const active = new Map()
+          ;(cfg.active[hand] || []).forEach((n) => active.set(n.r + '-' + n.c, n))
+
+          for (let r = 0; r < g.rows; r++) {
+            for (let c = 0; c < g.cols; c++) {
+              const x = g.cx(c),
+                y = g.cy(r, c)
+              const on = active.get(r + '-' + c)
+              const laneVar = cfg.colour === 'cycle' ? cfgCycle(hand, r, c) : vars[c]
+
+              // guide track
+              if (cfg.guides && !on) {
+                const t = document.createElement('div')
+                t.className = 'track guide'
+                t.style.left = x - g.BS * 0.34 + 'px'
+                t.style.width = g.BS * 0.68 + 'px'
+                t.style.top = '6px'
+                t.style.height = y - 6 + 'px'
+                frag.appendChild(t)
+              }
+
+              // active track + falling pill
+              if (on) {
+                const strikeY = cfg.anchor === 'line' ? H - cfg.kbH - 12 : y
+                const t = document.createElement('div')
+                t.className = 'track'
+                t.style.setProperty('--lane', `var(${laneVar})`)
+                t.style.left = x - g.BS * 0.4 + 'px'
+                t.style.width = g.BS * 0.8 + 'px'
+                t.style.top = '4px'
+                t.style.height = strikeY - 4 + 'px'
+                frag.appendChild(t)
+
+                const pill = document.createElement('div')
+                pill.className = 'pill' + (on.dir === 'pull' ? ' pull' : '')
+                pill.style.setProperty('--lane', `var(${laneVar})`)
+                const pw = g.BS * 0.92,
+                  ph = g.BS * 0.66
+                pill.style.width = pw + 'px'
+                pill.style.height = ph + 'px'
+                pill.style.left = x - pw / 2 + 'px'
+                pill.style.fontSize = g.BS * 0.34 + 'px'
+                pill.textContent = (on.dir === 'pull' ? '▲' : '▼') + on.name
+                // fall animation from top to (strikeY - ph)
+                const endTop = strikeY - ph - (cfg.anchor === 'line' ? 2 : g.BS * 0.1)
+                pill.style.top = '0px'
+                pill.style.setProperty('--from', -ph - 10 + 'px')
+                pill.style.setProperty('--to', endTop + 'px')
+                pill.style.setProperty('--rest', endTop * (on.prog ?? 0.5) + 'px')
+                pill.style.setProperty('--dur', (cfg.dur || 3.4) + 's')
+                if (cfg.animate) {
+                  pill.classList.add('anim')
+                  pill.style.animationDelay = -(on.prog ?? 0.5) * (cfg.dur || 3.4) + 's'
+                } else {
+                  pill.style.transform = `translateY(${endTop * (on.prog ?? 0.5)}px)`
+                }
+                frag.appendChild(pill)
+              }
+
+              // strike-line map dims non-target buttons
+              const b = document.createElement('div')
+              b.className = 'btn' + (on ? ' lit' : '')
+              if (on) b.style.setProperty('--lane', `var(${laneVar})`)
+              b.style.left = x - g.BS / 2 + 'px'
+              b.style.top = y - g.BS / 2 + 'px'
+              b.style.width = g.BS + 'px'
+              b.style.height = g.BS + 'px'
+              const fs = g.BS * 0.32 + 'px'
+              const [pull, push] = NOTES[hand][r][c]
+              const tgtPull = on && on.dir === 'pull'
+              const tgtPush = on && on.dir === 'push'
+              // Only the lit buttons show their letters — grey buttons are position, not reading.
+              const pl = on ? pull : '',
+                ps = on ? push : ''
+              b.innerHTML =
+                `<div class="half pull${tgtPull ? ' target pullfill' : ''}" style="font-size:${fs}">${pl}</div>` +
+                `<div class="half push${tgtPush ? ' target' : ''}" style="font-size:${fs}">${ps}</div>`
+              frag.appendChild(b)
+            }
+          }
+
+          // strike line
+          if (cfg.anchor === 'line') {
+            const s = document.createElement('div')
+            s.className = 'strike'
+            s.style.left = '8px'
+            s.style.right = '8px'
+            s.style.top = H - cfg.kbH - 12 + 'px'
+            host.appendChild(s)
+          }
+          host.appendChild(frag)
+        }
+
+        const CYCLE = ['--r0', '--l1', '--r3', '--l0', '--r4', '--l3']
+        let ci = 0
+        function cfgCycle() {
+          return CYCLE[ci++ % CYCLE.length]
+        }
+
+        function build(id, cfg) {
+          const field = document.getElementById(id)
+          if (!field) return
+          const W = field.clientWidth || 640,
+            H = field.clientHeight
+          field.innerHTML = ''
+          const div = document.createElement('div')
+          div.className = 'divider'
+          field.appendChild(div)
+          const dl = document.createElement('div')
+          dl.className = 'divlabel'
+          dl.textContent = 'bellows'
+          field.appendChild(dl)
+          const left = document.createElement('div')
+          left.className = 'hand left'
+          field.appendChild(left)
+          const right = document.createElement('div')
+          right.className = 'hand right'
+          field.appendChild(right)
+          ci = 0
+          buildHand(left, 'left', W / 2, H, cfg)
+          buildHand(right, 'right', W / 2, H, cfg)
+        }
+
+        const base = { bs: 42, padX: 16, padY: 12, kbH: 210, arc: 8, animate: true }
+        const mini = { bs: 26, padX: 10, padY: 8, kbH: 118, arc: 7, animate: true, dur: 3.0 }
+
+        const heroActive = {
+          left: [
+            { r: 1, c: 0, dir: 'pull', name: 'A', prog: 0.55 },
+            { r: 2, c: 2, dir: 'push', name: 'G', prog: 0.3 },
+            { r: 0, c: 4, dir: 'pull', name: 'B', prog: 0.72 },
+          ],
+          right: [
+            { r: 1, c: 1, dir: 'push', name: 'D', prog: 0.44 },
+            { r: 2, c: 3, dir: 'pull', name: 'E', prog: 0.15 },
+            { r: 0, c: 0, dir: 'push', name: 'A', prog: 0.62 },
+          ],
+        }
+        build('hero', {
+          ...base,
+          active: heroActive,
+          guides: false,
+          anchor: 'button',
+          colour: 'fixed',
+        })
+
+        const twoLeft = {
+          left: [
+            { r: 1, c: 0, dir: 'pull', name: 'A', prog: 0.5 },
+            { r: 0, c: 2, dir: 'push', name: 'C', prog: 0.7 },
+          ],
+          right: [
+            { r: 2, c: 1, dir: 'push', name: 'G', prog: 0.3 },
+            { r: 1, c: 3, dir: 'pull', name: 'A', prog: 0.55 },
+          ],
+        }
+        build('visA', {
+          ...mini,
+          active: twoLeft,
+          guides: false,
+          anchor: 'button',
+          colour: 'fixed',
+        })
+        build('visB', { ...mini, active: twoLeft, guides: true, anchor: 'button', colour: 'fixed' })
+
+        build('anchorA', {
+          ...mini,
+          active: twoLeft,
+          guides: false,
+          anchor: 'button',
+          colour: 'fixed',
+        })
+        build('anchorB', {
+          ...mini,
+          active: twoLeft,
+          guides: false,
+          anchor: 'line',
+          colour: 'fixed',
+        })
+
+        const colActive = {
+          left: [
+            { r: 1, c: 0, dir: 'push', name: 'G', prog: 0.5 },
+            { r: 1, c: 2, dir: 'pull', name: 'F', prog: 0.4 },
+            { r: 0, c: 4, dir: 'push', name: 'G', prog: 0.62 },
+          ],
+          right: [
+            { r: 1, c: 1, dir: 'push', name: 'D', prog: 0.46 },
+            { r: 2, c: 3, dir: 'pull', name: 'E', prog: 0.3 },
+          ],
+        }
+        build('colA', {
+          ...mini,
+          active: colActive,
+          guides: false,
+          anchor: 'button',
+          colour: 'fixed',
+        })
+        build('colB', {
+          ...mini,
+          active: colActive,
+          guides: false,
+          anchor: 'button',
+          colour: 'cycle',
+        })
+
+        // rebuild on resize so geometry stays correct
+        let t
+        addEventListener('resize', () => {
+          clearTimeout(t)
+          t = setTimeout(() => {
+            build('hero', {
+              ...base,
+              active: heroActive,
+              guides: false,
+              anchor: 'button',
+              colour: 'fixed',
+            })
+            build('visA', {
+              ...mini,
+              active: twoLeft,
+              guides: false,
+              anchor: 'button',
+              colour: 'fixed',
+            })
+            build('visB', {
+              ...mini,
+              active: twoLeft,
+              guides: true,
+              anchor: 'button',
+              colour: 'fixed',
+            })
+            build('anchorA', {
+              ...mini,
+              active: twoLeft,
+              guides: false,
+              anchor: 'button',
+              colour: 'fixed',
+            })
+            build('anchorB', {
+              ...mini,
+              active: twoLeft,
+              guides: false,
+              anchor: 'line',
+              colour: 'fixed',
+            })
+            build('colA', {
+              ...mini,
+              active: colActive,
+              guides: false,
+              anchor: 'button',
+              colour: 'fixed',
+            })
+            build('colB', {
+              ...mini,
+              active: colActive,
+              guides: false,
+              anchor: 'button',
+              colour: 'cycle',
+            })
+          }, 150)
+        })
+      })()
+    </script>
+  </body>
+</html>

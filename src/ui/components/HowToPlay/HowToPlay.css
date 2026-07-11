@@ -1,0 +1,229 @@
+/* ---------- How to play (compact, two worked examples) ---------- */
+.howto-play__lead {
+  margin: 0 0 var(--sp-16);
+  font-size: var(--fs-base);
+  font-weight: 500;
+}
+.howto-play__demos {
+  --lane: var(--red);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-24);
+  justify-content: center;
+}
+.howto-play__demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-8);
+  width: 150px;
+}
+
+/* The mini fall zone: a note card falls to the dashed hit line at its foot. */
+.howto-play__lane {
+  position: relative;
+  width: 100%;
+  height: 92px;
+  background:
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 4px),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--lane) 6%, #fff),
+      color-mix(in srgb, var(--lane) 22%, #fff)
+    );
+  border: 3px solid var(--ink);
+  border-radius: 12px 14px 12px 14px;
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+.howto-play__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  border-bottom: 3px dashed color-mix(in srgb, var(--ink) 55%, transparent);
+}
+.howto-play__note {
+  position: absolute;
+  left: 50%;
+  bottom: 15px;
+  transform: translateX(-50%) rotate(-2deg);
+  min-width: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-2) var(--sp-6);
+  border: 3px solid var(--ink);
+  border-radius: 11px 13px 10px 12px;
+  box-shadow: var(--shadow-xs);
+  animation: htpFall 2.6s ease-in-out infinite;
+}
+.howto-play__note--push {
+  background: var(--lane);
+}
+.howto-play__note--pull {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--lane) 0 7px,
+    color-mix(in srgb, var(--lane) 55%, #fff) 7px 14px
+  );
+  box-shadow:
+    var(--shadow-xs),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.65);
+}
+.howto-play__arrow {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xs);
+  line-height: 0.8;
+  color: var(--ink);
+  -webkit-text-stroke: 2px #fff;
+  paint-order: stroke fill;
+}
+.howto-play__name {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-lg);
+  line-height: 1;
+  color: var(--ink);
+  -webkit-text-stroke: 2px #fff;
+  paint-order: stroke fill;
+}
+
+/* The button below, its played half filled in (solid push / striped pull) with a
+   ring, exactly like the real keyboard's pressed state. */
+.howto-play__key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.howto-play__circle {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--lane) 55%, #fff),
+    var(--shadow-xs);
+  animation: htpPress 2.6s ease-in-out infinite;
+}
+.howto-play__half {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 19px;
+  line-height: 1;
+  color: var(--ink);
+}
+.howto-play__half--pull {
+  background: color-mix(in srgb, var(--lane) 30%, #fff);
+}
+.howto-play__half--push {
+  background: color-mix(in srgb, var(--lane) 12%, #fff);
+  border-top: 2px solid color-mix(in srgb, var(--ink) 45%, transparent);
+}
+/* The played half fills in; the other half recedes to a faint wash. */
+.howto-play__key--push .howto-play__half--push {
+  background: var(--lane);
+}
+.howto-play__key--pull .howto-play__half--pull {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--lane) 0 6px,
+    color-mix(in srgb, var(--lane) 55%, #fff) 6px 12px
+  );
+}
+.howto-play__key--push .howto-play__half--pull,
+.howto-play__key--pull .howto-play__half--push {
+  background: color-mix(in srgb, var(--lane) 14%, #fff);
+}
+.howto-play__keylabel {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  padding: 1px 8px;
+  background: color-mix(in srgb, var(--lane) 40%, #fff);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+
+.howto-play__how {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.howto-play__shift {
+  display: inline-block;
+  padding: 0 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  background: var(--sky);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+
+.howto-play__hint {
+  margin: var(--sp-14) 0 0;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* The card falls to the line, holds, then fades and restarts; the button pops in
+   time as it lands. */
+@keyframes htpFall {
+  0% {
+    transform: translateX(-50%) translateY(-54px) rotate(-2deg);
+    opacity: 0;
+  }
+  16% {
+    opacity: 1;
+  }
+  55% {
+    transform: translateX(-50%) translateY(0) rotate(-2deg);
+    opacity: 1;
+  }
+  74% {
+    transform: translateX(-50%) translateY(0) rotate(-2deg);
+    opacity: 1;
+  }
+  86% {
+    transform: translateX(-50%) translateY(3px) rotate(-2deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-54px) rotate(-2deg);
+    opacity: 0;
+  }
+}
+@keyframes htpPress {
+  0%,
+  52% {
+    transform: scale(1);
+  }
+  62% {
+    transform: scale(1.12);
+  }
+  80%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Respect reduced-motion: leave the card resting at the line and the button still. */
+@media (prefers-reduced-motion: reduce) {
+  .howto-play__note,
+  .howto-play__circle {
+    animation: none;
+  }
+}

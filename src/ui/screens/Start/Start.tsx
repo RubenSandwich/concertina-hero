@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { LANE_BUTTONS, LANE_COLORS, LANE_NOTES } from '#data/instrument'
 import { INSTRUMENT_SIZES, minInstrumentFor, type InstrumentSize } from '#data/layout'
 import { getActivePreset, type Preset } from '#data/presets'
 import { DIFF_CLASS, type Song } from '#data/songs'
 import Accordion from '#components/Accordion/Accordion'
+import HowToPlay from '#components/HowToPlay/HowToPlay'
 import SegmentedControl from '#components/SegmentedControl/SegmentedControl'
 import Switch from '#components/Switch/Switch'
 import PresetPicker from '#modals/PresetPicker/PresetPicker'
@@ -24,6 +24,10 @@ const INSTRUMENTS = INSTRUMENT_SIZES.map((size) => ({
   note: 'button',
 }))
 
+// Which collapsible sections are open. Held in App so it survives the Start
+// screen unmounting during a game and restores on return.
+export type StartSections = { howto: boolean; songs: boolean; settings: boolean }
+
 interface StartProps {
   songs: Song[]
   onStart: (index: number, speed: number, waitForNote: boolean, hideFeedback: boolean) => void
@@ -32,6 +36,8 @@ interface StartProps {
   onMicChange: (enabled: boolean) => void
   instrumentSize: InstrumentSize
   onInstrumentChange: (size: InstrumentSize) => void
+  sections: StartSections
+  onSectionToggle: (section: keyof StartSections, open: boolean) => void
 }
 
 export default function Start({
@@ -42,6 +48,8 @@ export default function Start({
   onMicChange,
   instrumentSize,
   onInstrumentChange,
+  sections,
+  onSectionToggle,
 }: StartProps) {
   const [selectedId, setSelectedId] = useState<string | undefined>(() => songs[0]?.id)
   const [speed, setSpeed] = useState(1)
@@ -115,63 +123,19 @@ export default function Start({
       </h1>
       <p className="subtitle">A squeezebox rhythm game — notes fall onto the keyboard!</p>
 
-      <Accordion variant="howto" heading="How to play">
-        <p className="howto__lead">
-          Note cards <b>fall</b> onto your concertina's keyboard and cut off at the dashed line.
-          When a card reaches the line, play its button the way the arrow shows.
-        </p>
-
-        <div className="howto__row">
-          <span className="badge badge--push">▼ PUSH</span>
-          <span>
-            Squeeze the bellows in — just <strong>tap</strong> the button's key (or tap it
-            on-screen).
-          </span>
-        </div>
-        <div className="howto__row">
-          <span className="badge badge--pull">▲ PULL</span>
-          <span>
-            Draw the bellows out — hold <span className="key-cap key-cap--shift">⇧ Shift</span> +
-            the key (or tap the top half).
-          </span>
-        </div>
-
-        <div className="howto__keys">
-          {LANE_BUTTONS.map((b) => (
-            <span key={b.lane} className="key-cap" style={{ '--lane': b.color }}>
-              {b.keyLabel}
-            </span>
-          ))}
-        </div>
-        <p className="howto__hint">
-          The keys mirror the keyboard on screen — <b>Q W E …</b> the top row, <b>A S D …</b> the
-          home row, <b>Z X C …</b> the bottom — and each button sounds a different note on push vs
-          pull.
-        </p>
-        <p className="howto__hint">
-          Got a real concertina? Switch to <b>🎤 Mic</b> in Settings and just play the note — the
-          keyboard still works as a fallback. Pick your instrument size there too.
-        </p>
-
-        <div className="note-map">
-          {LANE_NOTES.map((n, i) => (
-            <div key={i} className="note-map__btn" style={{ '--lane': LANE_COLORS[i] }}>
-              <span className="note-map__num">
-                {LANE_BUTTONS[i].number}
-                <b className="note-map__key">{LANE_BUTTONS[i].keyLabel}</b>
-              </span>
-              <span className="note-map__notes">
-                <span className="nm nm--push">▼ {n.push.name}</span>
-                <span className="nm nm--pull">▲ {n.pull.name}</span>
-              </span>
-            </div>
-          ))}
-        </div>
+      <Accordion
+        variant="howto"
+        heading="How to play"
+        open={sections.howto}
+        onOpenChange={(o) => onSectionToggle('howto', o)}
+      >
+        <HowToPlay />
       </Accordion>
 
       <Accordion
         variant="songs"
-        defaultOpen
+        open={sections.songs}
+        onOpenChange={(o) => onSectionToggle('songs', o)}
         heading={
           <>
             Song
@@ -206,7 +170,12 @@ export default function Start({
                     className={'song-card__supports' + (locked ? ' is-blocked' : '')}
                     title={`Plays on the ${minSize}-button and any larger concertina`}
                   >
-                    🪗 {minSize}+
+                    <img
+                      className="song-card__supports-icon"
+                      src={`${import.meta.env.BASE_URL}concertina.svg`}
+                      alt=""
+                    />
+                    {minSize}+
                   </span>
                 </span>
               </button>
@@ -218,7 +187,12 @@ export default function Start({
         </button>
       </Accordion>
 
-      <Accordion variant="settings" heading="Settings">
+      <Accordion
+        variant="settings"
+        heading="Settings"
+        open={sections.settings}
+        onOpenChange={(o) => onSectionToggle('settings', o)}
+      >
         <div className="practice-row">
           <span className="practice-row__label">Speed</span>
           <SegmentedControl label="Speed" options={SPEEDS} value={speed} onChange={setSpeed} />
@@ -280,7 +254,14 @@ export default function Start({
 
         <div className="practice-row practice-row--divider">
           <div className="practice-row__info">
-            <span className="practice-row__label">🪗 Your concertina</span>
+            <span className="practice-row__label">
+              <img
+                className="practice-row__icon"
+                src={`${import.meta.env.BASE_URL}concertina.svg`}
+                alt=""
+              />
+              Your concertina
+            </span>
             <span className="practice-row__desc">
               Pick the anglo you own — sets the keyboard, colours and tuning.
             </span>
@@ -295,7 +276,7 @@ export default function Start({
 
         <div className="practice-row practice-row--divider note-freq-row">
           <div className="practice-row__info">
-            <span className="practice-row__label">🎹 Note frequencies</span>
+            <span className="practice-row__label">🔘 Note frequencies</span>
             <span className="practice-row__desc">
               Tune each button to your instrument — presets are saved per size.
             </span>
