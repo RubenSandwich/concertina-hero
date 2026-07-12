@@ -158,6 +158,84 @@
   z-index: 0;
 }
 
+/* ---------- Breath bands ----------
+   A full-width, tinted zone behind each run of same-direction notes, so a player
+   can read the coming push/pull switch before the notes reach the line. Push is a
+   solid warm wash; pull is cool diagonal stripes (echoing the striped pull notes).
+   A big faint arrow watermarks the direction; a leading-edge label counts the run.
+
+   The whole song's bands live in one `.breath-track` that is only ever moved with
+   a translateY (see Game.tsx) — a compositor transform, so scrolling never repaints
+   the gradients. `will-change` keeps it on its own layer. */
+.breath-track {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  will-change: transform;
+}
+.breath-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.breath-band--push {
+  background: color-mix(in srgb, var(--orange) 14%, transparent);
+  border-top: 2px solid color-mix(in srgb, var(--orange) 55%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--orange) 55%, transparent);
+}
+.breath-band--pull {
+  background: repeating-linear-gradient(
+    -45deg,
+    color-mix(in srgb, var(--sky) 17%, transparent) 0 10px,
+    color-mix(in srgb, var(--sky) 6%, transparent) 10px 20px
+  );
+  border-top: 2px solid color-mix(in srgb, var(--sky) 60%, transparent);
+  border-bottom: 2px solid color-mix(in srgb, var(--sky) 60%, transparent);
+}
+.breath-band__arrow {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 7vh, 4rem);
+  line-height: 1;
+  opacity: 0.22;
+}
+.breath-band--push .breath-band__arrow {
+  color: var(--orange);
+}
+.breath-band--pull .breath-band__arrow {
+  color: var(--sky);
+}
+/* The label rides the band's leading (bottom) edge — the first part to scroll into
+   view — so the push/pull is read as early as possible. It is repeated on both
+   edges so the count is visible wherever the eyes are across the wide field. */
+.breath-band__label {
+  position: absolute;
+  bottom: 5px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.08em;
+}
+.breath-band__label--left {
+  left: var(--sp-8);
+}
+.breath-band__label--right {
+  right: var(--sp-8);
+}
+.breath-band--push .breath-band__label {
+  color: color-mix(in srgb, var(--orange) 65%, var(--ink));
+}
+.breath-band--pull .breath-band__label {
+  color: color-mix(in srgb, var(--sky) 68%, var(--ink));
+}
+
 /* Dashed divider between the two hands. */
 .hand-divider {
   position: absolute;

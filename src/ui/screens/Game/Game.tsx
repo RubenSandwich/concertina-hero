@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useGameEngine } from '#hooks/useGameEngine'
 import type { GameNote, GameResult } from '#hooks/useGameEngine'
 import type { Song, Section } from '#data/songs'
@@ -47,6 +48,30 @@ function currentDir(sections: Section[], elapsed: number): Direction {
   return sections.length ? sections[sections.length - 1].dir : 'push'
 }
 
+// A push/pull run as a full-width "breath band". The whole song is precomputed
+// once into a fixed film strip: `bottom`/`height` are percentages of the fall-zone
+// height at song time 0, so the strip only ever needs a single `translateY` to
+// scroll (a compositor transform — no per-frame layout or repaint of the big
+// translucent gradients). `count` labels the run; a push run's label sits on the
+// left, a pull run's on the right, so the direction reads from position too.
+interface BandStripItem {
+  id: number
+  dir: Direction
+  count: number
+  bottom: number
+  height: number
+}
+
+function buildBandStrip(song: Song): BandStripItem[] {
+  return song.sections.map((s) => ({
+    id: s.id,
+    dir: s.dir,
+    count: song.notes.reduce((c, n) => (n.time >= s.start && n.time < s.end ? c + 1 : c), 0),
+    bottom: (s.start / LEAD_TIME) * 100,
+    height: ((s.end - s.start) / LEAD_TIME) * 100,
+  }))
+}
+
 interface GameProps {
   song: Song
   speed?: number
@@ -93,6 +118,32 @@ export default function Game({
     ? Math.round(((g.counts.perfect + g.counts.good + g.counts.ok) / judged) * 100)
     : 100
   const mode = currentDir(song.sections, Math.max(g.elapsed, 0))
+
+  // The breath bands are static per song, so build them (and their label elements)
+  // once. Only the enclosing track's translateY changes each frame, so React skips
+  // reconciling these children and the browser never repaints the gradients.
+  const bandStrip = useMemo(() => buildBandStrip(song), [song])
+  const bandEls = useMemo(
+    () =>
+      bandStrip.map((b) => {
+        const label = (b.dir === 'pull' ? '▲ PULL' : '▼ PUSH') + ' ×' + b.count
+        return (
+          <div
+            key={b.id}
+            className={'breath-band breath-band--' + b.dir}
+            style={{ bottom: b.bottom.toFixed(3) + '%', height: b.height.toFixed(3) + '%' }}
+          >
+            <span className="breath-band__arrow" aria-hidden="true">
+              {b.dir === 'pull' ? '▲' : '▼'}
+            </span>
+            {/* Repeated on both edges so the count is readable wherever the eyes are. */}
+            <span className="breath-band__label breath-band__label--left">{label}</span>
+            <span className="breath-band__label breath-band__label--right">{label}</span>
+          </div>
+        )
+      }),
+    [bandStrip],
+  )
 
   const placed = placeNotes(g.notes, g.elapsed, beatFrac)
 
@@ -197,6 +248,16 @@ export default function Game({
               }
             />
           ))}
+
+          {/* Breath bands: one tinted push/pull zone per run. The strip is built
+              once (bandEls) and only translated here, so scrolling it is a single
+              compositor transform rather than a per-frame relayout. */}
+          <div
+            className="breath-track"
+            style={{ transform: `translateY(${((g.elapsed / LEAD_TIME) * 100).toFixed(3)}%)` }}
+          >
+            {bandEls}
+          </div>
 
           {geom.split && <div className="hand-divider" />}
 
