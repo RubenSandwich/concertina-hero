@@ -1,29 +1,243 @@
-/* ---------- How to play (compact, two worked examples) ---------- */
+/* ---------- How to play ----------
+   Two passes, in learning order: the push/pull concept on one button, then the
+   falling-note flow. `--lane` (the button colour) is set on the root. */
+.howto-play {
+  --lane: var(--red);
+}
 .howto-play__lead {
   margin: 0 0 var(--sp-16);
   font-size: var(--fs-base);
   font-weight: 500;
 }
-.howto-play__demos {
-  --lane: var(--red);
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-24);
-  justify-content: center;
+
+/* ---- One button, two notes (push vs pull) ---- */
+.howto-play__dirs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 560px;
+  margin: 0 auto;
 }
-.howto-play__demo {
+.howto-play__dir {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: var(--sp-12);
+  padding: 0 var(--sp-24);
+}
+.howto-play__dir:first-child {
+  border-right: 3px dashed color-mix(in srgb, var(--ink) 28%, transparent);
+}
+.howto-play__dirhd {
+  display: flex;
+  align-items: center;
   gap: var(--sp-8);
-  width: 150px;
+}
+.howto-play__dirword {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xl);
+}
+/* Direction badge — orange push / sky-striped pull, the same push/pull colours
+   the HUD and note ribbon use. */
+.howto-play__badge {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: var(--shadow-xs);
+}
+.howto-play__badge--push {
+  background: var(--orange);
+}
+.howto-play__badge--pull {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--sky) 0 6px,
+    color-mix(in srgb, var(--sky) 55%, #fff) 6px 12px
+  );
+}
+
+/* The concertina motif: two end plates and a folded middle, squeezed together
+   for push and drawn apart for pull. */
+.howto-play__bellows {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 32px;
+}
+.howto-play__plate {
+  width: 11px;
+  height: 30px;
+  background: var(--lane);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: var(--shadow-xs);
+}
+.howto-play__fold {
+  height: 26px;
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--ink) 80%, transparent) 0 2px,
+    transparent 2px 8px
+  );
+}
+.howto-play__fold--in {
+  width: 26px;
+}
+.howto-play__fold--out {
+  width: 50px;
+}
+.howto-play__move {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-md);
+  line-height: 1;
+  color: var(--ink);
+}
+
+/* The button, its played half filled in (solid push / striped pull) with a ring,
+   exactly like the real keyboard's pressed state. */
+.howto-play__key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.howto-play__circle {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: 3px solid var(--ink);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--lane) 55%, #fff),
+    var(--shadow-xs);
+}
+.howto-play__half {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 19px;
+  line-height: 1;
+  color: var(--ink);
+}
+.howto-play__half--pull {
+  background: color-mix(in srgb, var(--lane) 30%, #fff);
+}
+.howto-play__half--push {
+  background: color-mix(in srgb, var(--lane) 12%, #fff);
+  border-top: 2px solid color-mix(in srgb, var(--ink) 45%, transparent);
+}
+/* The played half fills in; the other recedes to a faint wash. */
+.howto-play__key--push .howto-play__half--push {
+  background: var(--lane);
+}
+.howto-play__key--pull .howto-play__half--pull {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--lane) 0 6px,
+    color-mix(in srgb, var(--lane) 55%, #fff) 6px 12px
+  );
+}
+.howto-play__key--push .howto-play__half--pull,
+.howto-play__key--pull .howto-play__half--push {
+  background: color-mix(in srgb, var(--lane) 14%, #fff);
+  color: color-mix(in srgb, var(--ink) 55%, #fff);
+}
+.howto-play__keylabel {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  color: var(--ink);
+  padding: 1px 8px;
+  background: color-mix(in srgb, var(--lane) 40%, #fff);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+.howto-play__how {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.35;
+}
+.howto-play__shift {
+  display: inline-block;
+  padding: 0 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 800;
+  background: var(--sky);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+
+/* ---- The flow: three steps ---- */
+.howto-play__flow-lead {
+  margin: var(--sp-24) 0 var(--sp-14);
+  padding-top: var(--sp-20);
+  border-top: 3px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+  font-size: var(--fs-base);
+  font-weight: 500;
+}
+.howto-play__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-20);
+}
+.howto-play__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-10);
+}
+.howto-play__step-hd {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-8);
+}
+.howto-play__num {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--yellow);
+  border: 3px solid var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-sm);
+  box-shadow: var(--shadow-xs);
+}
+.howto-play__step-t {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-base);
 }
 
 /* The mini fall zone: a note card falls to the dashed hit line at its foot. */
 .howto-play__lane {
   position: relative;
   width: 100%;
-  height: 92px;
+  height: 88px;
   background:
     repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 4px),
     linear-gradient(
@@ -48,7 +262,7 @@
   left: 50%;
   bottom: 15px;
   transform: translateX(-50%) rotate(-2deg);
-  min-width: 52px;
+  min-width: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -56,20 +270,12 @@
   border: 3px solid var(--ink);
   border-radius: 11px 13px 10px 12px;
   box-shadow: var(--shadow-xs);
-  animation: htpFall 2.6s ease-in-out infinite;
 }
 .howto-play__note--push {
   background: var(--lane);
 }
-.howto-play__note--pull {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--lane) 0 7px,
-    color-mix(in srgb, var(--lane) 55%, #fff) 7px 14px
-  );
-  box-shadow:
-    var(--shadow-xs),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.65);
+.howto-play__note--falling {
+  animation: htpFall 2.6s ease-in-out infinite;
 }
 .howto-play__arrow {
   font-family: var(--font-display);
@@ -90,100 +296,76 @@
   paint-order: stroke fill;
 }
 
-/* The button below, its played half filled in (solid push / striped pull) with a
-   ring, exactly like the real keyboard's pressed state. */
-.howto-play__key {
+.howto-play__acts {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-10);
+  height: 88px;
+}
+.howto-play__act {
+  margin: 0;
+  display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-6);
+  font-size: var(--fs-sm);
+  font-weight: 600;
 }
-.howto-play__circle {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  border: 3px solid var(--ink);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: #fff;
-  box-shadow:
-    0 0 0 3px color-mix(in srgb, var(--lane) 55%, #fff),
-    var(--shadow-xs);
-  animation: htpPress 2.6s ease-in-out infinite;
-}
-.howto-play__half {
-  flex: 1;
+.howto-play__achip {
+  flex: none;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 19px;
-  line-height: 1;
+  font-size: var(--fs-2xs);
   color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  box-shadow: var(--shadow-xs);
 }
-.howto-play__half--pull {
-  background: color-mix(in srgb, var(--lane) 30%, #fff);
+.howto-play__achip--push {
+  background: var(--orange);
 }
-.howto-play__half--push {
-  background: color-mix(in srgb, var(--lane) 12%, #fff);
-  border-top: 2px solid color-mix(in srgb, var(--ink) 45%, transparent);
-}
-/* The played half fills in; the other half recedes to a faint wash. */
-.howto-play__key--push .howto-play__half--push {
-  background: var(--lane);
-}
-.howto-play__key--pull .howto-play__half--pull {
+.howto-play__achip--pull {
   background: repeating-linear-gradient(
     -45deg,
-    var(--lane) 0 6px,
-    color-mix(in srgb, var(--lane) 55%, #fff) 6px 12px
+    var(--sky) 0 5px,
+    color-mix(in srgb, var(--sky) 55%, #fff) 5px 10px
   );
 }
-.howto-play__key--push .howto-play__half--pull,
-.howto-play__key--pull .howto-play__half--push {
-  background: color-mix(in srgb, var(--lane) 14%, #fff);
-}
-.howto-play__keylabel {
+.howto-play__kc {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 26px;
+  height: 26px;
+  padding: 0 6px;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   color: var(--ink);
-  padding: 1px 8px;
-  background: color-mix(in srgb, var(--lane) 40%, #fff);
+  background: #fff;
   border: 2px solid var(--ink);
   border-radius: 6px;
+  box-shadow: var(--shadow-xs);
 }
-
-.howto-play__how {
-  margin: 0;
-  text-align: center;
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  line-height: 1.35;
-}
-.howto-play__shift {
-  display: inline-block;
-  padding: 0 5px;
-  font-size: var(--fs-2xs);
-  font-weight: 800;
+.howto-play__kc--shift {
   background: var(--sky);
-  border: 2px solid var(--ink);
-  border-radius: 6px;
 }
 
 .howto-play__hint {
-  margin: var(--sp-14) 0 0;
+  margin: var(--sp-20) 0 0;
   font-weight: 600;
   color: var(--muted);
 }
 
-/* The card falls to the line, holds, then fades and restarts; the button pops in
-   time as it lands. */
+/* The card falls to the line, holds, then fades and restarts. */
 @keyframes htpFall {
   0% {
-    transform: translateX(-50%) translateY(-54px) rotate(-2deg);
+    transform: translateX(-50%) translateY(-52px) rotate(-2deg);
     opacity: 0;
   }
   16% {
@@ -202,28 +384,7 @@
     opacity: 0;
   }
   100% {
-    transform: translateX(-50%) translateY(-54px) rotate(-2deg);
+    transform: translateX(-50%) translateY(-52px) rotate(-2deg);
     opacity: 0;
-  }
-}
-@keyframes htpPress {
-  0%,
-  52% {
-    transform: scale(1);
-  }
-  62% {
-    transform: scale(1.12);
-  }
-  80%,
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Respect reduced-motion: leave the card resting at the line and the button still. */
-@media (prefers-reduced-motion: reduce) {
-  .howto-play__note,
-  .howto-play__circle {
-    animation: none;
   }
 }

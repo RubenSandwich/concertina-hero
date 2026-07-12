@@ -6,6 +6,7 @@ import { LEAD_TIME, noteProgress, noteVisible } from '#data/timing'
 import Keyboard from '#components/Keyboard/Keyboard'
 import NoteCard from '#components/NoteCard/NoteCard'
 import HowToPlay from '#components/HowToPlay/HowToPlay'
+import Modal from '#components/Modal/Modal'
 import './Game.css'
 
 // The tallest a note card is allowed to grow (fraction of the fall zone), so a
@@ -117,6 +118,9 @@ export default function Game({
         <button className="btn btn--ghost quit-btn" onClick={onQuit}>
           ‹ Quit
         </button>
+        <button className="btn btn--ghost pause-btn" onClick={g.togglePause}>
+          ⏸ Pause
+        </button>
         <div className="hud__song">
           <span className="hud__label">Now Playing</span>
           <span className="hud__song-name">
@@ -215,15 +219,11 @@ export default function Game({
         )}
 
         {g.paused && (
-          <div className="pause-overlay">
-            <div className="paper pause-card">
-              <span className="pause-card__title">⏸ Paused</span>
+          <Modal title="⏸ Paused" onClose={g.togglePause} className="pause-modal">
+            <div className="modal__body">
               <HowToPlay />
-              <span className="pause-card__hint">
-                Press <b>Space</b> to resume
-              </span>
             </div>
-          </div>
+          </Modal>
         )}
       </div>
     </div>

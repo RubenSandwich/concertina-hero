@@ -112,8 +112,10 @@ export function useGameEngine(
   // the keyboard component isn't re-created every frame.
   const pressRef = useRef<(lane: number, pull: boolean) => void>(() => {})
   const releaseRef = useRef<(lane: number) => void>(() => {})
+  const togglePauseRef = useRef<() => void>(() => {})
   const pressLane = useCallback((lane: number, pull: boolean) => pressRef.current(lane, pull), [])
   const releaseLane = useCallback((lane: number) => releaseRef.current(lane), [])
+  const togglePause = useCallback(() => togglePauseRef.current(), [])
 
   useEffect(() => {
     // Fresh state for this run.
@@ -271,7 +273,7 @@ export function useGameEngine(
 
     // Space toggles pause. Pausing freezes the game clock; resuming shifts the
     // start time forward by however long we were paused so nothing is missed.
-    const togglePause = () => {
+    const doTogglePause = () => {
       if (finishedRef.current) return
       if (pausedRef.current) {
         startRef.current += performance.now() - pausedAtRef.current
@@ -299,11 +301,15 @@ export function useGameEngine(
     }
     pressRef.current = doPress
     releaseRef.current = doRelease
+    togglePauseRef.current = doTogglePause
 
     const onKeyDown = (e: KeyboardEvent) => {
+      // Space toggles pause; the HUD Pause button and the pause modal's own
+      // controls (✕, backdrop, Escape) call the same path, so pause is never
+      // keyboard-only.
       if (e.code === 'Space') {
         e.preventDefault()
-        if (!e.repeat) togglePause()
+        if (!e.repeat) doTogglePause()
         return
       }
       if (e.repeat || pausedRef.current) return
@@ -495,5 +501,6 @@ export function useGameEngine(
     activeKeys: activeKeysRef.current,
     pressLane,
     releaseLane,
+    togglePause,
   }
 }

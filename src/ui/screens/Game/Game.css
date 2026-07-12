@@ -16,7 +16,8 @@
   gap: var(--sp-16);
   flex-wrap: wrap;
 }
-.quit-btn {
+.quit-btn,
+.pause-btn {
   padding: var(--sp-8) var(--sp-16);
   font-size: var(--fs-md);
 }
@@ -317,47 +318,25 @@
   border-bottom-color: color-mix(in srgb, var(--sky) 75%, var(--ink));
 }
 
-/* ---------- Pause overlay ---------- */
-.pause-overlay {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--sp-12);
-  z-index: 7;
-  background: color-mix(in srgb, var(--ink) 20%, transparent);
-  -webkit-backdrop-filter: blur(1px);
-  backdrop-filter: blur(1px);
+/* ---------- Pause modal ----------
+   Uses the shared Modal component (its head/✕/backdrop/Escape and the sticky
+   head over a scrolling .modal__body). Only widen it for the how-to, and give
+   the resume-hint keys a keycap look. */
+.pause-modal .modal {
+  width: min(780px, 96vw);
 }
-.pause-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-12);
-  max-width: 460px;
-  /* Cap to the playfield so the how-to never clips on short windows — it scrolls
-     inside the card instead. */
-  max-height: 100%;
-  overflow-y: auto;
-  padding: var(--sp-20) var(--sp-28) var(--sp-24);
-  transform: rotate(-1.5deg);
+
+.pause-modal .modal__head {
+  padding-bottom: var(--sp-8);
+  border-bottom: 3px dashed color-mix(in srgb, var(--ink) 22%, transparent);
 }
-.pause-card__title {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: var(--fs-6xl);
-  color: var(--red-ink);
-}
-.pause-card__hint {
-  font-weight: 600;
-  font-size: var(--fs-base);
-}
-.pause-card__hint b {
+
+.pause-modal .modal__hint b {
+  color: var(--ink);
   background: var(--yellow);
   border: 2px solid var(--ink);
   border-radius: 6px;
-  padding: 0 7px;
+  padding: 0 6px;
 }
 
 @media (max-width: 640px) {
