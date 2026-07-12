@@ -97,9 +97,16 @@
   -webkit-user-select: none;
   user-select: none;
 }
-/* Pull on top (tinted), push on the bottom half. */
+/* Pull on top — striped like the pull notes in the fall zone; push on the bottom
+   half, solid. `--pull-fill` is the stripe's stronger shade, so every state below
+   just re-tints it (idle → active → pressed) without re-declaring the gradient. */
 .key-btn__note--pull {
-  background: color-mix(in srgb, var(--btn-color) 30%, #fff);
+  --pull-fill: color-mix(in srgb, var(--btn-color) 30%, #fff);
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--pull-fill) 0 7px,
+    color-mix(in srgb, var(--pull-fill) 55%, #fff) 7px 14px
+  );
 }
 .key-btn__note--push {
   background: color-mix(in srgb, var(--btn-color) 12%, #fff);
@@ -126,7 +133,9 @@
     0 0 0 3px color-mix(in srgb, var(--btn-color) 42%, #fff),
     var(--shadow-xs);
 }
-.key-btn.is-active.key-btn--pull .key-btn__note--pull,
+.key-btn.is-active.key-btn--pull .key-btn__note--pull {
+  --pull-fill: color-mix(in srgb, var(--btn-color) 52%, #fff);
+}
 .key-btn.is-active.key-btn--push .key-btn__note--push {
   background: color-mix(in srgb, var(--btn-color) 52%, #fff);
 }
@@ -152,16 +161,14 @@
   background: var(--btn-color);
 }
 .key-btn.is-pressed.key-btn--pull .key-btn__note--pull {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--btn-color) 0 7px,
-    color-mix(in srgb, var(--btn-color) 55%, #fff) 7px 14px
-  );
+  --pull-fill: var(--btn-color);
 }
 
 /* In either lit state, the half that isn't the one to play recedes to a faint
    wash so the highlighted half stands out. */
-.key-btn--push .key-btn__note--pull,
+.key-btn--push .key-btn__note--pull {
+  --pull-fill: color-mix(in srgb, var(--btn-color) 14%, #fff);
+}
 .key-btn--pull .key-btn__note--push {
   background: color-mix(in srgb, var(--btn-color) 14%, #fff);
 }

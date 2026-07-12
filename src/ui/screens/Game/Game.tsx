@@ -2,6 +2,7 @@ import { useGameEngine } from '#hooks/useGameEngine'
 import type { GameNote, GameResult } from '#hooks/useGameEngine'
 import type { Song, Section } from '#data/songs'
 import { LANE_COLORS, getActiveLayout, type Direction } from '#data/instrument'
+import type { InstrumentSize } from '#data/layout'
 import { LEAD_TIME, noteProgress, noteVisible } from '#data/timing'
 import Keyboard from '#components/Keyboard/Keyboard'
 import NoteCard from '#components/NoteCard/NoteCard'
@@ -12,6 +13,11 @@ import './Game.css'
 // The tallest a note card is allowed to grow (fraction of the fall zone), so a
 // slow song's one-beat cards don't swallow the whole playfield.
 const MAX_CARD_FRAC = 0.42
+
+// The note letter/arrow are sized in viewport units, but the sparse 7/10-button
+// layouts have far fewer lanes, so their cards are much wider — scale the text up
+// to fill them. The dense 20/30-button layouts keep the base size.
+const NOTE_TEXT_SCALE: Record<InstrumentSize, number> = { 7: 1.5, 10: 1.25, 20: 1, 30: 1 }
 
 // A falling note with the vertical progress at which to draw it (0 = top of the
 // fall zone, 1 = the hit line). Active/holding notes track the clock; a just-
@@ -171,7 +177,14 @@ export default function Game({
 
       <div
         className="playfield"
-        style={{ '--w': cardW, '--h': cardH, '--key-frac': keyFrac } as React.CSSProperties}
+        style={
+          {
+            '--w': cardW,
+            '--h': cardH,
+            '--key-frac': keyFrac,
+            '--note-scale': NOTE_TEXT_SCALE[layout.size],
+          } as React.CSSProperties
+        }
       >
         <div className="fall-zone">
           {/* A faint colour band runs down each lane. */}

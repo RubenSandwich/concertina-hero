@@ -21,7 +21,7 @@
 .note-arrow {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(0.8rem, 1.8vh, 1.25rem);
+  font-size: calc(var(--note-scale, 1) * clamp(0.8rem, 1.8vh, 1.25rem));
   line-height: 0.8;
   color: var(--ink);
   -webkit-text-stroke: 2px #fff;
@@ -30,7 +30,7 @@
 .note-name {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(1rem, 3.2vh, 2.2rem);
+  font-size: calc(var(--note-scale, 1) * clamp(1rem, 3.2vh, 2.2rem));
   line-height: 1;
   color: var(--ink);
   -webkit-text-stroke: 3px #fff;
