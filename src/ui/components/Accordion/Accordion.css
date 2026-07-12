@@ -1,6 +1,6 @@
 /* Collapsible "accordion" card (a disclosure widget). */
 .accordion {
-  width: min(760px, 100%);
+  width: min(920px, 100%);
   padding: var(--sp-16) var(--sp-22);
   margin-bottom: var(--sp-20);
 }

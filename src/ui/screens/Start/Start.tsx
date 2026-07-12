@@ -194,7 +194,12 @@ export default function Start({
         onOpenChange={(o) => onSectionToggle('settings', o)}
       >
         <div className="practice-row">
-          <span className="practice-row__label">Speed</span>
+          <div className="practice-row__info">
+            <span className="practice-row__label">⏩ Speed</span>
+            <span className="practice-row__desc">
+              Slow the notes down while you learn, then work back up to full speed.
+            </span>
+          </div>
           <SegmentedControl label="Speed" options={SPEEDS} value={speed} onChange={setSpeed} />
         </div>
 

@@ -28,7 +28,8 @@
 /* ---------- Song list ---------- */
 .song-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  /* Always three cards to a row, whatever the container width. */
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-16);
   width: 100%;
 }
@@ -40,10 +41,14 @@
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  padding: var(--sp-16) var(--sp-18);
+  /* Taller than wide-padding would give: extra top/bottom room spaces the name,
+     blurb and chips out. Horizontal padding stays 16px so the three chips still
+     fit three-to-a-row. */
+  padding: var(--sp-24) var(--sp-16);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-6);
+  gap: var(--sp-12);
+  min-width: 0; /* let the grid track shrink instead of the card overflowing */
   border-left: 14px solid var(--card);
   transition:
     transform 0.1s ease,
@@ -71,22 +76,44 @@
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--fs-2xl);
+  line-height: 1.1; /* pull wrapped titles closer together */
 }
 .song-card__blurb {
   font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--muted);
+  /* Take up the slack above the blurb so the blurb and the meta chips drop to
+     the bottom together — the blurb always sits directly above the chips, and
+     the chip rows still line up across a row of cards whatever the blurb length.
+     The name stays anchored at the top. */
+  margin-top: auto;
 }
 .song-card__meta {
   display: flex;
   align-items: center;
-  gap: var(--sp-10);
-  margin-top: var(--sp-4);
+  /* Difficulty at the left edge, supported-size at the right, BPM centred
+     between them with equal gaps either side. */
+  justify-content: space-between;
+  gap: var(--sp-6);
 }
+/* Tighter pill padding here than the shared defaults keeps the row compact. */
+.song-card__meta .diff {
+  padding-inline: var(--sp-8);
+}
+/* BPM gets the same neutral "cream chip" as the supported-size badge; difficulty
+   keeps its own colour. */
 .song-card__bpm {
-  font-weight: 600;
-  font-size: var(--fs-sm);
-  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-xs);
+  color: var(--ink);
+  background: var(--cream);
+  border: 2px solid var(--ink);
+  border-radius: 20px;
+  padding: 2px var(--sp-8);
+  white-space: nowrap;
 }
 
 /* A song that needs more buttons than the selected instrument has: greyed out,
@@ -102,9 +129,9 @@
   transform: none;
   box-shadow: var(--shadow-sm);
 }
-/* The smallest concertina this song plays on (and up), shown on every card. */
+/* The smallest concertina this song plays on (and up), shown on every card.
+   Sits at the right edge of the meta row (see justify-content there). */
 .song-card__supports {
-  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: var(--sp-4);
@@ -115,12 +142,17 @@
   background: var(--cream);
   border: 2px solid var(--ink);
   border-radius: 20px;
-  padding: 2px var(--sp-10);
+  padding: 2px var(--sp-8);
   white-space: nowrap;
 }
 .song-card__supports-icon {
-  height: 1.4em;
+  /* The artwork fills only ~0.67 of its square viewBox and its strokes are thin,
+     so a box matched to the text reads small beside the bold "N+". Oversize the
+     box so the glyph feels the same weight as the number; margin keeps the pill
+     from growing taller. */
+  height: 1.8em;
   width: auto;
+  margin: -0.35em 0;
 }
 .song-card__supports.is-blocked {
   background: var(--red);
@@ -194,8 +226,12 @@
   color: var(--teal-ink);
 }
 .practice-row__icon {
-  height: 1.15em;
+  /* The artwork fills only ~0.67 of its square viewBox, so a box matched to the
+     label height reads smaller than the emoji on the other rows. Oversize the box
+     so the visible glyph feels the same size; it stays vertically centred. */
+  height: 1.4em;
   width: auto;
+  margin: -0.25em 0;
 }
 .practice-row--wait .practice-row__label {
   color: var(--green-ink);
@@ -205,6 +241,8 @@
   font-weight: 500;
   font-size: var(--fs-sm);
   color: var(--muted);
+  max-width: 50ch; /* keep the description to a ~50-character measure so it wraps
+                      instead of stretching across the full-width panel */
 }
 .practice-row__err {
   margin-top: var(--sp-2);
