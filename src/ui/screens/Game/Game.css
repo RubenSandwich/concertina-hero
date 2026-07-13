@@ -248,20 +248,25 @@
   z-index: 1;
 }
 
-/* The dashed "cut here" hit line across the bottom of the fall zone. */
-.hit-line {
+/* The hit bar: a strike zone one beat tall at the bottom of the fall zone. Its
+   dashed top edge is the press line — a note's leading edge reaches it exactly on
+   the beat, then sinks through the tinted band for the length of the hold before
+   leaving at the bottom. Kept translucent so notes read clearly inside it. */
+.hit-bar {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  border-bottom: 5px dashed color-mix(in srgb, var(--ink) 55%, transparent);
+  height: var(--hit-h);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  border-top: 4px dashed color-mix(in srgb, var(--ink) 55%, transparent);
   pointer-events: none;
   z-index: 4;
 }
-.hit-line__label {
+.hit-bar__label {
   position: absolute;
   right: var(--sp-8);
-  bottom: 3px;
+  top: 3px;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--fs-2xs);
@@ -392,8 +397,9 @@
     var(--shadow-lg),
     inset 0 0 0 4px color-mix(in srgb, var(--sky) 42%, transparent);
 }
-.game.mode--pull .hit-line {
-  border-bottom-color: color-mix(in srgb, var(--sky) 75%, var(--ink));
+.game.mode--pull .hit-bar {
+  border-top-color: color-mix(in srgb, var(--sky) 75%, var(--ink));
+  background: color-mix(in srgb, var(--sky) 9%, transparent);
 }
 
 /* ---------- Pause modal ----------

@@ -27,7 +27,9 @@ export default function NoteCard({ note, x, color, progress }: NoteCardProps) {
         {
           '--note-color': color,
           left: `calc(${(x * 100).toFixed(3)}% - var(--w) / 2)`,
-          bottom: `${((1 - progress) * 100).toFixed(3)}%`,
+          // Lifted by the hit-bar height so the beat lands at the bar's top edge and
+          // the note stays on screen, sinking through the bar, for the whole hold.
+          bottom: `calc(${((1 - progress) * 100).toFixed(3)}% + var(--hit-h, 0%))`,
         } as React.CSSProperties
       }
     >

@@ -113,6 +113,11 @@ export default function Game({
   // the bellows divider. CSS caps it by the row height.
   const keyFrac = (minGap * 0.82).toFixed(4)
 
+  // Hit-bar height: a short, fixed strike zone whose top edge is the press line —
+  // the note's leading edge lands there on the beat and dips into the bar as it's
+  // held. Kept thin (a target band, not a full-height zone).
+  const hitH = (Math.max(0.1, Math.min(beatFrac, 0.1)) * 100).toFixed(2) + '%'
+
   const judged = g.counts.perfect + g.counts.good + g.counts.ok + g.counts.miss
   const accuracy = judged
     ? Math.round(((g.counts.perfect + g.counts.good + g.counts.ok) / judged) * 100)
@@ -233,6 +238,7 @@ export default function Game({
             '--w': cardW,
             '--h': cardH,
             '--key-frac': keyFrac,
+            '--hit-h': hitH,
             '--note-scale': NOTE_TEXT_SCALE[layout.size],
           } as React.CSSProperties
         }
@@ -254,7 +260,9 @@ export default function Game({
               compositor transform rather than a per-frame relayout. */}
           <div
             className="breath-track"
-            style={{ transform: `translateY(${((g.elapsed / LEAD_TIME) * 100).toFixed(3)}%)` }}
+            style={{
+              transform: `translateY(calc(${((g.elapsed / LEAD_TIME) * 100).toFixed(3)}% - var(--hit-h)))`,
+            }}
           >
             {bandEls}
           </div>
@@ -271,8 +279,8 @@ export default function Game({
             />
           ))}
 
-          <div className="hit-line">
-            <span className="hit-line__label">HIT</span>
+          <div className="hit-bar">
+            <span className="hit-bar__label">HIT</span>
           </div>
         </div>
 
