@@ -113,9 +113,9 @@ export default function Game({
   // the bellows divider. CSS caps it by the row height.
   const keyFrac = (minGap * 0.82).toFixed(4)
 
-  // Hit-bar height: a short, fixed strike zone whose top edge is the press line —
-  // the note's leading edge lands there on the beat and dips into the bar as it's
-  // held. Kept thin (a target band, not a full-height zone).
+  // Hit-bar height (fraction of the fall zone) ≈ one beat, so a note's leading edge
+  // takes about a beat to sink through it — the window you hold. Floored/capped so
+  // it stays a usable strike zone on very fast or very slow songs.
   const hitH = (Math.max(0.1, Math.min(beatFrac, 0.1)) * 100).toFixed(2) + '%'
 
   const judged = g.counts.perfect + g.counts.good + g.counts.ok + g.counts.miss
