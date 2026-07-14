@@ -10,10 +10,12 @@ export const LEAD_TIME = 2200
 export const LEAD_IN = LEAD_TIME + 200
 
 // Timing windows (ms) measured from the ideal hit moment. They grade a press;
-// they no longer decide when a note is given up on (see MISS_AT).
-export const PERFECT_WINDOW = 70
-export const GOOD_WINDOW = 125
-export const HIT_WINDOW = 185 // largest *early* offset that still counts as a hit
+// they no longer decide when a note is given up on (see MISS_AT). Kept
+// deliberately generous so a hit that lands a little early or a little late still
+// scores well — being roughly on the beat is enough.
+export const PERFECT_WINDOW = 110
+export const GOOD_WINDOW = 190
+export const HIT_WINDOW = 250 // largest *early* offset that still counts as a hit
 
 // A mic press is always late: an onset is only believed once the note has filled
 // the capture window (a window still holding the previous note's tail is rejected
@@ -32,10 +34,11 @@ export const MIC_LATENCY = 195
 export const MIC_WINDOW_SCALE = 1.5
 
 // A note is only missed once it is this far through its one-beat hold window
-// with nothing played — by then its card has all but left the hit line. Until
-// that moment a late press still catches it, though so little of the beat is
-// left that it scores next to nothing.
-export const MISS_AT = 0.9
+// with nothing played — at 1.0 its card has fully crossed the hit line and is all
+// the way gone. Until that moment a late press still catches it, so a note is
+// never given up on early just because the player is lingering on the one before
+// it; it stays up right until it leaves the screen.
+export const MISS_AT = 1
 
 // The moment an untouched note becomes a miss.
 export function missTime(noteTime: number, holdMs: number): number {

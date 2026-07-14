@@ -68,12 +68,19 @@ as its button stays down. Releasing early stops the credit; pressing again while
 the note is still live resumes it (`accrueHold`).
 
 A note is **never missed for being late**. It stays playable from `HIT_WINDOW`
-before its beat until `missTime` — `MISS_AT` (90%) through its hold window — and
-is only auto-missed if it reaches that point with nothing played (`isPlayable`).
-A late press therefore always lands, but it forfeits the beat already gone, so
-it can only ever bank the sliver of hold that remains. Lateness costs points, not
-the note. A press claims the **oldest** playable note in its lane, so a note
-you're behind on is caught before an early press can steal the next one.
+before its beat until `missTime` — `MISS_AT` (100%) through its hold window, i.e.
+the instant its card has fallen all the way past the hit line — and is only
+auto-missed if it reaches that point with nothing played (`isPlayable`). So a note
+stays up until it is fully gone, even while the player is still holding the note
+before it. A late press therefore always lands, but it forfeits the beat already
+gone, so it can only ever bank the sliver of hold that remains. Lateness costs
+points, not the note. A press claims the **oldest** playable note in its lane, so
+a note you're behind on is caught before an early press can steal the next one.
+
+A **wrong-direction press never spends the note**: pressing push when a pull is
+due (or the previous note in that lane still ringing under the next one) only
+flags "Wrong Way!" — it doesn't count a miss or break the combo, and the note is
+left up to be played correctly, right until it falls all the way gone.
 
 When the beat ends the note is finalized: it scores
 `holdPoints(rating, holdFraction(heldMs, beat))` — the grade's points scaled by

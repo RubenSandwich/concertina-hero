@@ -193,4 +193,89 @@ const BUILTIN_DEFS: BuiltinDef[] = [
       (+1 +3 +5) X (+1 +3 +5) X
     `,
   },
+  {
+    id: 'song-of-storms',
+    name: 'Song of Storms',
+    blurb: "Zelda's windmill waltz — swirling pull runs and a quick push flurry.",
+    bpm: 120,
+    color: '#4361ee',
+    difficulty: 'Medium',
+    chart: `
+      -1 -2 -5
+      -1 -2 -5
+
+      +5 -6 +5 -6 +5 +4 -3
+      -3 -1 -2 +3 -3
+      -3 -1 -2 +3 +2
+
+      -1 -2 -5
+      -1 -2 -5
+
+      +5 -6 +5 -6 +5 +4 -3
+      -3 -1 -2 +3 -3
+      -3 -1
+    `,
+  },
+  {
+    id: 'concerning-hobbits',
+    name: 'Concerning Hobbits',
+    blurb: "The Shire's easy amble, all gentle push/pull steps.",
+    bpm: 100,
+    color: '#2a9d8f',
+    difficulty: 'Medium',
+    chart: `
+      +1 -1 +2 +3
+      +2 -1 +1
+
+      +2 +3 -3 +4 -4 +3
+      +2 -2 +2 -1
+
+      +1 -1 +2 +3
+      +2 -1 +1 -1 +1
+
+      +2 +3 -3
+      +3 +2 +2 -2 +2 -1
+      +1 -1 +1
+    `,
+  },
+  {
+    id: 'drunken-sailor',
+    name: 'Drunken Sailor',
+    blurb: 'A rowdy sea shanty — long repeated draws, then hoist the tune high.',
+    bpm: 140,
+    color: '#e07a5f',
+    difficulty: 'Medium',
+    chart: `
+      -3 -3 -3 -3 -3 -3 -3
+      -1 -2 -3
+
+      +3 +3 +3 +3 +3 +3 +3
+      +1 +2 +3
+
+      -3 -3 -3 -3 -3 -3 -3
+      -4 +4 -5 +4
+      -3 +3 +2 -1
+
+      -3 -3 -3 -3 -1 -2 -3
+      +3 +3 +3 +3 +1 +2 +3
+      -3 -3 -3 -3 -4 +4 -5 +4
+      -3 +3 +2 -1 -1
+    `,
+  },
+  {
+    id: 'taps',
+    name: 'Taps',
+    blurb: 'The slow, solemn bugle call — just a handful of long notes.',
+    bpm: 66,
+    color: '#6c757d',
+    difficulty: 'Easy',
+    chart: `
+      -1 -1 +3
+      -1 +3 -4
+
+      +3 -4 -5
+      -4 +3 -1
+      -1 -1 +3
+    `,
+  },
 ]

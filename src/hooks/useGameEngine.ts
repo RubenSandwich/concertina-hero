@@ -243,15 +243,14 @@ export function useGameEngine(
 
       const wantType: Direction = wantPull ? 'pull' : 'push'
       if (best.type !== wantType) {
-        // Wrong bellows direction. In wait-for-note mode the note stays put so
-        // you can try again; otherwise it counts as a miss.
+        // Wrong bellows direction — or just the previous note in this lane still
+        // being held or re-struck (a push G lingering under the pull A that comes
+        // next on the same button). Either way, don't spend the upcoming note on
+        // it: flag the wrong direction but leave the note up so it can still be
+        // played correctly. It is only ever counted as a miss once it has fallen
+        // all the way past the hit line with nothing played for it.
         setFeedback('Wrong Way!', 'miss')
         playMiss()
-        if (!waitForNote) {
-          judge(best, clock, 'miss') // the card pops where it is *now*, not where it was heard
-          comboRef.current = 0
-          countsRef.current.miss += 1
-        }
         return
       }
 
