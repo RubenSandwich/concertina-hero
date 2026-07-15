@@ -29,13 +29,40 @@
   harmless no-op in that mode, so retrying/waiting it out is exactly right,
   and sidesteps ever needing to know a song's BPM or lead-in.
 - `e2e/audio-taps.spec.ts` feeds a _real_ synthesized recording of "Taps" into
-  Chromium's fake microphone (`--use-file-for-fake-audio-capture`, wired up in
-  `playwright.config.ts` from `e2e/fixtures/taps.wav`) instead of mocking
-  `detectChord()` — it exercises the actual FFT/onset pipeline in
-  `audio/pitch.ts` and the engine's mic debounce. `--mute-audio` (also in
-  `playwright.config.ts`) guarantees none of it is ever audible on the test
-  machine's speakers. Regenerate the fixture with
+  a fake microphone (`mockMicFromWav`, from `e2e/helpers.ts`, fed from
+  `e2e/fixtures/taps.wav`) instead of mocking `detectChord()` — it exercises
+  the actual FFT/onset pipeline in `audio/pitch.ts` and the engine's mic
+  debounce. `--mute-audio` (in `playwright.config.ts`) guarantees none of it
+  is ever audible on the test machine's speakers. Regenerate the fixture with
   `node e2e/fixtures/generate-taps-wav.mjs` if Taps's chart or tuning changes.
+- `e2e/audio-taps-held.spec.ts` is that mic test's companion, playing Taps in
+  _real time_ (no "Wait for correct note") to also exercise _held_-note credit
+  (`holdFraction()`/`holdPoints()` in `data/scoring.ts`), which wait-for-note
+  can't: it holds the clock the instant a note is caught, so heldMs barely
+  accrues. Real-time timing means this recording's start has to actually line
+  up with the game's clock — `waitForCountdownEndAndStartFakeMic` triggers
+  playback in the same in-page check that detects the countdown ending, not a
+  separate round trip afterwards (which is precise enough normally, but under
+  CPU contention became the difference between a note landing inside or
+  outside its window). Because this test has no wait-for-note safety net,
+  `playwright.config.ts` caps `workers` well below this machine's core count
+  so it isn't competing for CPU with other tests' own Chromium instances at
+  the moment it matters; retrying a failure was tried first and rejected —
+  retrying an expensive real-time test under contention just adds more
+  contention. Regenerate its fixture with
+  `node e2e/fixtures/generate-taps-held-wav.mjs`.
+- Both mic tests mock the microphone the same way, via `mockMicFromWav`:
+  `page.addInitScript` overrides `navigator.mediaDevices.getUserMedia` itself
+  to decode a WAV (served in-page by intercepting a fake URL with
+  `page.route`) into a `MediaStreamDestination`, arming
+  `window.__startFakeMic()` rather than autoplaying — a test triggers that at
+  whatever moment it needs (immediately for the loop/wait-for-note test,
+  right as the countdown ends for the real-time one). This replaced an
+  earlier version built on Chromium's `--use-fake-device-for-media-stream` +
+  `--use-file-for-fake-audio-capture` launch flags: those are fixed for the
+  whole browser (no per-test file, no control over exactly _when_ playback
+  starts) and needed a `permissions: ['microphone']` grant besides — the
+  in-page mock needs none of that, since it never reaches the real API.
 
 ## CSS
 

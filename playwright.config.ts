@@ -1,9 +1,4 @@
 import { defineConfig, devices } from '@playwright/test'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const dirname = path.dirname(fileURLToPath(import.meta.url))
-const TAPS_WAV = path.join(dirname, 'e2e/fixtures/taps.wav')
 
 // End-to-end tests drive a real browser against the app's own dev server —
 // unlike the `npm test` unit tests (pure logic, no DOM), these exist to catch
@@ -13,25 +8,28 @@ const TAPS_WAV = path.join(dirname, 'e2e/fixtures/taps.wav')
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
+  // One of the mic tests (audio-taps-held.spec.ts) verifies real-time note
+  // timing with no "wait for the right note" safety net, so it's sensitive to
+  // scheduling delays under CPU contention — capping workers well below this
+  // machine's core count keeps enough headroom that the moment it triggers
+  // fake-mic playback doesn't get delayed by other tests' Chromium instances
+  // competing for the CPU at the same time.
+  workers: 2,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: 'list',
   use: {
     baseURL: process.env.PW_BASE_URL ?? 'http://localhost:5173',
     trace: 'retain-on-failure',
-    // Mic tests (audio-taps.spec.ts) need a microphone permission grant, a
-    // fake capture device fed from a WAV fixture instead of a real mic, and
-    // `--mute-audio` so nothing is ever actually audible on the test machine's
-    // speakers — the app's synth (audio/sound.ts) plays real tones on hits
-    // otherwise. Harmless for every other test, which never touches the mic.
-    permissions: ['microphone'],
+    // Mic tests (audio-taps.spec.ts, audio-taps-held.spec.ts) mock
+    // getUserMedia itself in-page (see e2e/helpers.ts's `mockMicFromWav`), so
+    // they never touch a real or fake OS-level capture device — no
+    // permission grant or fake-device flags needed. `--mute-audio` is still
+    // real, though: it guarantees nothing is ever audible on the test
+    // machine's speakers, since the app's synth (audio/sound.ts) plays real
+    // tones on hits regardless of where the mic input came from.
     launchOptions: {
-      args: [
-        '--mute-audio',
-        '--use-fake-device-for-media-stream',
-        '--use-fake-ui-for-media-stream',
-        `--use-file-for-fake-audio-capture=${TAPS_WAV}`,
-      ],
+      args: ['--mute-audio'],
     },
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
