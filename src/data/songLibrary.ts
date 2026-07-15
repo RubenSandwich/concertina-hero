@@ -14,6 +14,10 @@ import {
   type SongDef,
 } from './songs'
 import { randomAccentColor } from './colors'
+import {
+  findVersionMismatches,
+  type VersionMismatch,
+} from './storageVersion.ts'
 import twinkle from './builtinSongs/twinkle.json'
 import rowYourBoat from './builtinSongs/row-your-boat.json'
 import odeToJoy from './builtinSongs/ode-to-joy.json'
@@ -22,6 +26,11 @@ import songOfStorms from './builtinSongs/song-of-storms.json'
 import concerningHobbits from './builtinSongs/concerning-hobbits.json'
 import drunkenSailor from './builtinSongs/drunken-sailor.json'
 import taps from './builtinSongs/taps.json'
+
+// This store's own model version (independent of presets.ts's) — bump only
+// when a *song's* stored shape changes in a way an old record can't just fall
+// back to sane defaults for.
+const SONG_MODEL_VERSION = '1'
 
 const HEX_RE = /^#[0-9a-f]{3,8}$/i
 const SONGS_KEY = 'accordion-user-songs'
@@ -89,6 +98,7 @@ export function normalizeSongDef(
     color,
     difficulty,
     chart,
+    version: SONG_MODEL_VERSION,
   }
 }
 
@@ -108,6 +118,20 @@ function writeUserDefs(defs: SongDef[]): void {
   } catch {
     /* storage unavailable — ignore */
   }
+}
+
+// Stored user songs whose `version` doesn't match SONG_MODEL_VERSION —
+// surfaced by the startup VersionMismatch modal.
+export function findSongVersionMismatches(): VersionMismatch[] {
+  return findVersionMismatches(SONGS_KEY, 'song', SONG_MODEL_VERSION, (raw) => {
+    const name =
+      raw &&
+      typeof raw === 'object' &&
+      typeof (raw as Record<string, unknown>).name === 'string'
+        ? ((raw as Record<string, unknown>).name as string)
+        : 'Untitled song'
+    return name
+  })
 }
 
 // Every playable song: the built-in ones first, then user songs from storage.

@@ -15,22 +15,37 @@ import {
   setNoteFrequencies,
   validFreq,
   type Direction,
+  type InstrumentSize,
   type LaneNote,
   type NoteInfo,
 } from './instrument.ts'
+import { INSTRUMENT_SIZES } from './layout.ts'
+import {
+  findVersionMismatches,
+  type VersionMismatch,
+} from './storageVersion.ts'
+
+// This store's own model version (independent of songLibrary.ts's) — bump
+// only when a *preset's* stored shape changes in a way an old record can't
+// just fall back to sane defaults for.
+const PRESET_MODEL_VERSION = '1'
 
 // A saved note-frequency tuning. The built-in "Default" preset is `builtin`.
+// `version` is this store's model version (see PRESET_MODEL_VERSION above),
+// stamped whenever a preset is created/saved.
 export interface Preset {
   id: string
   name: string
   builtin?: boolean
   notes: LaneNote[]
+  version: string
 }
 
 // Storage keys are per instrument size, so a 20-button's presets are separate from
 // a 7-button's. (Old, size-agnostic presets under the previous keys are ignored —
 // no migration, as decided.)
-const presetsKey = () => `concertina-presets-${getActiveInstrument()}`
+const presetsKeyFor = (size: InstrumentSize) => `concertina-presets-${size}`
+const presetsKey = () => presetsKeyFor(getActiveInstrument())
 const activePresetKey = () =>
   `concertina-active-preset-${getActiveInstrument()}`
 export const DEFAULT_PRESET_ID = 'default'
@@ -47,6 +62,7 @@ function makeDefaultPreset(): Preset {
     name: 'Default',
     builtin: true,
     notes: getDefaultNotes(),
+    version: PRESET_MODEL_VERSION,
   }
 }
 
@@ -82,10 +98,35 @@ function readUserPresets(): Preset[] {
             ? p.name.trim()
             : 'Untitled preset',
         notes: normalizeNotes(p.notes),
+        version:
+          typeof p.version === 'string' && p.version
+            ? p.version
+            : PRESET_MODEL_VERSION,
       }))
   } catch {
     return []
   }
+}
+
+// Stored user presets (across every instrument size) whose `version` doesn't
+// match PRESET_MODEL_VERSION — surfaced by the startup VersionMismatch modal.
+export function findPresetVersionMismatches(): VersionMismatch[] {
+  return INSTRUMENT_SIZES.flatMap((size) =>
+    findVersionMismatches(
+      presetsKeyFor(size),
+      'preset',
+      PRESET_MODEL_VERSION,
+      (raw) => {
+        const name =
+          raw &&
+          typeof raw === 'object' &&
+          typeof (raw as Record<string, unknown>).name === 'string'
+            ? ((raw as Record<string, unknown>).name as string)
+            : 'Untitled preset'
+        return `${name} (${size}-button)`
+      },
+    ),
+  )
 }
 
 function writeUserPresets(presets: Preset[]): void {
@@ -146,6 +187,7 @@ export function savePreset({
     id: id && id !== DEFAULT_PRESET_ID ? id : makePresetId(),
     name: (name || '').trim() || 'Untitled preset',
     notes: normalizeNotes(notes),
+    version: PRESET_MODEL_VERSION,
   }
   const presets = readUserPresets()
   const i = presets.findIndex((p) => p.id === preset.id)

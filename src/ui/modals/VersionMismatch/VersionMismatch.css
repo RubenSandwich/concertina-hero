@@ -1,0 +1,47 @@
+/* Full-screen blocking overlay for localStorage records with an outdated
+   model version — see ui/modals/VersionMismatch/VersionMismatch.tsx. Follows
+   ScreenGuard's non-dismissable overlay pattern (no close button/backdrop
+   dismiss), since there's deliberately no way to keep outdated data around. */
+.version-mismatch {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-24);
+  background: color-mix(in srgb, var(--ink) 60%, transparent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.version-mismatch__card {
+  width: 100%;
+  max-width: 480px;
+  max-height: min(600px, 80vh);
+  padding: var(--sp-28) var(--sp-34);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-16);
+  transform: rotate(-1deg);
+}
+.version-mismatch__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-3xl);
+  color: var(--red-ink);
+}
+.version-mismatch__body {
+  margin: 0;
+  font-size: var(--fs-base);
+  font-weight: 500;
+  line-height: 1.4;
+}
+.version-mismatch__list {
+  overflow-y: auto;
+  min-height: 0;
+}
+.version-mismatch__footer {
+  display: flex;
+  justify-content: flex-end;
+}

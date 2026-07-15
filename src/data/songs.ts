@@ -29,6 +29,11 @@ export type Difficulty = 'Easy' | 'Medium' | 'Hard'
 // JSON string can't contain a literal newline, so this lets a chart be
 // written/read one phrase per line; line breaks are just for readability and
 // are joined back into one string before parsing (see buildSong).
+//
+// `version` is the storage model version (see data/storageVersion.ts),
+// stamped by songLibrary.ts whenever a user song is saved. It's optional here
+// (rather than on Song) because built-in songs are source-controlled JSON,
+// never migrated, and so never carry one.
 export interface SongDef {
   id: string
   name: string
@@ -38,6 +43,7 @@ export interface SongDef {
   color: string
   difficulty: Difficulty
   chart: string[]
+  version?: string
 }
 
 // A built, playable song: its definition plus the derived notes/sections/timing.
