@@ -1,20 +1,36 @@
 // Shared WAV-writing helpers for the e2e mic fixtures. Plain PCM synthesis, no
 // dependencies — a standard 16-bit mono WAV is broadly compatible with both
 // Chromium's `--use-file-for-fake-audio-capture` and `AudioContext.decodeAudioData`.
+//
+// Run any script that imports this with `--experimental-strip-types` (like
+// `npm test` does) — `loadBuiltinSong`/`noteFrequencies` import straight from
+// the app's own `src/data/songs.ts` and `src/data/layout.ts`, so fixtures stay
+// derived from the real chart + tuning instead of a hand-copied note list.
 
-import { writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import path from 'node:path'
+import { buildSong } from '../../src/data/songs.ts'
+import { LAYOUTS, DEFAULT_INSTRUMENT } from '../../src/data/layout.ts'
 
 export const SAMPLE_RATE = 44100
 
-// Taps' chart is "-1 -1 +3 -1 +3 -4 +3 -4 -5 -4 +3 -1 -1 -1 +3" (bpm 66, see
-// src/data/songLibrary.ts). Each token maps to a button/direction, and each
-// button/direction to its default frequency (src/data/layout.ts):
-//   button 1 pull = D 293.66, button 3 push = G 392.00,
-//   button 4 pull = B 493.88, button 5 pull = D 587.33
-export const TAPS_NOTES_HZ = [
-  293.66, 293.66, 392.0, 293.66, 392.0, 493.88, 392.0, 493.88, 587.33, 493.88, 392.0, 293.66,
-  293.66, 293.66, 392.0,
-]
+const dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Loads and builds a built-in song from its raw JSON definition
+// (src/data/builtinSongs/<id>.json — see src/data/songLibrary.ts).
+export function loadBuiltinSong(id) {
+  const defPath = path.join(dirname, '..', '..', 'src', 'data', 'builtinSongs', `${id}.json`)
+  const def = JSON.parse(readFileSync(defPath, 'utf8'))
+  return buildSong(def)
+}
+
+// The Hz of each of `song`'s notes, in chart order, using the default
+// instrument's tuning (layout.ts's 7-button push/pull frequencies).
+export function noteFrequencies(song) {
+  const buttons = LAYOUTS[DEFAULT_INSTRUMENT].buttons
+  return song.notes.map((n) => buttons[n.lane][n.type].freq)
+}
 
 // A single sine tone, with a short linear fade in/out so it doesn't click.
 export function toneSamples(freq, ms, fadeMs, amplitude, sampleRate = SAMPLE_RATE) {

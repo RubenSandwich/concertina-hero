@@ -1,0 +1,23 @@
+{
+  "id": "song-of-storms",
+  "name": "Song of Storms",
+  "blurb": "Zelda's windmill waltz — swirling pull runs and a quick push flurry.",
+  "bpm": 120,
+  "color": "#4361ee",
+  "difficulty": "Medium",
+  "chart": [
+    "-1 -2 -5",
+    "-1 -2 -5",
+    "",
+    "+5 -6 +5 -6 +5 +4 -3",
+    "-3 -1 -2 +3 -3",
+    "-3 -1 -2 +3 +2",
+    "",
+    "-1 -2 -5",
+    "-1 -2 -5",
+    "",
+    "+5 -6 +5 -6 +5 +4 -3",
+    "-3 -1 -2 +3 -3",
+    "-3 -1"
+  ]
+}

@@ -3,7 +3,7 @@
 // audio-taps-held.spec.ts can also exercise *held*-note credit — the engine
 // crediting a note for as long as the mic keeps sustaining it, not just for
 // being struck. Run with:
-//   node e2e/fixtures/generate-taps-held-wav.mjs
+//   node --experimental-strip-types e2e/fixtures/generate-taps-held-wav.mjs
 //
 // Layout: `LEADING_SILENCE_MS` of silence, then each note's tone starting
 // exactly on its beat and held for most of that beat's one-beat hold window
@@ -16,14 +16,23 @@
 
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { SAMPLE_RATE, TAPS_NOTES_HZ, toneSamples, silenceSamples, writeWav } from './wav.mjs'
+import {
+  SAMPLE_RATE,
+  loadBuiltinSong,
+  noteFrequencies,
+  toneSamples,
+  silenceSamples,
+  writeWav,
+} from './wav.mjs'
+
+const song = loadBuiltinSong('taps')
+const notesHz = noteFrequencies(song)
 
 // The test triggers this file's playback at the exact instant the countdown
 // ends, so this only needs to cover the lead-in every song applies after that
 // (LEAD_IN in src/data/timing.ts).
 export const LEADING_SILENCE_MS = 2400
-const BPM = 66 // Taps' tempo (src/data/songLibrary.ts)
-const BEAT_MS = 60000 / BPM // 909.09ms — equals Taps' one-beat hold window exactly
+const BEAT_MS = 60000 / song.bpm // 909.09ms — equals Taps' one-beat hold window exactly
 // Taps repeats the same note back to back twice ("D, D" at the start) and
 // three times ("D, D, D" near the end). Distinguishing two such notes relies
 // entirely on the mic hearing true silence between them (nothing else
@@ -37,7 +46,7 @@ const FADE_MS = 15
 const AMPLITUDE = 0.3
 
 const chunks = [silenceSamples(LEADING_SILENCE_MS)]
-for (const freq of TAPS_NOTES_HZ) {
+for (const freq of notesHz) {
   chunks.push(toneSamples(freq, TONE_MS, FADE_MS, AMPLITUDE))
   chunks.push(silenceSamples(GAP_MS))
 }

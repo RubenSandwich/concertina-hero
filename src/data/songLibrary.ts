@@ -14,6 +14,14 @@ import {
   type SongDef,
 } from './songs'
 import { randomAccentColor } from './colors'
+import twinkle from './builtinSongs/twinkle.json'
+import rowYourBoat from './builtinSongs/row-your-boat.json'
+import odeToJoy from './builtinSongs/ode-to-joy.json'
+import chordParade from './builtinSongs/chord-parade.json'
+import songOfStorms from './builtinSongs/song-of-storms.json'
+import concerningHobbits from './builtinSongs/concerning-hobbits.json'
+import drunkenSailor from './builtinSongs/drunken-sailor.json'
+import taps from './builtinSongs/taps.json'
 
 const HEX_RE = /^#[0-9a-f]{3,8}$/i
 const SONGS_KEY = 'accordion-user-songs'
@@ -35,9 +43,17 @@ export function normalizeSongDef(data: unknown, { id }: { id?: string } = {}): S
   if (!name) throw new Error('Song needs a name.')
   const bpm = Number(d.bpm)
   if (!Number.isFinite(bpm) || bpm <= 0) throw new Error('Song needs a positive BPM.')
-  const chart = typeof d.chart === 'string' ? d.chart : ''
-  if (!chart.trim()) throw new Error('Song needs a chart (tokens like +3 or -4).')
-  if (!chartNoteCount(chart)) {
+  // chart is an array of lines (see SongDef); accept a plain string too, for a
+  // hand-written upload that didn't split it up.
+  const chart = Array.isArray(d.chart)
+    ? d.chart.filter((line): line is string => typeof line === 'string')
+    : typeof d.chart === 'string'
+      ? [d.chart]
+      : []
+  if (!chart.some((line) => line.trim())) {
+    throw new Error('Song needs a chart (tokens like +3 or -4).')
+  }
+  if (!chartNoteCount(chart.join('\n'))) {
     throw new Error('The chart has no playable notes (use tokens like +3 or -4).')
   }
   const sub = Number(d.subdivision)
@@ -127,155 +143,30 @@ export function importSongJSON(data: unknown): Song {
   return saveSong({ ...(data as Record<string, unknown>), id: undefined })
 }
 
+// A JSON import infers `difficulty` as the widened `string` type, not the
+// literal `Difficulty` union it actually holds — this narrows it back.
+// Unlike normalizeSongDef() (which validates an *untrusted* upload and
+// quietly falls back when something's wrong), a bad value here is a bug in
+// a file we authored ourselves, so it throws instead of papering over it.
+function asDifficulty(value: string): Difficulty {
+  if (!DIFFICULTIES.includes(value as Difficulty)) {
+    throw new Error(`Unknown difficulty "${value}" in a built-in song.`)
+  }
+  return value as Difficulty
+}
+
 // Raw definitions for the built-in songs (source of truth; built on demand).
+// Each lives in its own JSON file under ./builtinSongs; this array's order is
+// the song list's display order.
 type BuiltinDef = Omit<SongDef, 'subdivision'>
 
 const BUILTIN_DEFS: BuiltinDef[] = [
-  {
-    id: 'twinkle',
-    name: 'Twinkle, Twinkle',
-    blurb: 'The classic. Mostly gentle push/pull pairs.',
-    bpm: 100,
-    color: '#8ac926',
-    difficulty: 'Easy',
-    chart: `
-      +1 +1 +3 +3 -3 -3 +3
-      -2 -2 +2 +2 -1 -1 +1
-      +3 +3 -2 -2 +2 +2 -1
-      +3 +3 -2 -2 +2 +2 -1
-      +1 +1 +3 +3 -3 -3 +3
-      -2 -2 +2 +2 -1 -1 +1
-    `,
-  },
-  {
-    id: 'row-your-boat',
-    name: 'Row, Row, Row Your Boat',
-    blurb: 'Reaches the high buttons with quick direction flips.',
-    bpm: 112,
-    color: '#4cc9f0',
-    difficulty: 'Medium',
-    chart: `
-      +3 +3 +3 -3 -4
-      -4 -3 -4 +4 -5
-      +6 +6 +6
-      -5 -5 -5
-      -4 -4 -4
-      +3 -5 +4 -4 -3 +3
-    `,
-  },
-  {
-    id: 'ode-to-joy',
-    name: 'Ode to Joy',
-    blurb: 'Beethoven at a brisk pace — mind the push/pull switches.',
-    bpm: 124,
-    color: '#ff5d5d',
-    difficulty: 'Hard',
-    chart: `
-      +2 +2 -2 +3 +3 -2 +2 -1
-      +1 +1 -1 +2 +2 -1 -1
-      +2 +2 -2 +3 +3 -2 +2 -1
-      +1 +1 -1 +2 -1 +1 +1
-    `,
-  },
-  {
-    id: 'chord-parade',
-    name: 'Chord Parade',
-    blurb: 'Squeeze a few buttons at once, then breathe — full of chords and rests.',
-    bpm: 108,
-    color: '#9d4edd',
-    difficulty: 'Medium',
-    chart: `
-      +1 X +1 (+1 +3)
-      -2 X (-2 -3) X
-      +3 +3 (+3 +5) X
-      (-4 -3) X +2 X
-      +1 (+1 +3) +1 X
-      (+1 +3 +5) X (+1 +3 +5) X
-    `,
-  },
-  {
-    id: 'song-of-storms',
-    name: 'Song of Storms',
-    blurb: "Zelda's windmill waltz — swirling pull runs and a quick push flurry.",
-    bpm: 120,
-    color: '#4361ee',
-    difficulty: 'Medium',
-    chart: `
-      -1 -2 -5
-      -1 -2 -5
-
-      +5 -6 +5 -6 +5 +4 -3
-      -3 -1 -2 +3 -3
-      -3 -1 -2 +3 +2
-
-      -1 -2 -5
-      -1 -2 -5
-
-      +5 -6 +5 -6 +5 +4 -3
-      -3 -1 -2 +3 -3
-      -3 -1
-    `,
-  },
-  {
-    id: 'concerning-hobbits',
-    name: 'Concerning Hobbits',
-    blurb: "The Shire's easy amble, all gentle push/pull steps.",
-    bpm: 100,
-    color: '#2a9d8f',
-    difficulty: 'Medium',
-    chart: `
-      +1 -1 +2 +3
-      +2 -1 +1
-
-      +2 +3 -3 +4 -4 +3
-      +2 -2 +2 -1
-
-      +1 -1 +2 +3
-      +2 -1 +1 -1 +1
-
-      +2 +3 -3
-      +3 +2 +2 -2 +2 -1
-      +1 -1 +1
-    `,
-  },
-  {
-    id: 'drunken-sailor',
-    name: 'Drunken Sailor',
-    blurb: 'A rowdy sea shanty — long repeated draws, then hoist the tune high.',
-    bpm: 140,
-    color: '#e07a5f',
-    difficulty: 'Medium',
-    chart: `
-      -3 -3 -3 -3 -3 -3 -3
-      -1 -2 -3
-
-      +3 +3 +3 +3 +3 +3 +3
-      +1 +2 +3
-
-      -3 -3 -3 -3 -3 -3 -3
-      -4 +4 -5 +4
-      -3 +3 +2 -1
-
-      -3 -3 -3 -3 -1 -2 -3
-      +3 +3 +3 +3 +1 +2 +3
-      -3 -3 -3 -3 -4 +4 -5 +4
-      -3 +3 +2 -1 -1
-    `,
-  },
-  {
-    id: 'taps',
-    name: 'Taps',
-    blurb: 'The slow, solemn bugle call — just a handful of long notes.',
-    bpm: 66,
-    color: '#6c757d',
-    difficulty: 'Easy',
-    chart: `
-      -1 -1 +3
-      -1 +3 -4
-
-      +3 -4 -5
-      -4 +3 -1
-      -1 -1 +3
-    `,
-  },
-]
+  twinkle,
+  rowYourBoat,
+  odeToJoy,
+  chordParade,
+  songOfStorms,
+  concerningHobbits,
+  drunkenSailor,
+  taps,
+].map((d) => ({ ...d, difficulty: asDifficulty(d.difficulty) }))

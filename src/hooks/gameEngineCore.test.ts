@@ -17,7 +17,15 @@ import {
 
 // bpm 120, subdivision 1 -> a 500ms beat, so holdMs (one beat) is 500 too.
 const song = (chart: string) =>
-  buildSong({ id: 't', name: 't', blurb: '', bpm: 120, color: '#fff', difficulty: 'Easy', chart })
+  buildSong({
+    id: 't',
+    name: 't',
+    blurb: '',
+    bpm: 120,
+    color: '#fff',
+    difficulty: 'Easy',
+    chart: [chart],
+  })
 
 function advance(
   state: EngineState,

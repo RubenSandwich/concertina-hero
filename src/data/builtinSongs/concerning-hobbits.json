@@ -1,0 +1,22 @@
+{
+  "id": "concerning-hobbits",
+  "name": "Concerning Hobbits",
+  "blurb": "The Shire's easy amble, all gentle push/pull steps.",
+  "bpm": 100,
+  "color": "#2a9d8f",
+  "difficulty": "Medium",
+  "chart": [
+    "+1 -1 +2 +3",
+    "+2 -1 +1",
+    "",
+    "+2 +3 -3 +4 -4 +3",
+    "+2 -2 +2 -1",
+    "",
+    "+1 -1 +2 +3",
+    "+2 -1 +1 -1 +1",
+    "",
+    "+2 +3 -3",
+    "+3 +2 +2 -2 +2 -1",
+    "+1 -1 +1"
+  ]
+}

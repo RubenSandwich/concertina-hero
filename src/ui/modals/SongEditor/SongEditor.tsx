@@ -32,7 +32,7 @@ export interface SongDraft {
   bpm: number
   color: string
   difficulty: Difficulty
-  chart: string
+  chart: string[]
 }
 
 // Blank starting point for a brand-new song.
@@ -63,7 +63,7 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
           bpm: song.bpm,
           color: song.color,
           difficulty: song.difficulty,
-          chart: song.chart,
+          chart: song.chart.join('\n'),
         }
       : emptyDraft(),
   )
@@ -85,7 +85,7 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
       bpm: Number(draft.bpm) || 0,
       color: draft.color,
       difficulty: draft.difficulty,
-      chart: draft.chart,
+      chart: draft.chart.split('\n'),
     })
   }
 
@@ -104,6 +104,7 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
         name: draft.name.trim(),
         blurb: draft.blurb.trim(),
         bpm,
+        chart: draft.chart.split('\n'),
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err))

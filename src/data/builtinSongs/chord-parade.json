@@ -1,0 +1,16 @@
+{
+  "id": "chord-parade",
+  "name": "Chord Parade",
+  "blurb": "Squeeze a few buttons at once, then breathe — full of chords and rests.",
+  "bpm": 108,
+  "color": "#9d4edd",
+  "difficulty": "Medium",
+  "chart": [
+    "+1 X +1 (+1 +3)",
+    "-2 X (-2 -3) X",
+    "+3 +3 (+3 +5) X",
+    "(-4 -3) X +2 X",
+    "+1 (+1 +3) +1 X",
+    "(+1 +3 +5) X (+1 +3 +5) X"
+  ]
+}

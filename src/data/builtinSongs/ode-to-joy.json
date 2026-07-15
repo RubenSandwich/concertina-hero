@@ -1,0 +1,14 @@
+{
+  "id": "ode-to-joy",
+  "name": "Ode to Joy",
+  "blurb": "Beethoven at a brisk pace — mind the push/pull switches.",
+  "bpm": 124,
+  "color": "#ff5d5d",
+  "difficulty": "Hard",
+  "chart": [
+    "+2 +2 -2 +3 +3 -2 +2 -1",
+    "+1 +1 -1 +2 +2 -1 -1",
+    "+2 +2 -2 +3 +3 -2 +2 -1",
+    "+1 +1 -1 +2 -1 +1 +1"
+  ]
+}

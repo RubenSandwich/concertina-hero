@@ -1,0 +1,16 @@
+{
+  "id": "row-your-boat",
+  "name": "Row, Row, Row Your Boat",
+  "blurb": "Reaches the high buttons with quick direction flips.",
+  "bpm": 112,
+  "color": "#4cc9f0",
+  "difficulty": "Medium",
+  "chart": [
+    "+3 +3 +3 -3 -4",
+    "-4 -3 -4 +4 -5",
+    "+6 +6 +6",
+    "-5 -5 -5",
+    "-4 -4 -4",
+    "+3 -5 +4 -4 -3 +3"
+  ]
+}

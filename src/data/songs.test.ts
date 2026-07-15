@@ -13,7 +13,15 @@ import {
 import { minInstrumentFor, INSTRUMENT_SIZES } from './layout.ts'
 
 const build = (chart: string): Song =>
-  buildSong({ id: 't', name: 't', blurb: '', bpm: 120, color: '#fff', difficulty: 'Easy', chart })
+  buildSong({
+    id: 't',
+    name: 't',
+    blurb: '',
+    bpm: 120,
+    color: '#fff',
+    difficulty: 'Easy',
+    chart: [chart],
+  })
 
 // The lane/type/time of every note, for compact comparisons.
 const shape = (song: Song) => song.notes.map((n) => ({ lane: n.lane, type: n.type, time: n.time }))

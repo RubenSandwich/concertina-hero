@@ -1,0 +1,24 @@
+{
+  "id": "drunken-sailor",
+  "name": "Drunken Sailor",
+  "blurb": "A rowdy sea shanty — long repeated draws, then hoist the tune high.",
+  "bpm": 140,
+  "color": "#e07a5f",
+  "difficulty": "Medium",
+  "chart": [
+    "-3 -3 -3 -3 -3 -3 -3",
+    "-1 -2 -3",
+    "",
+    "+3 +3 +3 +3 +3 +3 +3",
+    "+1 +2 +3",
+    "",
+    "-3 -3 -3 -3 -3 -3 -3",
+    "-4 +4 -5 +4",
+    "-3 +3 +2 -1",
+    "",
+    "-3 -3 -3 -3 -1 -2 -3",
+    "+3 +3 +3 +3 +1 +2 +3",
+    "-3 -3 -3 -3 -4 +4 -5 +4",
+    "-3 +3 +2 -1 -1"
+  ]
+}

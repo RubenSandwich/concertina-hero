@@ -25,7 +25,10 @@ export interface Section {
 export type Difficulty = 'Easy' | 'Medium' | 'Hard'
 
 // A raw, validated song definition — the form persisted in localStorage and fed
-// to buildSong.
+// to buildSong. `chart` is an array of lines rather than one long string — a
+// JSON string can't contain a literal newline, so this lets a chart be
+// written/read one phrase per line; line breaks are just for readability and
+// are joined back into one string before parsing (see buildSong).
 export interface SongDef {
   id: string
   name: string
@@ -34,7 +37,7 @@ export interface SongDef {
   subdivision: number
   color: string
   difficulty: Difficulty
-  chart: string
+  chart: string[]
 }
 
 // A built, playable song: its definition plus the derived notes/sections/timing.
@@ -155,7 +158,7 @@ export function buildSong({
   chart,
   builtin = false,
 }: BuildInput): Song {
-  const { notes, duration, requiredButtons } = parseChart(chart, { bpm, subdivision })
+  const { notes, duration, requiredButtons } = parseChart(chart.join('\n'), { bpm, subdivision })
   const sections = deriveSections(notes, duration)
   return {
     id,
