@@ -34,7 +34,8 @@
   the actual FFT/onset pipeline in `audio/pitch.ts` and the engine's mic
   debounce. `--mute-audio` (in `playwright.config.ts`) guarantees none of it
   is ever audible on the test machine's speakers. Regenerate the fixture with
-  `node e2e/fixtures/generate-taps-wav.mjs` if Taps's chart or tuning changes.
+  `node scripts/generate-test-wavs/generate-taps-wav.mjs` if Taps's chart or
+  tuning changes.
 - `e2e/audio-taps-held.spec.ts` is that mic test's companion, playing Taps in
   _real time_ (no "Wait for correct note") to also exercise _held_-note credit
   (`holdFraction()`/`holdPoints()` in `data/scoring.ts`), which wait-for-note
@@ -50,7 +51,7 @@
   the moment it matters; retrying a failure was tried first and rejected —
   retrying an expensive real-time test under contention just adds more
   contention. Regenerate its fixture with
-  `node e2e/fixtures/generate-taps-held-wav.mjs`.
+  `node scripts/generate-test-wavs/generate-taps-held-wav.mjs`.
 - Both mic tests mock the microphone the same way, via `mockMicFromWav`:
   `page.addInitScript` overrides `navigator.mediaDevices.getUserMedia` itself
   to decode a WAV (served in-page by intercepting a fake URL with

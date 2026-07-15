@@ -3,7 +3,10 @@
 // audio-taps-held.spec.ts can also exercise *held*-note credit — the engine
 // crediting a note for as long as the mic keeps sustaining it, not just for
 // being struck. Run with:
-//   node --experimental-strip-types e2e/fixtures/generate-taps-held-wav.mjs
+//   node --experimental-strip-types scripts/generate-test-wavs/generate-taps-held-wav.mjs
+//
+// This script lives outside e2e/fixtures/ (only the generated .wav files do)
+// so Playwright's test discovery never has to look past actual fixtures.
 //
 // Layout: `LEADING_SILENCE_MS` of silence, then each note's tone starting
 // exactly on its beat and held for most of that beat's one-beat hold window
@@ -53,6 +56,10 @@ const total = chunks.reduce((n, c) => n + c.length, 0)
 
 const outPath = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+  '..',
+  'e2e',
+  'fixtures',
   'taps-held.wav',
 )
 const bytes = writeWav(outPath, chunks)

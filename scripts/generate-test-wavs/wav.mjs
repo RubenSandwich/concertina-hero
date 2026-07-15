@@ -1,6 +1,9 @@
-// Shared WAV-writing helpers for the e2e mic fixtures. Plain PCM synthesis, no
-// dependencies — a standard 16-bit mono WAV is broadly compatible with both
-// Chromium's `--use-file-for-fake-audio-capture` and `AudioContext.decodeAudioData`.
+// Shared WAV-writing helpers for the e2e mic fixtures. Lives in
+// scripts/generate-test-wavs/ (not e2e/fixtures/, which holds only the
+// generated .wav files themselves) alongside the generate-*-wav.mjs scripts
+// that write into e2e/fixtures/. Plain PCM synthesis, no dependencies — a
+// standard 16-bit mono WAV is broadly compatible with both Chromium's
+// `--use-file-for-fake-audio-capture` and `AudioContext.decodeAudioData`.
 //
 // Tones are synthesized with a free-reed-like overtone mix and a bellows
 // attack/decay envelope (see chordSamples) rather than a bare sine, so the

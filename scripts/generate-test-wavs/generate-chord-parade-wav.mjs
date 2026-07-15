@@ -11,9 +11,11 @@
 // separated by silence so the app's onset detection (which delineates a
 // "press" by a note starting after a silent gap, not by pitch changing) sees
 // the same distinct beats, in the same order, as the chart. Run with:
-//   node --experimental-strip-types e2e/fixtures/generate-chord-parade-wav.mjs
+//   node --experimental-strip-types scripts/generate-test-wavs/generate-chord-parade-wav.mjs
 //
-// Committing the generated .wav alongside this script means the test doesn't
+// This script lives outside e2e/fixtures/ (only the generated .wav files do)
+// so Playwright's test discovery never has to look past actual fixtures.
+// Committing the generated .wav alongside the fixtures means the test doesn't
 // need to regenerate it, but re-run this file if Chord Parade's chart or
 // tuning ever changes.
 //
@@ -48,6 +50,10 @@ const total = chunks.reduce((n, c) => n + c.length, 0)
 
 const outPath = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
+  '..',
+  '..',
+  'e2e',
+  'fixtures',
   'chord-parade.wav',
 )
 const bytes = writeWav(outPath, chunks)
