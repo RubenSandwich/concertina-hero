@@ -13,7 +13,8 @@ npm test              # unit tests: mic detection, scoring, timing, layout, song
                       #   instrument key map, per-size presets, the game engine core
                       #   (Node's test runner, pure logic, no browser)
 npm run test:e2e       # browser tests (Playwright + Chromium): screen flow, real
-                      #   keyboard input — starts its own dev server automatically
+                      #   keyboard input, and a real mic pipeline test fed from a
+                      #   fake-microphone WAV fixture — starts its own dev server
 npm run format        # format everything with Prettier
 npm run format:check  # verify formatting, no writes
 ```

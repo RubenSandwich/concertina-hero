@@ -19,6 +19,16 @@ export async function setWaitForNote(page: Page, on: boolean): Promise<void> {
   await expect(toggle).toHaveAttribute('aria-checked', String(on))
 }
 
+// Switches "Play style" to the microphone. `startMic()` is async (it awaits
+// getUserMedia), so wait for the radio to actually report checked rather than
+// just firing the click — the permission grant + fake-device setup can take a
+// moment (see playwright.config.ts's `permissions`/`launchOptions`).
+export async function enableMic(page: Page): Promise<void> {
+  await expandSettings(page)
+  await page.getByRole('radio', { name: /Mic/ }).click()
+  await expect(page.getByRole('radio', { name: /Mic/ })).toBeChecked()
+}
+
 // Selects `songName`'s card, then starts it, waiting out the real-time 3-2-1
 // countdown. Every song's notes are further shifted by a fixed lead-in after
 // that (so the fall animation has room to play), so the first note still

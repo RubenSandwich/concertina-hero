@@ -21,7 +21,21 @@
   unlock gestures, the actual screen flow. `e2e/` has its own `tsconfig.json`
   (`npm run typecheck:e2e`) so its Playwright types don't leak into the main
   `src` build. `e2e/helpers.ts` has the shared Start-screen setup (expand
-  Settings, flip "Wait for correct note", start a song).
+  Settings, flip "Wait for correct note", switch to Mic, start a song) plus
+  `pressUntilCombo` for keyboard-driven tests.
+- Any e2e test that avoids timing by turning on "Wait for correct note" (both
+  the keyboard chord test and the mic test below) should poll for the outcome
+  rather than sleep for it — a press/tone before its note is reachable is a
+  harmless no-op in that mode, so retrying/waiting it out is exactly right,
+  and sidesteps ever needing to know a song's BPM or lead-in.
+- `e2e/audio-taps.spec.ts` feeds a _real_ synthesized recording of "Taps" into
+  Chromium's fake microphone (`--use-file-for-fake-audio-capture`, wired up in
+  `playwright.config.ts` from `e2e/fixtures/taps.wav`) instead of mocking
+  `detectChord()` — it exercises the actual FFT/onset pipeline in
+  `audio/pitch.ts` and the engine's mic debounce. `--mute-audio` (also in
+  `playwright.config.ts`) guarantees none of it is ever audible on the test
+  machine's speakers. Regenerate the fixture with
+  `node e2e/fixtures/generate-taps-wav.mjs` if Taps's chart or tuning changes.
 
 ## CSS
 
