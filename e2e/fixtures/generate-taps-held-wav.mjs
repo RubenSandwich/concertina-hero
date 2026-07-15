@@ -42,12 +42,11 @@ const BEAT_MS = 60000 / song.bpm // 909.09ms — equals Taps' one-beat hold wind
 // it) — 250ms matches the gap already proven reliable in generate-taps-wav.mjs.
 const GAP_MS = 250
 const TONE_MS = BEAT_MS - GAP_MS // ~659ms held, ~72% of the note's hold window
-const FADE_MS = 15
 const AMPLITUDE = 0.3
 
 const chunks = [silenceSamples(LEADING_SILENCE_MS)]
 for (const freq of notesHz) {
-  chunks.push(toneSamples(freq, TONE_MS, FADE_MS, AMPLITUDE))
+  chunks.push(toneSamples(freq, TONE_MS, AMPLITUDE))
   chunks.push(silenceSamples(GAP_MS))
 }
 const total = chunks.reduce((n, c) => n + c.length, 0)

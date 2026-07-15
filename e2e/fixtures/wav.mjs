@@ -2,6 +2,13 @@
 // dependencies — a standard 16-bit mono WAV is broadly compatible with both
 // Chromium's `--use-file-for-fake-audio-capture` and `AudioContext.decodeAudioData`.
 //
+// Tones are synthesized with a free-reed-like overtone mix and a bellows
+// attack/decay envelope (see chordSamples) rather than a bare sine, so the
+// fixtures actually sound like a concertina — also a *better* test of the
+// mic's chord detector than a pure sine, not just an aesthetic choice (see
+// /audio/pitch.test.ts's makeChordBuffer, which uses an even richer sawtooth
+// for exactly that reason).
+//
 // Run any script that imports this with `--experimental-strip-types` (like
 // `npm test` does) — `loadBuiltinSong`/`noteFrequencies` import straight from
 // the app's own `src/data/songs.ts` and `src/data/layout.ts`, so fixtures stay
@@ -58,40 +65,52 @@ export function chordFrequencies(song) {
   return groups
 }
 
-// One or more sine tones summed together — several make a chord, and a
-// single one is just a plain tone — each with its own short linear fade
-// in/out so the mix doesn't click. `amplitude` is per tone, not the total.
-export function chordSamples(
-  freqs,
-  ms,
-  fadeMs,
-  amplitude,
-  sampleRate = SAMPLE_RATE,
-) {
+// The overtone mix (fundamental, 2nd, 3rd harmonic) that gives a synthesized
+// tone the sound of a free-reed concertina instead of a bare sine, scaled to
+// sum to 1 so a chord of several of these together still peaks about where a
+// chord of plain sine tones did.
+const RAW_HARMONICS = [1, 0.5, 0.3]
+const HARMONIC_SUM = RAW_HARMONICS.reduce((a, b) => a + b, 0)
+const HARMONICS = RAW_HARMONICS.map((w) => w / HARMONIC_SUM)
+
+// A bellows-style attack/decay envelope: a linear ramp in, a sustain, a
+// linear ramp out — rather than a symmetric click-guard fade. Only applied
+// when the tone is long enough to hold a sustain; a tone shorter than
+// ATTACK_MS + DECAY_MS plays at full volume throughout instead.
+const ATTACK_MS = 80
+const DECAY_MS = 120
+
+// One or more concertina-ish tones summed together — several make a chord,
+// and a single one is just a plain note. `amplitude` is per tone, not the
+// total.
+export function chordSamples(freqs, ms, amplitude, sampleRate = SAMPLE_RATE) {
   const n = Math.round((ms / 1000) * sampleRate)
-  const fadeN = Math.round((fadeMs / 1000) * sampleRate)
+  const attackN = Math.round((ATTACK_MS / 1000) * sampleRate)
+  const decayN = Math.round((DECAY_MS / 1000) * sampleRate)
+  const hasEnvelope = n > attackN + decayN
   const samples = new Float64Array(n)
   for (const freq of freqs) {
     for (let i = 0; i < n; i++) {
       let env = 1
-      if (i < fadeN) env = i / fadeN
-      else if (i > n - fadeN) env = (n - i) / fadeN
-      samples[i] +=
-        Math.sin((2 * Math.PI * freq * i) / sampleRate) * amplitude * env
+      if (hasEnvelope) {
+        if (i < attackN) env = i / attackN
+        else if (i > n - decayN) env = (n - i) / decayN
+      }
+      let tone = 0
+      for (let h = 0; h < HARMONICS.length; h++) {
+        tone +=
+          Math.sin((2 * Math.PI * freq * (h + 1) * i) / sampleRate) *
+          HARMONICS[h]
+      }
+      samples[i] += tone * amplitude * env
     }
   }
   return samples
 }
 
-// A single sine tone, with a short linear fade in/out so it doesn't click.
-export function toneSamples(
-  freq,
-  ms,
-  fadeMs,
-  amplitude,
-  sampleRate = SAMPLE_RATE,
-) {
-  return chordSamples([freq], ms, fadeMs, amplitude, sampleRate)
+// A single concertina-ish tone (see chordSamples).
+export function toneSamples(freq, ms, amplitude, sampleRate = SAMPLE_RATE) {
+  return chordSamples([freq], ms, amplitude, sampleRate)
 }
 
 export function silenceSamples(ms, sampleRate = SAMPLE_RATE) {
