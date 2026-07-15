@@ -28,7 +28,7 @@ export default function ScreenGuard() {
 
   return (
     <div
-      className="screen-guard"
+      className="blocking-overlay screen-guard"
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="screen-guard-title"

@@ -25,10 +25,10 @@
 .song-color__input {
   width: 54px;
   height: 46px;
-  padding: 2px;
+  padding: var(--sp-2);
   background: var(--paper);
   border: 3px solid var(--ink);
-  border-radius: 10px 12px 9px 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 .song-color__random {
@@ -37,7 +37,7 @@
   padding: var(--sp-8) var(--sp-10);
   background: var(--paper);
   border: 3px solid var(--ink);
-  border-radius: 10px 12px 9px 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   box-shadow: var(--shadow-xs);
 }

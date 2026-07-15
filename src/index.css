@@ -20,21 +20,16 @@
   --green-ink: #477310;
   --red-ink: #b71c1c;
 
-  /* Shared push / pull fills — used identically by the ribbon, the HUD banner
-     and the per-note indicator so all three read the same way. */
-  --push-fill: color-mix(in srgb, var(--orange) 55%, #fff);
-  --pull-fill: repeating-linear-gradient(
-    -45deg,
-    color-mix(in srgb, var(--sky) 62%, #fff) 0 9px,
-    color-mix(in srgb, var(--sky) 34%, #fff) 9px 18px
-  );
-
   --shadow: 5px 6px 0 color-mix(in srgb, var(--ink) 22%, transparent);
   --shadow-lg: 8px 10px 0 color-mix(in srgb, var(--ink) 20%, transparent);
   --shadow-sm: 3px 4px 0 color-mix(in srgb, var(--ink) 22%, transparent);
   --shadow-xs: 2px 3px 0 color-mix(in srgb, var(--ink) 22%, transparent);
 
   --paper-radius: 16px 20px 15px 22px / 22px 15px 20px 16px;
+  /* Shared "wobbly" radii reused by several components so their corner
+     curvature stays consistent without repeating the same shorthand. */
+  --radius-chip: 14px 18px 14px 18px / 18px 14px 18px 14px;
+  --radius-sm: 10px 12px 9px 12px;
 
   --muted: #6a5a4c; /* secondary text (darkened for >=4.5:1 contrast) */
 
@@ -236,7 +231,7 @@ html[data-transition='backward']::view-transition-old(screen) {
   color: var(--ink);
   background: var(--paper);
   border: 4px solid var(--ink);
-  border-radius: 14px 18px 14px 18px / 18px 14px 18px 14px;
+  border-radius: var(--radius-chip);
   padding: var(--sp-12) var(--sp-22);
   cursor: pointer;
   box-shadow: var(--shadow);
@@ -320,4 +315,35 @@ html[data-transition='backward']::view-transition-old(screen) {
 }
 .diff--hard {
   background: var(--red);
+}
+
+/* ---------- Full-screen blocking overlay ----------
+   Shared by ScreenGuard and VersionMismatch: a non-dismissable backdrop that
+   covers the whole viewport. Each consumer adds this class alongside its own
+   (which then only needs its card content's own specific styling). */
+.blocking-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-24);
+  background: color-mix(in srgb, var(--ink) 60%, transparent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+/* ---------- Segmented shell ----------
+   Shared pill-shaped container for SegmentedControl and Switch: a row of
+   joined options with a bold ink border. Each consumer adds this class
+   alongside its own for its direction/state-specific styling. */
+.segmented-shell {
+  display: inline-flex;
+  margin-left: auto;
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 13px 15px 12px 14px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }

@@ -63,7 +63,7 @@
   padding: var(--sp-6) var(--sp-8);
   background: var(--cream);
   border: 2px solid var(--ink);
-  border-radius: 10px 12px 9px 12px;
+  border-radius: var(--radius-sm);
 }
 .freq-cell.is-listening {
   background: var(--paper);

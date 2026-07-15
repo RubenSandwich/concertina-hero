@@ -1,16 +1,11 @@
 /* OFF/ON toggle styled to match the segmented control: two joined OFF/ON
    segments with the active side filled. Kept separate from SegmentedControl on
-   purpose — a switch and a radiogroup differ semantically. */
+   purpose — a switch and a radiogroup differ semantically. Pill-shaped
+   container chrome (border, radius, shadow, overflow) lives in index.css's
+   shared .segmented-shell, applied alongside .switch in Switch.tsx. */
 .switch {
   flex: 0 0 auto;
-  margin-left: auto;
-  display: inline-flex;
   padding: 0;
-  background: var(--paper);
-  border: 3px solid var(--ink);
-  border-radius: 13px 15px 12px 14px;
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
   cursor: pointer;
   font-family: var(--font-display);
 }

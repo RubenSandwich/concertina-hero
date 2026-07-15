@@ -110,7 +110,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-4);
 }
 .howto-play__circle {
   width: 62px;
@@ -164,7 +164,7 @@
   font-weight: 800;
   font-size: var(--fs-sm);
   color: var(--ink);
-  padding: 1px 8px;
+  padding: 1px var(--sp-8);
   background: color-mix(in srgb, var(--lane) 40%, #fff);
   border: 2px solid var(--ink);
   border-radius: 6px;

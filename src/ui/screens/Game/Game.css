@@ -45,7 +45,7 @@
   padding: var(--sp-6) var(--sp-14);
   background: var(--paper);
   border: 4px solid var(--ink);
-  border-radius: 14px 18px 14px 18px / 18px 14px 18px 14px;
+  border-radius: var(--radius-chip);
   box-shadow: var(--shadow);
 }
 .hud__label {
@@ -82,7 +82,7 @@
   padding: var(--sp-6) var(--sp-14);
   background: var(--teal);
   border: 4px solid var(--ink);
-  border-radius: 14px 18px 14px 18px / 18px 14px 18px 14px;
+  border-radius: var(--radius-chip);
   box-shadow: var(--shadow);
   font-family: var(--font-display);
   font-weight: 800;

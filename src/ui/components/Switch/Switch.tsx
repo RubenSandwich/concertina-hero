@@ -31,7 +31,7 @@ export default function Switch({
       aria-describedby={describedBy}
       aria-label={labelledBy ? undefined : label}
       disabled={disabled}
-      className={'switch' + (checked ? ' is-on' : '')}
+      className={'segmented-shell switch' + (checked ? ' is-on' : '')}
       onClick={() => onChange(!checked)}
     >
       <span className="switch__option switch__option--off" aria-hidden="true">

@@ -1,16 +1,6 @@
-/* Full-screen blocking guard for windows below the minimum app width. */
-.screen-guard {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--sp-24);
-  background: color-mix(in srgb, var(--ink) 60%, transparent);
-  -webkit-backdrop-filter: blur(3px);
-  backdrop-filter: blur(3px);
-}
+/* Full-screen blocking guard for windows below the minimum app width. Base
+   overlay chrome (fixed position, backdrop, blur) lives in index.css's
+   shared .blocking-overlay, applied alongside this class in ScreenGuard.tsx. */
 .screen-guard__card {
   max-width: 440px;
   padding: var(--sp-28) var(--sp-34);

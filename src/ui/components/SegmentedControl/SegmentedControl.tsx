@@ -71,7 +71,7 @@ export default function SegmentedControl<T extends string | number>({
 
   return (
     <div
-      className="segmented"
+      className="segmented-shell segmented"
       role="radiogroup"
       aria-label={label}
       ref={ref}

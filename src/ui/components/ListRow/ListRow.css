@@ -141,7 +141,7 @@ button.list-row__main:focus-visible {
   color: var(--ink);
   background: var(--paper);
   border: 3px solid var(--ink);
-  border-radius: 10px 12px 9px 12px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   box-shadow: var(--shadow-xs);
   transition: transform 0.08s ease;

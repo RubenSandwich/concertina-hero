@@ -1,13 +1,6 @@
-/* Segmented control: connected single-select buttons. */
-.segmented {
-  display: inline-flex;
-  margin-left: auto;
-  background: var(--paper);
-  border: 3px solid var(--ink);
-  border-radius: 13px 15px 12px 14px;
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-}
+/* Segmented control: connected single-select buttons. Pill-shaped container
+   chrome (border, radius, shadow, overflow) lives in index.css's shared
+   .segmented-shell, applied alongside .segmented in SegmentedControl.tsx. */
 .segmented__option {
   font-family: inherit;
   cursor: pointer;

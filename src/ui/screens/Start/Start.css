@@ -112,7 +112,7 @@
   background: var(--cream);
   border: 2px solid var(--ink);
   border-radius: 20px;
-  padding: 2px var(--sp-8);
+  padding: var(--sp-2) var(--sp-8);
   white-space: nowrap;
 }
 
@@ -142,7 +142,7 @@
   background: var(--cream);
   border: 2px solid var(--ink);
   border-radius: 20px;
-  padding: 2px var(--sp-8);
+  padding: var(--sp-2) var(--sp-8);
   white-space: nowrap;
 }
 .song-card__supports-icon {

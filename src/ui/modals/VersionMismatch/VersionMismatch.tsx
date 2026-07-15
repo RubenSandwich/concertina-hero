@@ -58,7 +58,7 @@ export default function VersionMismatchModal({
 
   return (
     <div
-      className="version-mismatch"
+      className="blocking-overlay version-mismatch"
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="version-mismatch-title"
