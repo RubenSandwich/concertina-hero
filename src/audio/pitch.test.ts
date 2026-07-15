@@ -23,7 +23,7 @@ import {
   LANE_NOTES,
   setNoteFrequencies,
   getDefaultNotes,
-} from '../data/instrument.ts'
+} from '../instrument/instrument.ts'
 
 // LANE_NOTES is a live, module-level map, so any test that retunes it must put it
 // back — the whole file shares one instrument.

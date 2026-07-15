@@ -12,7 +12,8 @@
   `./layout.ts`); type-only imports are erased, so they can stay extensionless.
   `.tsx` UI files aren't in the test graph and use the `#…` aliases as normal —
   as does `useGameEngine.ts`, since nothing in the test graph imports it.
-- Two imports stay relative rather than aliased: `../utils` and the test-graph
+- Two imports stay relative rather than aliased: `utils/general.ts` (and its
+  `utils/colors.ts`/`utils/storageVersion.ts` siblings) and the test-graph
   files above.
 - `e2e/` holds Playwright browser tests (`npm run test:e2e`), separate from the
   `npm test` unit tests above: they drive a real Chromium against the app's own
@@ -38,7 +39,7 @@
   tuning changes.
 - `e2e/audio-taps-held.spec.ts` is that mic test's companion, playing Taps in
   _real time_ (no "Wait for correct note") to also exercise _held_-note credit
-  (`holdFraction()`/`holdPoints()` in `data/scoring.ts`), which wait-for-note
+  (`holdFraction()`/`holdPoints()` in `scoring/scoring.ts`), which wait-for-note
   can't: it holds the clock the instant a note is caught, so heldMs barely
   accrues. Real-time timing means this recording's start has to actually line
   up with the game's clock — `waitForCountdownEndAndStartFakeMic` triggers
@@ -96,12 +97,12 @@ auto` with `margin: auto` on its child (centres when it fits, scrolls from the
 ## The game loop
 
 - The engine is split into a stateless core and an impure shell:
-  - `hooks/gameEngineCore.ts` exports `createInitialState(song)` and
+  - `engine/gameEngineCore.ts` exports `createInitialState(song)` and
     `stepEngine(state, input) -> { state, events }`. It is a plain function of
     its arguments — no DOM, no audio, no `performance.now()`, no `console.log` —
     which is what lets `gameEngineCore.test.ts` assert on it directly with
     made-up input instead of driving a real rAF loop or mic.
-  - `hooks/useGameEngine.ts` is the shell: it owns rAF, keyboard listeners,
+  - `engine/useGameEngine.ts` is the shell: it owns rAF, keyboard listeners,
     sampling the mic (`detectChord()`), and applying the `EngineEvent`s a step
     returns (playing sounds, logging, calling `onFinish`). It keeps the engine
     state in a single ref (`stateRef`) and re-renders once per animation frame

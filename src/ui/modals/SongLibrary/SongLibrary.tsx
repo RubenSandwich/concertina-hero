@@ -4,8 +4,8 @@ import {
   deleteSong,
   saveSong,
   importSongJSON,
-} from '#data/songLibrary'
-import { DIFF_CLASS, type Song } from '#data/songs'
+} from '#songs/songLibrary'
+import { DIFF_CLASS, type Song } from '#songs/songs'
 import Modal from '#components/Modal/Modal'
 import UploadButton from '#components/UploadButton/UploadButton'
 import ListRow from '#components/ListRow/ListRow'

@@ -1,10 +1,14 @@
 import { useMemo } from 'react'
-import { useGameEngine } from '#hooks/useGameEngine'
-import type { GameNote, GameResult } from '#hooks/useGameEngine'
-import type { Song, Section } from '#data/songs'
-import { LANE_COLORS, getActiveLayout, type Direction } from '#data/instrument'
-import type { InstrumentSize } from '#data/layout'
-import { LEAD_TIME, noteProgress, noteVisible } from '#data/timing'
+import { useGameEngine } from '#engine/useGameEngine'
+import type { GameNote, GameResult } from '#engine/useGameEngine'
+import type { Song, Section } from '#songs/songs'
+import {
+  LANE_COLORS,
+  getActiveLayout,
+  type Direction,
+} from '#instrument/instrument'
+import type { InstrumentSize } from '#instrument/layout'
+import { LEAD_TIME, noteProgress, noteVisible } from '#scoring/timing'
 import Keyboard from '#components/Keyboard/Keyboard'
 import NoteCard from '#components/NoteCard/NoteCard'
 import HowToPlay from '#components/HowToPlay/HowToPlay'

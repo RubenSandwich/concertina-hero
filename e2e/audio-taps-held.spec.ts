@@ -20,7 +20,8 @@ const TAPS_HELD_WAV = path.join(
 // the instant a note is caught, so heldMs barely accrues. This test plays
 // Taps in real time instead (no wait-for-note) specifically to exercise the
 // engine crediting a *held* mic note (see holdFraction()/holdPoints() in
-// data/scoring.ts) as it actually sustains, the same way a keyboard hold does.
+// scoring/scoring.ts) as it actually sustains, the same way a keyboard hold
+// does.
 //
 // That means this recording's timing has to actually line up with the game's
 // clock, unlike taps.wav's looping onset-only recording. Rather than guess a

@@ -15,22 +15,22 @@
 // container is replaced each call, so callers always get a new `EngineState`
 // reference to store, even though most of what it points to is reused in place.
 
-import { LANE_NOTES, type Direction } from '../data/instrument.ts'
+import { LANE_NOTES, type Direction } from '../instrument/instrument.ts'
 import {
   MIC_LATENCY,
   MIC_WINDOW_SCALE,
   isPlayable,
   missTime,
   noteProgress,
-} from '../data/timing.ts'
-import type { Song, Note } from '../data/songs.ts'
+} from '../scoring/timing.ts'
+import type { Song, Note } from '../songs/songs.ts'
 import {
   gradeFor,
   holdFraction,
   holdPoints,
   isSustaining,
-} from '../data/scoring.ts'
-import type { Rating, Judgement } from '../data/scoring.ts'
+} from '../scoring/scoring.ts'
+import type { Rating, Judgement } from '../scoring/scoring.ts'
 import { aliasesOf, type ChordReading } from '../audio/pitch.ts'
 
 const COUNTDOWN_MS = 3000 // "3, 2, 1" before the song starts

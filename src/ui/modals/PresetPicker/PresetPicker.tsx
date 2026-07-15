@@ -9,7 +9,7 @@ import {
   deletePreset,
   importPresetJSON,
   type Preset,
-} from '#data/presets'
+} from '#instrument/presets'
 import Modal from '#components/Modal/Modal'
 import UploadButton from '#components/UploadButton/UploadButton'
 import ListRow, { type RowTag } from '#components/ListRow/ListRow'

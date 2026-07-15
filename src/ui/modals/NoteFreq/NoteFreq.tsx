@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { LANE_COLORS, getDefaultNotes, type Direction } from '#data/instrument'
-import type { Preset } from '#data/presets'
+import {
+  LANE_COLORS,
+  getDefaultNotes,
+  type Direction,
+} from '#instrument/instrument'
+import type { Preset } from '#instrument/presets'
 import {
   startMic,
   stopMic,
@@ -8,7 +12,7 @@ import {
   tuningIssues,
   MIC_ERROR,
 } from '#audio/pitch'
-import { slug, downloadJSON } from '../../../utils'
+import { slug, downloadJSON } from '../../../utils/general'
 import Modal from '#components/Modal/Modal'
 import './NoteFreq.css'
 

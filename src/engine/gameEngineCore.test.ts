@@ -6,7 +6,7 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildSong } from '../data/songs.ts'
+import { buildSong } from '../songs/songs.ts'
 import type { ChordNote, ChordReading } from '../audio/pitch.ts'
 import {
   createInitialState,

@@ -1,5 +1,5 @@
 // Generates e2e/fixtures/chord-parade.wav: a synthetic "performance" of the
-// built-in "Chord Parade" song (src/data/builtinSongs/chord-parade.json),
+// built-in "Chord Parade" song (src/songs/builtinSongs/chord-parade.json),
 // used as a fake microphone input for e2e/audio-chords.spec.ts.
 //
 // Each chart beat becomes a concertina-ish tone (see wav.mjs's chordSamples)

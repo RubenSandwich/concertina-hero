@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
-import type { VersionMismatch } from '#data/storageVersion'
-import { deleteVersionMismatch } from '#data/storageVersion'
+import type { VersionMismatch } from '../../../utils/storageVersion'
+import { deleteVersionMismatch } from '../../../utils/storageVersion'
 import ListRow from '#components/ListRow/ListRow'
 import './VersionMismatch.css'
 
@@ -11,7 +11,7 @@ interface VersionMismatchModalProps {
 }
 
 // A blocking, non-dismissable overlay shown at startup when one or more
-// records saved in localStorage (presets/songs — see data/storageVersion.ts)
+// records saved in localStorage (presets/songs — see storageVersion.ts)
 // were stamped with a different model version than the app currently
 // expects. Unlike the shared Modal component, there is deliberately no close
 // button, backdrop-click, or Escape dismissal, and no "keep"/"ignore" option

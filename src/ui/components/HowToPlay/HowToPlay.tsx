@@ -1,4 +1,4 @@
-import { LANE_BUTTONS, LANE_COLORS, LANE_NOTES } from '#data/instrument'
+import { LANE_BUTTONS, LANE_COLORS, LANE_NOTES } from '#instrument/instrument'
 import './HowToPlay.css'
 
 // "How to play" in two passes, in the order they're easiest to learn.

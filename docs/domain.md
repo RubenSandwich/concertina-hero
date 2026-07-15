@@ -3,9 +3,9 @@
 ## Instruments, buttons, lanes, push/pull
 
 - The game supports four anglo sizes — **7 / 10 / 20 / 30 buttons** — as a global
-  setting (`getActiveInstrument` / `setActiveInstrument` in `data/instrument.ts`,
+  setting (`getActiveInstrument` / `setActiveInstrument` in `instrument/instrument.ts`,
   persisted to `localStorage`). The chosen size drives the geometry, colours, key
-  labels and tuning. `data/layout.ts` holds the pure per-size data (see below).
+  labels and tuning. `instrument/layout.ts` holds the pure per-size data (see below).
 - A **button = a lane**; `lane` (0…N-1) is the button's identity everywhere, and
   equals the **display number − 1**. Numbers run top-to-bottom, left-to-right
   across the screen (mirror-aware for the right hand).
@@ -19,7 +19,7 @@
   button is _bisonoric_ — a different note per direction. The live map is
   `LANE_NOTES`; `LANE_BUTTONS` is the active geometry.
 
-## Instrument layouts (`data/layout.ts`)
+## Instrument layouts (`instrument/layout.ts`)
 
 `LAYOUTS[size]` is a pure descriptor: a `HandGeom` (hands / cols / rows / split /
 mirror / stagger) plus a flat `ButtonSpec[]` — per button its `lane`, `number`,
@@ -28,7 +28,7 @@ push/pull notes. `instrument.ts` derives the live `LANE_NOTES` / `LANE_COLORS` /
 `NOTE_CANDIDATES` / `LANE_BUTTONS` from it, rebuilt in place when the size changes. `minInstrumentFor(buttons)` gives the smallest
 size that fits a button count; `MAX_BUTTONS` is 30.
 
-## Chart format (`data/songs.ts`)
+## Chart format (`songs/songs.ts`)
 
 Charts are **instrument-agnostic** — just a sequence of button numbers. A song's
 highest button (`requiredButtons`) is the smallest instrument that can play it, so
@@ -45,7 +45,7 @@ of one-beat tokens:
 same-direction notes are grouped into **sections** that drive the push/pull mode
 glow. `chartOutOfRange` lists button numbers outside 1–30 for the editor to flag.
 
-## Timing & motion (`data/timing.ts`)
+## Timing & motion (`scoring/timing.ts`)
 
 Notes **fall vertically** onto the drawn keyboard and cut off at the hit line.
 `noteProgress(deltaMs)` maps a note's time-until-hit to its travel down the fall
@@ -55,7 +55,7 @@ zone (0 = top, 1 = the hit line, >1 = crossing and being clipped);
 3-2-1 countdown. Practice **speed** scales the game clock in `useGameEngine`
 (lower = slower motion and spacing). **Space** pauses.
 
-## Held notes & scoring (`data/scoring.ts`)
+## Held notes & scoring (`scoring/scoring.ts`)
 
 Every note **sustains for one beat**: its hold window is `[time, time + beat)`,
 which is exactly the span its card covers the hit line (a card's leading edge
@@ -251,4 +251,4 @@ by tests).
 Easiest: the in-app **Song library** ("Add / edit songs" on the start screen) —
 write or upload a chart, saved to `localStorage`. To ship a **built-in** song,
 add a raw def `{ id, name, blurb, bpm, color, difficulty, chart }` to
-`BUILTIN_DEFS` in `data/songLibrary.ts`; it appears automatically.
+`BUILTIN_DEFS` in `songs/songLibrary.ts`; it appears automatically.

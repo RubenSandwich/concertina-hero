@@ -23,7 +23,7 @@ import { INSTRUMENT_SIZES } from './layout.ts'
 import {
   findVersionMismatches,
   type VersionMismatch,
-} from './storageVersion.ts'
+} from '../utils/storageVersion.ts'
 
 // This store's own model version (independent of songLibrary.ts's) — bump
 // only when a *preset's* stored shape changes in a way an old record can't

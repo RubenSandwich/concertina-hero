@@ -13,11 +13,11 @@ import {
   type Song,
   type SongDef,
 } from './songs'
-import { randomAccentColor } from './colors'
+import { randomAccentColor } from '../utils/colors'
 import {
   findVersionMismatches,
   type VersionMismatch,
-} from './storageVersion.ts'
+} from '../utils/storageVersion.ts'
 import twinkle from './builtinSongs/twinkle.json'
 import rowYourBoat from './builtinSongs/row-your-boat.json'
 import odeToJoy from './builtinSongs/ode-to-joy.json'

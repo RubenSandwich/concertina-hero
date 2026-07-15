@@ -1,7 +1,7 @@
 import './Results.css'
-import type { Song } from '#data/songs'
-import { rankFor } from '#data/scoring'
-import type { GameResult } from '#hooks/useGameEngine'
+import type { Song } from '#songs/songs'
+import { rankFor } from '#scoring/scoring'
+import type { GameResult } from '#engine/useGameEngine'
 
 interface ResultsProps {
   song: Song

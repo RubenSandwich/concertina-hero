@@ -1,5 +1,5 @@
 // Generates e2e/fixtures/taps.wav: a synthetic "performance" of the built-in
-// "Taps" song (src/data/builtinSongs/taps.json), used as a fake microphone
+// "Taps" song (src/songs/builtinSongs/taps.json), used as a fake microphone
 // input for e2e/audio-taps.spec.ts.
 //
 // Each chart note becomes a concertina-ish tone (see wav.mjs's chordSamples)

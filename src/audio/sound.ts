@@ -1,6 +1,6 @@
 // Lightweight Web Audio "toy concertina" synth. No external assets needed.
 
-import { LANE_NOTES, type Direction } from '../data/instrument.ts'
+import { LANE_NOTES, type Direction } from '../instrument/instrument.ts'
 
 let ctx: AudioContext | null = null
 

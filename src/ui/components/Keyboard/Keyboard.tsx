@@ -1,5 +1,5 @@
-import type { ButtonSpec, HandGeom } from '#data/layout'
-import type { Direction } from '#data/instrument'
+import type { ButtonSpec, HandGeom } from '#instrument/layout'
+import type { Direction } from '#instrument/instrument'
 import './Keyboard.css'
 
 interface KeyboardProps {

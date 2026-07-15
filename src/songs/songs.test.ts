@@ -10,7 +10,7 @@ import {
   chartOutOfRange,
   type Song,
 } from './songs.ts'
-import { minInstrumentFor, INSTRUMENT_SIZES } from './layout.ts'
+import { minInstrumentFor, INSTRUMENT_SIZES } from '../instrument/layout.ts'
 
 const build = (chart: string): Song =>
   buildSong({

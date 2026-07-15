@@ -10,32 +10,40 @@ src/
   App.tsx                 screen router (start → game → results), View Transitions
   index.css               global theme + CSS vars + shared primitives (.paper/.btn/.title/.diff)
 
-  data/layout.ts          per-size anglo layouts (7/10/20/30): HandGeom + ButtonSpec,
+  instrument/layout.ts    per-size anglo layouts (7/10/20/30): HandGeom + ButtonSpec,
                           geometry/numbering/colours/key grid/default notes, LAYOUTS,
                           minInstrumentFor, MAX_BUTTONS
-  data/instrument.ts      the active instrument: Direction/LaneNote types, the global
+  instrument/instrument.ts the active instrument: Direction/LaneNote types, the global
                           size (get/set/applyActiveInstrument), and the live maps
                           derived from the layout — LANE_NOTES, LANE_COLORS,
                           KEY_CODES (spatial grid), NOTE_CANDIDATES, LANE_BUTTONS
-  data/presets.ts         note-frequency preset store (localStorage, per instrument
-                          size) + Preset type
-  data/songs.ts           song model: Song/Note/Section types, chart parser (1–30),
+  instrument/presets.ts   note-frequency preset store (localStorage, per instrument
+                          size) + Preset type + findPresetVersionMismatches
+
+  songs/songs.ts          song model: Song/Note/Section types, chart parser (1–30),
                           buildSong, DIFFICULTIES/DIFF_CLASS, chartNoteCount,
                           chartRequiredButtons, chartOutOfRange, withLeadIn
-  data/songLibrary.ts     song store (localStorage) + built-in song defs
-  data/timing.ts          playfield clock/geometry: LEAD_TIME, hit windows,
+  songs/songLibrary.ts    song store (localStorage) + built-in song defs +
+                          findSongVersionMismatches
+  songs/builtinSongs/     raw JSON defs for each built-in song
+
+  scoring/timing.ts       playfield clock/geometry: LEAD_TIME, hit windows,
                           noteProgress()/noteVisible() (vertical fall)
-  data/colors.ts          colour math (randomAccentColor + WCAG contrast)
-  data/scoring.ts         accuracy → rank badge (rankFor)
+  scoring/scoring.ts      accuracy → rank badge (rankFor)
 
   audio/sound.ts          Web Audio "toy concertina" synth (reads LANE_NOTES)
   audio/pitch.ts          mic pitch detection (autocorrelation) → button note
 
-  hooks/gameEngineCore.ts the stateless engine: stepEngine(state, input) -> {state, events} —
+  engine/gameEngineCore.ts the stateless engine: stepEngine(state, input) -> {state, events} —
                           clock, hit/miss judging, hold accrual, mic onset debounce, scoring
-  hooks/useGameEngine.ts  the impure shell around it: rAF, keyboard + mic input, playing
+  engine/useGameEngine.ts the impure shell around it: rAF, keyboard + mic input, playing
                           sounds, logging, pause, calling onFinish
-  utils.ts                generic helpers (jsonErrorText, slug, downloadJSON)
+
+  utils/general.ts        generic helpers (jsonErrorText, slug, downloadJSON)
+  utils/colors.ts         colour math (randomAccentColor + WCAG contrast)
+  utils/storageVersion.ts generic localStorage "model version" scan/delete helpers, used by
+                          instrument/presets.ts and songs/songLibrary.ts (each keeps its own
+                          version constant) to find/clear outdated saved records
 
   ui/components/           reusable UI
     Modal/                <dialog>-based modal: focus trap, Escape, backdrop, portaled
@@ -56,6 +64,8 @@ src/
     Results/              rank + stats
   ui/modals/
     ScreenGuard/          blocking overlay below MIN_APP_WIDTH (1024px)
+    VersionMismatch/      blocking, non-dismissable overlay for outdated localStorage
+                          presets/songs — delete only, no keep/ignore option
     PresetPicker/         list presets: select / edit / delete / new / upload
     NoteFreq/             create/edit a preset (name + per-button Hz, mic tuning)
     SongLibrary/          list songs: edit / delete / new / upload (built-ins locked)
@@ -66,8 +76,9 @@ e2e/ (sibling of src/, own tsconfig.json) — Playwright browser tests; see
 docs/conventions.md's "TypeScript & tooling" section.
 
 Shared domain types live in their owning module: `InstrumentSize`/`HandGeom`/
-`ButtonSpec`/`InstrumentLayout` in `data/layout.ts`, `Direction`/`LaneNote` in
-`data/instrument.ts`, `Preset` in `data/presets.ts`, `Song`/`Note`/`Difficulty`
-in `data/songs.ts`, `Detection`/`ChordReading` in `audio/pitch.ts`,
-`GameResult`/`GameNote`/`EngineState` in `hooks/gameEngineCore.ts` (re-exported
-from `hooks/useGameEngine.ts` for UI imports).
+`ButtonSpec`/`InstrumentLayout` in `instrument/layout.ts`, `Direction`/`LaneNote`
+in `instrument/instrument.ts`, `Preset` in `instrument/presets.ts`,
+`Song`/`Note`/`Difficulty` in `songs/songs.ts`, `Detection`/`ChordReading` in
+`audio/pitch.ts`, `GameResult`/`GameNote`/`EngineState` in
+`engine/gameEngineCore.ts` (re-exported from `engine/useGameEngine.ts` for UI
+imports).

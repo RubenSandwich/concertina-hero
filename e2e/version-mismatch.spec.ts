@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
 // Regression coverage for the startup "outdated saved data" guard (see
-// data/storageVersion.ts + ui/modals/VersionMismatch/VersionMismatch.tsx):
+// utils/storageVersion.ts + ui/modals/VersionMismatch/VersionMismatch.tsx):
 // a preset/song stamped with a version other than the store's current one
 // must block the app behind a modal that can't be dismissed except by
 // deleting the offending record(s) — no Escape, no backdrop click, no

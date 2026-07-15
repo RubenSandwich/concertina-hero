@@ -7,10 +7,10 @@ import {
   chartOutOfRange,
   type Song,
   type Difficulty,
-} from '#data/songs'
-import { minInstrumentFor } from '#data/layout'
-import { randomAccentColor } from '#data/colors'
-import { slug, downloadJSON } from '../../../utils'
+} from '#songs/songs'
+import { minInstrumentFor } from '#instrument/layout'
+import { randomAccentColor } from '../../../utils/colors'
+import { slug, downloadJSON } from '../../../utils/general'
 import Modal from '#components/Modal/Modal'
 import './SongEditor.css'
 

@@ -29,8 +29,8 @@ npm run format:check  # verify formatting, no writes
   browser and catches what pure-function tests can't (rAF timing, keyboard
   events, audio-unlock gestures).
 - **Imports** use subpath aliases — `#components/*`, `#modals/*`, `#screens/*`,
-  `#hooks/*`, `#data/*`, `#audio/*` (the `imports` map in `package.json`) — not
-  deep `../../..` paths.
+  `#engine/*`, `#songs/*`, `#instrument/*`, `#scoring/*`, `#audio/*` (the
+  `imports` map in `package.json`) — not deep `../../..` paths.
 - **Hand-written CSS, no framework.** Don't add runtime dependencies or a CSS
   framework without being asked.
 - Keep edits minimal and in the existing style.

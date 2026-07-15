@@ -14,28 +14,29 @@
 //
 // Run any script that imports this with `--experimental-strip-types` (like
 // `npm test` does) — `loadBuiltinSong`/`noteFrequencies` import straight from
-// the app's own `src/data/songs.ts` and `src/data/layout.ts`, so fixtures stay
-// derived from the real chart + tuning instead of a hand-copied note list.
+// the app's own `src/songs/songs.ts` and `src/instrument/layout.ts`, so
+// fixtures stay derived from the real chart + tuning instead of a
+// hand-copied note list.
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
-import { buildSong } from '../../src/data/songs.ts'
-import { LAYOUTS, DEFAULT_INSTRUMENT } from '../../src/data/layout.ts'
+import { buildSong } from '../../src/songs/songs.ts'
+import { LAYOUTS, DEFAULT_INSTRUMENT } from '../../src/instrument/layout.ts'
 
 export const SAMPLE_RATE = 44100
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Loads and builds a built-in song from its raw JSON definition
-// (src/data/builtinSongs/<id>.json — see src/data/songLibrary.ts).
+// (src/songs/builtinSongs/<id>.json — see src/songs/songLibrary.ts).
 export function loadBuiltinSong(id) {
   const defPath = path.join(
     dirname,
     '..',
     '..',
     'src',
-    'data',
+    'songs',
     'builtinSongs',
     `${id}.json`,
   )

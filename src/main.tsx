@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { applyActiveInstrument } from '#data/instrument'
-import { applyActivePreset } from '#data/presets'
+import { applyActiveInstrument } from '#instrument/instrument'
+import { applyActivePreset } from '#instrument/presets'
 import App from './App'
 import './index.css'
 

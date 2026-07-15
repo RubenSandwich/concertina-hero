@@ -11,7 +11,7 @@ import {
   DIRECTIONS,
   NOTE_CANDIDATES,
   type Direction,
-} from '../data/instrument.ts'
+} from '../instrument/instrument.ts'
 import { getAudioContext, resumeAudio } from './sound.ts'
 
 let stream: MediaStream | null = null

@@ -3,9 +3,9 @@ import {
   INSTRUMENT_SIZES,
   minInstrumentFor,
   type InstrumentSize,
-} from '#data/layout'
-import { getActivePreset, type Preset } from '#data/presets'
-import { DIFF_CLASS, type Song } from '#data/songs'
+} from '#instrument/layout'
+import { getActivePreset, type Preset } from '#instrument/presets'
+import { DIFF_CLASS, type Song } from '#songs/songs'
 import Accordion from '#components/Accordion/Accordion'
 import HowToPlay from '#components/HowToPlay/HowToPlay'
 import SegmentedControl from '#components/SegmentedControl/SegmentedControl'

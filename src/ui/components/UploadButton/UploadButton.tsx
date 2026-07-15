@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import type { ReactNode } from 'react'
-import { jsonErrorText } from '../../../utils'
+import { jsonErrorText } from '../../../utils/general'
 
 // A button that opens a file picker, reads the chosen file as JSON, and hands
 // the parsed value to `onData`. Parse *and* import errors (anything `onData`

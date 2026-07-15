@@ -1,7 +1,7 @@
 // Scoring: the hit ratings, how a sustained note's held time turns into points,
 // and the final rank shown on the results screen.
 
-import type { Direction } from './instrument'
+import type { Direction } from '../instrument/instrument'
 import { PERFECT_WINDOW, GOOD_WINDOW } from './timing.ts'
 
 // The three hit ratings that score; a whiffed note is a 'miss'.

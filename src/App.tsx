@@ -1,15 +1,18 @@
 import { useMemo, useState } from 'react'
 import { flushSync } from 'react-dom'
-import { getSongs, findSongVersionMismatches } from '#data/songLibrary'
-import { withLeadIn, type Song } from '#data/songs'
+import { getSongs, findSongVersionMismatches } from '#songs/songLibrary'
+import { withLeadIn, type Song } from '#songs/songs'
 import {
   getActiveInstrument,
   setActiveInstrument,
   type InstrumentSize,
-} from '#data/instrument'
-import { applyActivePreset, findPresetVersionMismatches } from '#data/presets'
-import type { VersionMismatch } from '#data/storageVersion'
-import type { GameResult } from '#hooks/useGameEngine'
+} from '#instrument/instrument'
+import {
+  applyActivePreset,
+  findPresetVersionMismatches,
+} from '#instrument/presets'
+import type { VersionMismatch } from './utils/storageVersion'
+import type { GameResult } from '#engine/useGameEngine'
 import Start, { type StartSections } from '#screens/Start/Start'
 import Game from '#screens/Game/Game'
 import Results from '#screens/Results/Results'
@@ -43,7 +46,7 @@ export default function App() {
   const [runId, setRunId] = useState(0) // bump to force a fresh Game mount
 
   // Saved presets/songs stamped with an older model version (see
-  // data/storageVersion.ts) — checked once at startup. Non-empty blocks the
+  // storageVersion.ts) — checked once at startup. Non-empty blocks the
   // app behind VersionMismatchModal until they're all deleted.
   const [versionMismatches, setVersionMismatches] = useState<VersionMismatch[]>(
     () => [...findSongVersionMismatches(), ...findPresetVersionMismatches()],

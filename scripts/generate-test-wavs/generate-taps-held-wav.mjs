@@ -14,7 +14,7 @@
 // debounce before the next onset. The test triggers this file's playback at
 // the exact instant the countdown ends (not by waiting a guessed amount of
 // time), so `LEADING_SILENCE_MS` only needs to cover the lead-in every song
-// applies after that (LEAD_IN in src/data/timing.ts) — see
+// applies after that (LEAD_IN in src/scoring/timing.ts) — see
 // audio-taps-held.spec.ts for how that trigger works.
 
 import { fileURLToPath } from 'node:url'
@@ -33,7 +33,7 @@ const notesHz = noteFrequencies(song)
 
 // The test triggers this file's playback at the exact instant the countdown
 // ends, so this only needs to cover the lead-in every song applies after that
-// (LEAD_IN in src/data/timing.ts).
+// (LEAD_IN in src/scoring/timing.ts).
 export const LEADING_SILENCE_MS = 2400
 const BEAT_MS = 60000 / song.bpm // 909.09ms — equals Taps' one-beat hold window exactly
 // Taps repeats the same note back to back twice ("D, D" at the start) and

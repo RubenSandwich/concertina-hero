@@ -7,8 +7,10 @@
     "#components/*": "./src/ui/components/*",
     "#modals/*": "./src/ui/modals/*",
     "#screens/*": "./src/ui/screens/*",
-    "#hooks/*": "./src/hooks/*",
-    "#data/*": "./src/data/*",
+    "#engine/*": "./src/engine/*",
+    "#songs/*": "./src/songs/*",
+    "#instrument/*": "./src/instrument/*",
+    "#scoring/*": "./src/scoring/*",
     "#audio/*": "./src/audio/*"
   },
   "description": "A Guitar Hero style rhythm game for toy concertinas, with a paper-mache / Paper Mario look.",

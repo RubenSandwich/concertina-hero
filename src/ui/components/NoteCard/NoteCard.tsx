@@ -1,5 +1,5 @@
-import type { GameNote } from '#hooks/useGameEngine'
-import { LANE_NOTES } from '#data/instrument'
+import type { GameNote } from '#engine/useGameEngine'
+import { LANE_NOTES } from '#instrument/instrument'
 import './NoteCard.css'
 
 interface NoteCardProps {

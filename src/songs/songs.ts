@@ -2,9 +2,9 @@
 // timed notes + push/pull sections, and the built song shape. Persistence of
 // user songs lives in songLibrary.ts.
 
-import { LEAD_IN } from './timing.ts'
-import type { Direction } from './instrument'
-import { MAX_BUTTONS } from './layout.ts'
+import { LEAD_IN } from '../scoring/timing.ts'
+import type { Direction } from '../instrument/instrument'
+import { MAX_BUTTONS } from '../instrument/layout.ts'
 
 // A single playable note parsed from a chart.
 export interface Note {
@@ -30,7 +30,7 @@ export type Difficulty = 'Easy' | 'Medium' | 'Hard'
 // written/read one phrase per line; line breaks are just for readability and
 // are joined back into one string before parsing (see buildSong).
 //
-// `version` is the storage model version (see data/storageVersion.ts),
+// `version` is the storage model version (see utils/storageVersion.ts),
 // stamped by songLibrary.ts whenever a user song is saved. It's optional here
 // (rather than on Song) because built-in songs are source-controlled JSON,
 // never migrated, and so never carry one.
