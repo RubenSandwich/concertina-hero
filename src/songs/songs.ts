@@ -7,7 +7,7 @@ import type { Direction } from '../instrument/instrument'
 import { MAX_BUTTONS } from '../instrument/layout.ts'
 
 // A single playable note parsed from a chart.
-export interface Note {
+export interface ChartNote {
   id: number
   lane: number
   time: number
@@ -30,7 +30,7 @@ export type Difficulty = 'Easy' | 'Medium' | 'Hard'
 // written/read one phrase per line; line breaks are just for readability and
 // are joined back into one string before parsing (see buildSong).
 //
-// `version` is the storage model version (see utils/storageVersion.ts),
+// `version` is the storage schema version (see utils/storageVersion.ts),
 // stamped by songLibrary.ts whenever a user song is saved. It's optional here
 // (rather than on Song) because built-in songs are source-controlled JSON,
 // never migrated, and so never carry one.
@@ -49,7 +49,7 @@ export interface SongDef {
 // A built, playable song: its definition plus the derived notes/sections/timing.
 export interface Song extends SongDef {
   builtin: boolean
-  notes: Note[]
+  notes: ChartNote[]
   sections: Section[]
   duration: number
   // The highest button number the chart uses = the smallest instrument that can
@@ -94,9 +94,9 @@ interface ParseOptions {
 function parseChart(
   chart: string,
   { bpm, subdivision = 1 }: ParseOptions,
-): { notes: Note[]; duration: number; requiredButtons: number } {
+): { notes: ChartNote[]; duration: number; requiredButtons: number } {
   const step = 60000 / bpm / subdivision // ms between beats
-  const notes: Note[] = []
+  const notes: ChartNote[] = []
   let noteId = 0
   let cursor = 0
   let requiredButtons = 0 // the highest button number the chart references
@@ -134,7 +134,7 @@ function parseChart(
 
 // Group consecutive same-direction notes into push/pull runs. These drive the
 // look-ahead ribbon and the current-direction banner.
-function deriveSections(notes: Note[], duration: number): Section[] {
+function deriveSections(notes: ChartNote[], duration: number): Section[] {
   const runs: { dir: Direction; start: number }[] = []
   notes.forEach((n) => {
     const last = runs[runs.length - 1]

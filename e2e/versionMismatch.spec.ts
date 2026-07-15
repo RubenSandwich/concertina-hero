@@ -20,7 +20,7 @@ async function seedOutdatedRecords(page: Page): Promise<void> {
       ]),
     )
     localStorage.setItem(
-      'accordion-user-songs',
+      'concertina-user-songs',
       JSON.stringify([
         {
           id: 'song-old-1',
@@ -38,6 +38,45 @@ async function seedOutdatedRecords(page: Page): Promise<void> {
     )
   })
 }
+
+test('a legacy accordion-user-songs record is migrated to the new key on load', async ({
+  page,
+}) => {
+  // songLibrary.ts used to persist user songs under 'accordion-user-songs';
+  // it now uses 'concertina-user-songs' for consistency with every other key
+  // ('concertina-instrument', 'concertina-presets-*', …), migrating any
+  // existing data across once at load so this rename doesn't silently lose
+  // songs someone already saved under the old name.
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      'accordion-user-songs',
+      JSON.stringify([
+        {
+          id: 'song-legacy-1',
+          name: 'Legacy Song',
+          blurb: 'A song saved before the storage-key rename.',
+          bpm: 100,
+          subdivision: 1,
+          color: '#00ff00',
+          difficulty: 'Easy',
+          chart: ['+1'],
+          version: '1',
+        },
+      ]),
+    )
+  })
+  await page.goto('/')
+
+  expect(
+    await page.evaluate(() => localStorage.getItem('accordion-user-songs')),
+  ).toBeNull()
+  expect(
+    await page.evaluate(() => localStorage.getItem('concertina-user-songs')),
+  ).toContain('song-legacy-1')
+  // The migrated song plays like any other saved song — no version mismatch,
+  // since it already carries the current schema version.
+  await expect(page.getByRole('button', { name: /^Legacy Song/ })).toBeVisible()
+})
 
 test('outdated saved data blocks the app and cannot be dismissed', async ({
   page,
@@ -61,7 +100,7 @@ test('outdated saved data blocks the app and cannot be dismissed', async ({
 
   // Nothing was deleted by any of the above.
   expect(
-    await page.evaluate(() => localStorage.getItem('accordion-user-songs')),
+    await page.evaluate(() => localStorage.getItem('concertina-user-songs')),
   ).toContain('song-old-1')
   expect(
     await page.evaluate(() => localStorage.getItem('concertina-presets-7')),
@@ -97,7 +136,7 @@ test('deleting the outdated records one at a time clears the modal and unblocks 
   await expect(modal).toBeVisible()
   await expect(modal.getByText('Old Tuning (7-button)')).toBeVisible()
   expect(
-    await page.evaluate(() => localStorage.getItem('accordion-user-songs')),
+    await page.evaluate(() => localStorage.getItem('concertina-user-songs')),
   ).toBe('[]')
 
   // "Delete all" (here, the one remaining preset) closes the modal entirely.
@@ -129,7 +168,7 @@ test('"Delete all" clears every outdated record in one step', async ({
   await expect(modal).toBeHidden()
 
   expect(
-    await page.evaluate(() => localStorage.getItem('accordion-user-songs')),
+    await page.evaluate(() => localStorage.getItem('concertina-user-songs')),
   ).toBe('[]')
   expect(
     await page.evaluate(() => localStorage.getItem('concertina-presets-7')),

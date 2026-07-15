@@ -1,4 +1,4 @@
-// Generic support for a hardcoded "model version" stamped onto every user
+// Generic support for a hardcoded "schema version" stamped onto every user
 // record persisted in localStorage. Presets (presets.ts) and user songs
 // (songLibrary.ts) each keep their own version constant, starting at '1', and
 // bump theirs independently whenever *their* stored shape changes in a way an

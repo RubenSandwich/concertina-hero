@@ -34,7 +34,7 @@ export async function enableMic(page: Page): Promise<void> {
 // Selects `songName`'s card and clicks Play, without waiting for the
 // countdown — use this instead of `startSong` when the caller needs to react
 // at the exact instant the countdown ends (see `waitForCountdownEnd` and
-// audio-taps-held.spec.ts, which starts its fake mic recording right then).
+// audioTapsHeld.spec.ts, which starts its fake mic recording right then).
 export async function selectAndPlaySong(
   page: Page,
   songName: string,
@@ -102,14 +102,14 @@ export function scoreValue(page: Page): Locator {
 }
 
 // Replaces the app's microphone with a fake one that plays `wavPath` through
-// a MediaStreamDestination — used by both mic tests (audio-taps.spec.ts,
-// audio-taps-held.spec.ts) instead of Chromium's `--use-file-for-fake-audio-
+// a MediaStreamDestination — used by both mic tests (audioTaps.spec.ts,
+// audioTapsHeld.spec.ts) instead of Chromium's `--use-file-for-fake-audio-
 // capture` launch flag, which is fixed for the whole browser and starts
 // feeding its file the instant the mic is enabled, with no way to control
 // exactly when or swap the file per test. This instead exposes
 // `startFakeMic` so a test can trigger playback (once, or looping) at a
 // precise moment of its choosing — needed to line a recording's timing up
-// with the game's clock (see audio-taps-held.spec.ts).
+// with the game's clock (see audioTapsHeld.spec.ts).
 //
 // Must be called before `page.goto()` — `addInitScript` only affects scripts
 // that run on the next navigation.
@@ -160,7 +160,7 @@ export async function startFakeMic(page: Page): Promise<void> {
 // `waitForCountdownEnd()` + `startFakeMic()` round trip afterwards. That gap
 // is normally small, but under the kind of CPU contention a full parallel
 // test run creates it can grow enough to throw off a recording's alignment
-// with the game's clock (see audio-taps-held.spec.ts). Playwright polls a
+// with the game's clock (see audioTapsHeld.spec.ts). Playwright polls a
 // `waitForFunction` predicate inside the page itself, so folding the trigger
 // into it keeps the two events exactly as close as they can be.
 //

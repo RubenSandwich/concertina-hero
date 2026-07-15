@@ -8,7 +8,7 @@
   (`node --experimental-strip-types --test`), one process per test file. Because
   Node won't rewrite a `.js` specifier to a `.ts` file, every module reachable from
   a test (pitch, sound, instrument, layout, timing, songs, scoring, presets,
-  gameEngineCore) uses explicit **`.ts`** relative _value_ imports (e.g.
+  core) uses explicit **`.ts`** relative _value_ imports (e.g.
   `./layout.ts`); type-only imports are erased, so they can stay extensionless.
   `.tsx` UI files aren't in the test graph and use the `#…` aliases as normal —
   as does `useGameEngine.ts`, since nothing in the test graph imports it.
@@ -21,23 +21,24 @@
   what a pure-function test can't catch — rAF/keyboard-event timing, audio
   unlock gestures, the actual screen flow. `e2e/` has its own `tsconfig.json`
   (`npm run typecheck:e2e`) so its Playwright types don't leak into the main
-  `src` build. `e2e/helpers.ts` has the shared Start-screen setup (expand
-  Settings, flip "Wait for correct note", switch to Mic, start a song) plus
-  `pressUntilCombo` for keyboard-driven tests.
+  `src` build. Every top-level file directly in `e2e/` is a spec; shared code
+  lives in its own subfolder instead — `e2e/helpers/index.ts` has the shared
+  Start-screen setup (expand Settings, flip "Wait for correct note", switch to
+  Mic, start a song) plus `pressUntilCombo` for keyboard-driven tests.
 - Any e2e test that avoids timing by turning on "Wait for correct note" (both
   the keyboard chord test and the mic test below) should poll for the outcome
   rather than sleep for it — a press/tone before its note is reachable is a
   harmless no-op in that mode, so retrying/waiting it out is exactly right,
   and sidesteps ever needing to know a song's BPM or lead-in.
-- `e2e/audio-taps.spec.ts` feeds a _real_ synthesized recording of "Taps" into
-  a fake microphone (`mockMicFromWav`, from `e2e/helpers.ts`, fed from
+- `e2e/audioTaps.spec.ts` feeds a _real_ synthesized recording of "Taps" into
+  a fake microphone (`mockMicFromWav`, from `e2e/helpers/index.ts`, fed from
   `e2e/fixtures/taps.wav`) instead of mocking `detectChord()` — it exercises
   the actual FFT/onset pipeline in `audio/pitch.ts` and the engine's mic
   debounce. `--mute-audio` (in `playwright.config.ts`) guarantees none of it
   is ever audible on the test machine's speakers. Regenerate the fixture with
-  `node scripts/generate-test-wavs/generate-taps-wav.mjs` if Taps's chart or
+  `node scripts/generate-test-wavs/generateTapsWav.mjs` if Taps's chart or
   tuning changes.
-- `e2e/audio-taps-held.spec.ts` is that mic test's companion, playing Taps in
+- `e2e/audioTapsHeld.spec.ts` is that mic test's companion, playing Taps in
   _real time_ (no "Wait for correct note") to also exercise _held_-note credit
   (`holdFraction()`/`holdPoints()` in `scoring/scoring.ts`), which wait-for-note
   can't: it holds the clock the instant a note is caught, so heldMs barely
@@ -52,7 +53,7 @@
   the moment it matters; retrying a failure was tried first and rejected —
   retrying an expensive real-time test under contention just adds more
   contention. Regenerate its fixture with
-  `node scripts/generate-test-wavs/generate-taps-held-wav.mjs`.
+  `node scripts/generate-test-wavs/generateTapsHeldWav.mjs`.
 - Both mic tests mock the microphone the same way, via `mockMicFromWav`:
   `page.addInitScript` overrides `navigator.mediaDevices.getUserMedia` itself
   to decode a WAV (served in-page by intercepting a fake URL with
@@ -65,6 +66,23 @@
   whole browser (no per-test file, no control over exactly _when_ playback
   starts) and needed a `permissions: ['microphone']` grant besides — the
   in-page mock needs none of that, since it never reaches the real API.
+
+## File & folder naming
+
+- **Folders: kebab-case** (`generate-test-wavs`, `builtin-songs`,
+  `design-exploration`).
+- **Files: camelCase** (`storageVersion.ts`, `audioTaps.spec.ts`,
+  `chordParade.json`), including test files (`core.test.ts`) and non-`.ts`
+  files like the `.mjs` scripts and the built-in songs' `.json` defs.
+  Exception: standard tool-mandated config filenames keep their canonical
+  name instead of being forced into camelCase (`package.json`,
+  `tsconfig.json`, `vite.config.ts`, `playwright.config.ts`).
+- **Exception: `src/ui/`** follows React's own convention instead of the
+  above — one folder per component, folder and file both **PascalCase** and
+  matching each other (`Modal/Modal.tsx`, `SegmentedControl/
+SegmentedControl.tsx`), since that pairing is the near-universal,
+  immediately-recognizable pattern for React components and isn't worth
+  fighting.
 
 ## CSS
 
@@ -97,10 +115,10 @@ auto` with `margin: auto` on its child (centres when it fits, scrolls from the
 ## The game loop
 
 - The engine is split into a stateless core and an impure shell:
-  - `engine/gameEngineCore.ts` exports `createInitialState(song)` and
+  - `engine/core.ts` exports `createInitialState(song)` and
     `stepEngine(state, input) -> { state, events }`. It is a plain function of
     its arguments — no DOM, no audio, no `performance.now()`, no `console.log` —
-    which is what lets `gameEngineCore.test.ts` assert on it directly with
+    which is what lets `core.test.ts` assert on it directly with
     made-up input instead of driving a real rAF loop or mic.
   - `engine/useGameEngine.ts` is the shell: it owns rAF, keyboard listeners,
     sampling the mic (`detectChord()`), and applying the `EngineEvent`s a step

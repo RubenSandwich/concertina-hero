@@ -1,6 +1,6 @@
-// Generates e2e/fixtures/chord-parade.wav: a synthetic "performance" of the
-// built-in "Chord Parade" song (src/songs/builtinSongs/chord-parade.json),
-// used as a fake microphone input for e2e/audio-chords.spec.ts.
+// Generates e2e/fixtures/chordParade.wav: a synthetic "performance" of the
+// built-in "Chord Parade" song (src/songs/builtin-songs/chordParade.json),
+// used as a fake microphone input for e2e/audioChords.spec.ts.
 //
 // Each chart beat becomes a concertina-ish tone (see wav.mjs's chordSamples)
 // at that button/direction's exact frequency (derived from the actual chart
@@ -11,7 +11,7 @@
 // separated by silence so the app's onset detection (which delineates a
 // "press" by a note starting after a silent gap, not by pitch changing) sees
 // the same distinct beats, in the same order, as the chart. Run with:
-//   node --experimental-strip-types scripts/generate-test-wavs/generate-chord-parade-wav.mjs
+//   node --experimental-strip-types scripts/generate-test-wavs/generateChordParadeWav.mjs
 //
 // This script lives outside e2e/fixtures/ (only the generated .wav files do)
 // so Playwright's test discovery never has to look past actual fixtures.
@@ -20,8 +20,8 @@
 // tuning ever changes.
 //
 // This file loops continuously and is only ever paired with "Wait for
-// correct note" (see audio-chords.spec.ts), so its exact timing relative to
-// the game clock doesn't matter — see generate-taps-held-wav.mjs for a
+// correct note" (see audioChords.spec.ts), so its exact timing relative to
+// the game clock doesn't matter — see generateTapsHeldWav.mjs for a
 // fixture that instead needs to line up with the game clock exactly.
 
 import { fileURLToPath } from 'node:url'
@@ -39,7 +39,7 @@ const TONE_MS = 700
 const GAP_MS = 250
 const AMPLITUDE = 0.3 // of full scale, per tone — comfortably above the detector's RMS floor
 
-const chords = chordFrequencies(loadBuiltinSong('chord-parade'))
+const chords = chordFrequencies(loadBuiltinSong('chordParade'))
 
 const chunks = []
 for (const freqs of chords) {
@@ -54,7 +54,7 @@ const outPath = path.join(
   '..',
   'e2e',
   'fixtures',
-  'chord-parade.wav',
+  'chordParade.wav',
 )
 const bytes = writeWav(outPath, chunks)
 console.log(

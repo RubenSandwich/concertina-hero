@@ -11,10 +11,10 @@ import {
 
 const TAPS_HELD_WAV = path.join(
   path.dirname(fileURLToPath(import.meta.url)),
-  'fixtures/taps-held.wav',
+  'fixtures/tapsHeld.wav',
 )
 
-// Companion to audio-taps.spec.ts: that test turns on "Wait for correct note"
+// Companion to audioTaps.spec.ts: that test turns on "Wait for correct note"
 // so it never has to deal with real-time timing, but that also means it can
 // only ever prove a note was *struck* — the song immediately holds the clock
 // the instant a note is caught, so heldMs barely accrues. This test plays
@@ -28,10 +28,10 @@ const TAPS_HELD_WAV = path.join(
 // delay, `mockMicFromWav` replaces getUserMedia with a fake mic the test
 // starts explicitly, right as the countdown ends
 // (`waitForCountdownEndAndStartFakeMic`) — taps-held.wav's leading silence
-// (LEADING_SILENCE_MS in generate-taps-held-wav.mjs) is exactly the lead-in
+// (LEADING_SILENCE_MS in generateTapsHeldWav.mjs) is exactly the lead-in
 // every song applies after that, so its 15 held tones land on Taps' 15
 // notes' beats. Each tone holds most of its one-beat window
-// (generate-taps-held-wav.mjs), so a healthy score below — not just zero
+// (generateTapsHeldWav.mjs), so a healthy score below — not just zero
 // misses — is what actually shows the engine credited the *hold*, not merely
 // the onset.
 //

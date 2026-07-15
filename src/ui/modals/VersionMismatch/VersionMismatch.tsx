@@ -12,7 +12,7 @@ interface VersionMismatchModalProps {
 
 // A blocking, non-dismissable overlay shown at startup when one or more
 // records saved in localStorage (presets/songs — see storageVersion.ts)
-// were stamped with a different model version than the app currently
+// were stamped with a different schema version than the app currently
 // expects. Unlike the shared Modal component, there is deliberately no close
 // button, backdrop-click, or Escape dismissal, and no "keep"/"ignore" option
 // either: an old-shape record is likely to make the app misbehave, so the

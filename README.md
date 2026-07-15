@@ -72,11 +72,11 @@ src/
   scoring/scoring.ts      accuracy → rank badge
   songs/songs.ts          song model: chart parser + buildSong
   songs/songLibrary.ts    built-in songs + the user song store (localStorage)
-  engine/gameEngineCore.ts the stateless engine core: stepEngine(state, input)
+  engine/core.ts          the stateless engine core: stepEngine(state, input)
   engine/useGameEngine.ts the impure shell: rAF, keyboard + mic input, sounds
   utils/general.ts        shared helpers (JSON errors, slugs, downloads)
   utils/colors.ts         colour helpers (random accessible accent)
-  utils/storageVersion.ts localStorage "model version" scan/delete helpers
+  utils/storageVersion.ts localStorage "schema version" scan/delete helpers
   ui/                     each component in its own folder with a co-located .css
     components/           Modal, Accordion, SegmentedControl, Switch
     screens/              Start, Game, Results

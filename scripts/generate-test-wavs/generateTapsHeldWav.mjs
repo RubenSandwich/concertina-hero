@@ -1,9 +1,9 @@
-// Generates e2e/fixtures/taps-held.wav: like generate-taps-wav.mjs, but
+// Generates e2e/fixtures/tapsHeld.wav: like generateTapsWav.mjs, but
 // precisely timed for REAL-TIME play (no "Wait for correct note") so
-// audio-taps-held.spec.ts can also exercise *held*-note credit — the engine
+// audioTapsHeld.spec.ts can also exercise *held*-note credit — the engine
 // crediting a note for as long as the mic keeps sustaining it, not just for
 // being struck. Run with:
-//   node --experimental-strip-types scripts/generate-test-wavs/generate-taps-held-wav.mjs
+//   node --experimental-strip-types scripts/generate-test-wavs/generateTapsHeldWav.mjs
 //
 // This script lives outside e2e/fixtures/ (only the generated .wav files do)
 // so Playwright's test discovery never has to look past actual fixtures.
@@ -15,7 +15,7 @@
 // the exact instant the countdown ends (not by waiting a guessed amount of
 // time), so `LEADING_SILENCE_MS` only needs to cover the lead-in every song
 // applies after that (LEAD_IN in src/scoring/timing.ts) — see
-// audio-taps-held.spec.ts for how that trigger works.
+// audioTapsHeld.spec.ts for how that trigger works.
 
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -42,7 +42,7 @@ const BEAT_MS = 60000 / song.bpm // 909.09ms — equals Taps' one-beat hold wind
 // changes), so the gap needs real margin: 110ms mostly worked but occasionally
 // left a repeated note's onset undetected (the release debounce needs 2
 // *consecutive* silent frames, and a single stray frame near the tail resets
-// it) — 250ms matches the gap already proven reliable in generate-taps-wav.mjs.
+// it) — 250ms matches the gap already proven reliable in generateTapsWav.mjs.
 const GAP_MS = 250
 const TONE_MS = BEAT_MS - GAP_MS // ~659ms held, ~72% of the note's hold window
 const AMPLITUDE = 0.3
@@ -60,7 +60,7 @@ const outPath = path.join(
   '..',
   'e2e',
   'fixtures',
-  'taps-held.wav',
+  'tapsHeld.wav',
 )
 const bytes = writeWav(outPath, chunks)
 console.log(

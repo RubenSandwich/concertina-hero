@@ -28,11 +28,13 @@ Settings → "Select preset" (`PresetPicker` → `NoteFreq`).
 
 ## Song library — `songs/songLibrary.ts` (over the model in `songs/songs.ts`)
 
-Key `accordion-user-songs`. API: `getSongs` (built-ins first, then user songs),
-`saveSong`, `deleteSong`, `importSongJSON`, `normalizeSongDef`. Songs are stored
-as raw defs and built on demand with `buildSong` (from `songs.ts`); the built
-song keeps its raw `chart`/`color`/`difficulty` plus a `builtin` flag so it
-round-trips through the editor. Managed from the Song accordion → "Add / edit
+Key `concertina-user-songs` (migrated once, at load, from the old
+`accordion-user-songs` key so existing users' saved songs aren't lost). API:
+`getSongs` (built-ins first, then user songs), `saveSong`, `deleteSong`,
+`importSongJSON`, `normalizeSongDef`. Songs are stored as raw defs and built
+on demand with `buildSong` (from `songs.ts`); the built song keeps its raw
+`chart`/`color`/`difficulty` plus a `builtin` flag so it round-trips through
+the editor. Managed from the Song accordion → "Add / edit
 songs" (`SongLibrary` → `SongEditor`).
 
 ## Notes

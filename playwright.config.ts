@@ -8,7 +8,7 @@ import { defineConfig, devices } from '@playwright/test'
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
-  // One of the mic tests (audio-taps-held.spec.ts) verifies real-time note
+  // One of the mic tests (audioTapsHeld.spec.ts) verifies real-time note
   // timing with no "wait for the right note" safety net, so it's sensitive to
   // scheduling delays under CPU contention — capping workers well below this
   // machine's core count keeps enough headroom that the moment it triggers
@@ -21,8 +21,8 @@ export default defineConfig({
   use: {
     baseURL: process.env.PW_BASE_URL ?? 'http://localhost:5173',
     trace: 'retain-on-failure',
-    // Mic tests (audio-taps.spec.ts, audio-taps-held.spec.ts) mock
-    // getUserMedia itself in-page (see e2e/helpers.ts's `mockMicFromWav`), so
+    // Mic tests (audioTaps.spec.ts, audioTapsHeld.spec.ts) mock
+    // getUserMedia itself in-page (see e2e/helpers/index.ts's `mockMicFromWav`), so
     // they never touch a real or fake OS-level capture device — no
     // permission grant or fake-device flags needed. `--mute-audio` is still
     // real, though: it guarantees nothing is ever audible on the test

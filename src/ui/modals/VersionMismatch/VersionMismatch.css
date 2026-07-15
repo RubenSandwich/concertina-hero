@@ -1,5 +1,5 @@
 /* Full-screen blocking overlay for localStorage records with an outdated
-   model version — see ui/modals/VersionMismatch/VersionMismatch.tsx. Follows
+   schema version — see ui/modals/VersionMismatch/VersionMismatch.tsx. Follows
    ScreenGuard's non-dismissable overlay pattern (no close button/backdrop
    dismiss), since there's deliberately no way to keep outdated data around. */
 .version-mismatch {

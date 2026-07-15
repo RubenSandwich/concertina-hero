@@ -18,22 +18,43 @@ import {
   findVersionMismatches,
   type VersionMismatch,
 } from '../utils/storageVersion.ts'
-import twinkle from './builtinSongs/twinkle.json'
-import rowYourBoat from './builtinSongs/row-your-boat.json'
-import odeToJoy from './builtinSongs/ode-to-joy.json'
-import chordParade from './builtinSongs/chord-parade.json'
-import songOfStorms from './builtinSongs/song-of-storms.json'
-import concerningHobbits from './builtinSongs/concerning-hobbits.json'
-import drunkenSailor from './builtinSongs/drunken-sailor.json'
-import taps from './builtinSongs/taps.json'
+import twinkle from './builtin-songs/twinkle.json'
+import rowYourBoat from './builtin-songs/rowYourBoat.json'
+import odeToJoy from './builtin-songs/odeToJoy.json'
+import chordParade from './builtin-songs/chordParade.json'
+import songOfStorms from './builtin-songs/songOfStorms.json'
+import concerningHobbits from './builtin-songs/concerningHobbits.json'
+import drunkenSailor from './builtin-songs/drunkenSailor.json'
+import taps from './builtin-songs/taps.json'
 
-// This store's own model version (independent of presets.ts's) — bump only
+// This store's own schema version (independent of presets.ts's) — bump only
 // when a *song's* stored shape changes in a way an old record can't just fall
 // back to sane defaults for.
-const SONG_MODEL_VERSION = '1'
+const SONG_SCHEMA_VERSION = '1'
 
 const HEX_RE = /^#[0-9a-f]{3,8}$/i
-const SONGS_KEY = 'accordion-user-songs'
+const SONGS_KEY = 'concertina-user-songs'
+// The key this store used before it was renamed for consistency with every
+// other localStorage key here (`concertina-instrument`, `concertina-presets-*`,
+// …). Migrated from once, below, so existing users' saved songs aren't
+// silently lost by the rename.
+const LEGACY_SONGS_KEY = 'accordion-user-songs'
+
+// One-time migration from LEGACY_SONGS_KEY to SONGS_KEY: a no-op as soon as
+// the new key exists (even as '[]'), so this only ever moves data once. Runs
+// at module load, before any of this module's other localStorage access.
+function migrateLegacySongsKey(): void {
+  try {
+    if (localStorage.getItem(SONGS_KEY) !== null) return
+    const legacy = localStorage.getItem(LEGACY_SONGS_KEY)
+    if (legacy === null) return
+    localStorage.setItem(SONGS_KEY, legacy)
+    localStorage.removeItem(LEGACY_SONGS_KEY)
+  } catch {
+    /* storage unavailable — ignore */
+  }
+}
+migrateLegacySongsKey()
 
 function makeSongId(): string {
   return (
@@ -98,7 +119,7 @@ export function normalizeSongDef(
     color,
     difficulty,
     chart,
-    version: SONG_MODEL_VERSION,
+    version: SONG_SCHEMA_VERSION,
   }
 }
 
@@ -120,18 +141,23 @@ function writeUserDefs(defs: SongDef[]): void {
   }
 }
 
-// Stored user songs whose `version` doesn't match SONG_MODEL_VERSION —
+// Stored user songs whose `version` doesn't match SONG_SCHEMA_VERSION —
 // surfaced by the startup VersionMismatch modal.
 export function findSongVersionMismatches(): VersionMismatch[] {
-  return findVersionMismatches(SONGS_KEY, 'song', SONG_MODEL_VERSION, (raw) => {
-    const name =
-      raw &&
-      typeof raw === 'object' &&
-      typeof (raw as Record<string, unknown>).name === 'string'
-        ? ((raw as Record<string, unknown>).name as string)
-        : 'Untitled song'
-    return name
-  })
+  return findVersionMismatches(
+    SONGS_KEY,
+    'song',
+    SONG_SCHEMA_VERSION,
+    (raw) => {
+      const name =
+        raw &&
+        typeof raw === 'object' &&
+        typeof (raw as Record<string, unknown>).name === 'string'
+          ? ((raw as Record<string, unknown>).name as string)
+          : 'Untitled song'
+      return name
+    },
+  )
 }
 
 // Every playable song: the built-in ones first, then user songs from storage.
@@ -201,7 +227,7 @@ function asDifficulty(value: string): Difficulty {
 }
 
 // Raw definitions for the built-in songs (source of truth; built on demand).
-// Each lives in its own JSON file under ./builtinSongs; this array's order is
+// Each lives in its own JSON file under ./builtin-songs; this array's order is
 // the song list's display order.
 type BuiltinDef = Omit<SongDef, 'subdivision'>
 

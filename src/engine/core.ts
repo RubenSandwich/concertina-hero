@@ -23,7 +23,7 @@ import {
   missTime,
   noteProgress,
 } from '../scoring/timing.ts'
-import type { Song, Note } from '../songs/songs.ts'
+import type { Song, ChartNote } from '../songs/songs.ts'
 import {
   gradeFor,
   holdFraction,
@@ -46,7 +46,7 @@ const MIC_DEBUG_THROTTLE_MS = 200
 
 // A chart note plus the mutable per-run play state the engine tracks. See
 // useGameEngine's header comment for the hold/finalize lifecycle.
-export interface GameNote extends Note {
+export interface GameNote extends ChartNote {
   state: 'active' | 'holding' | 'hit' | 'miss'
   rating: Judgement | null
   heldMs: number

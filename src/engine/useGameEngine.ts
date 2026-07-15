@@ -9,8 +9,8 @@ import {
   type EngineState,
   type InputEvent,
   type GameResult,
-} from './gameEngineCore.ts'
-export type { GameNote, GameResult } from './gameEngineCore.ts'
+} from './core.ts'
+export type { GameNote, GameResult } from './core.ts'
 
 interface GameOptions {
   speed?: number
@@ -22,7 +22,7 @@ interface GameOptions {
 // Owns the whole run's *impure* half: rAF, keyboard input, mic sampling, playing
 // sounds, logging, calling onFinish. Every rule of the game itself — clock,
 // judging, hold accrual, mic debounce, scoring — lives in the stateless
-// `stepEngine(state, input)` in gameEngineCore.ts; this hook just gathers one
+// `stepEngine(state, input)` in core.ts; this hook just gathers one
 // frame's input, calls it, and applies the events it hands back.
 //
 // Options:

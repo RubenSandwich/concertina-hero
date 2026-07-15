@@ -25,13 +25,13 @@ import {
   type VersionMismatch,
 } from '../utils/storageVersion.ts'
 
-// This store's own model version (independent of songLibrary.ts's) — bump
+// This store's own schema version (independent of songLibrary.ts's) — bump
 // only when a *preset's* stored shape changes in a way an old record can't
 // just fall back to sane defaults for.
-const PRESET_MODEL_VERSION = '1'
+const PRESET_SCHEMA_VERSION = '1'
 
 // A saved note-frequency tuning. The built-in "Default" preset is `builtin`.
-// `version` is this store's model version (see PRESET_MODEL_VERSION above),
+// `version` is this store's schema version (see PRESET_SCHEMA_VERSION above),
 // stamped whenever a preset is created/saved.
 export interface Preset {
   id: string
@@ -62,7 +62,7 @@ function makeDefaultPreset(): Preset {
     name: 'Default',
     builtin: true,
     notes: getDefaultNotes(),
-    version: PRESET_MODEL_VERSION,
+    version: PRESET_SCHEMA_VERSION,
   }
 }
 
@@ -101,7 +101,7 @@ function readUserPresets(): Preset[] {
         version:
           typeof p.version === 'string' && p.version
             ? p.version
-            : PRESET_MODEL_VERSION,
+            : PRESET_SCHEMA_VERSION,
       }))
   } catch {
     return []
@@ -109,13 +109,13 @@ function readUserPresets(): Preset[] {
 }
 
 // Stored user presets (across every instrument size) whose `version` doesn't
-// match PRESET_MODEL_VERSION — surfaced by the startup VersionMismatch modal.
+// match PRESET_SCHEMA_VERSION — surfaced by the startup VersionMismatch modal.
 export function findPresetVersionMismatches(): VersionMismatch[] {
   return INSTRUMENT_SIZES.flatMap((size) =>
     findVersionMismatches(
       presetsKeyFor(size),
       'preset',
-      PRESET_MODEL_VERSION,
+      PRESET_SCHEMA_VERSION,
       (raw) => {
         const name =
           raw &&
@@ -187,7 +187,7 @@ export function savePreset({
     id: id && id !== DEFAULT_PRESET_ID ? id : makePresetId(),
     name: (name || '').trim() || 'Untitled preset',
     notes: normalizeNotes(notes),
-    version: PRESET_MODEL_VERSION,
+    version: PRESET_SCHEMA_VERSION,
   }
   const presets = readUserPresets()
   const i = presets.findIndex((p) => p.id === preset.id)

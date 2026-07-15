@@ -29,7 +29,7 @@ export const SAMPLE_RATE = 44100
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Loads and builds a built-in song from its raw JSON definition
-// (src/songs/builtinSongs/<id>.json — see src/songs/songLibrary.ts).
+// (src/songs/builtin-songs/<id>.json — see src/songs/songLibrary.ts).
 export function loadBuiltinSong(id) {
   const defPath = path.join(
     dirname,
@@ -37,7 +37,7 @@ export function loadBuiltinSong(id) {
     '..',
     'src',
     'songs',
-    'builtinSongs',
+    'builtin-songs',
     `${id}.json`,
   )
   const def = JSON.parse(readFileSync(defPath, 'utf8'))

@@ -13,7 +13,7 @@ import {
   stepEngine,
   type EngineState,
   type InputEvent,
-} from './gameEngineCore.ts'
+} from './core.ts'
 
 // bpm 120, subdivision 1 -> a 500ms beat, so holdMs (one beat) is 500 too.
 const song = (chart: string) =>

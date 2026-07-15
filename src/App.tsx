@@ -45,7 +45,7 @@ export default function App() {
   const [result, setResult] = useState<GameResult | null>(null)
   const [runId, setRunId] = useState(0) // bump to force a fresh Game mount
 
-  // Saved presets/songs stamped with an older model version (see
+  // Saved presets/songs stamped with an older schema version (see
   // storageVersion.ts) — checked once at startup. Non-empty blocks the
   // app behind VersionMismatchModal until they're all deleted.
   const [versionMismatches, setVersionMismatches] = useState<VersionMismatch[]>(

@@ -25,7 +25,7 @@ src/
                           chartRequiredButtons, chartOutOfRange, withLeadIn
   songs/songLibrary.ts    song store (localStorage) + built-in song defs +
                           findSongVersionMismatches
-  songs/builtinSongs/     raw JSON defs for each built-in song
+  songs/builtin-songs/    raw JSON defs for each built-in song
 
   scoring/timing.ts       playfield clock/geometry: LEAD_TIME, hit windows,
                           noteProgress()/noteVisible() (vertical fall)
@@ -34,14 +34,14 @@ src/
   audio/sound.ts          Web Audio "toy concertina" synth (reads LANE_NOTES)
   audio/pitch.ts          mic pitch detection (autocorrelation) → button note
 
-  engine/gameEngineCore.ts the stateless engine: stepEngine(state, input) -> {state, events} —
+  engine/core.ts          the stateless engine: stepEngine(state, input) -> {state, events} —
                           clock, hit/miss judging, hold accrual, mic onset debounce, scoring
   engine/useGameEngine.ts the impure shell around it: rAF, keyboard + mic input, playing
                           sounds, logging, pause, calling onFinish
 
   utils/general.ts        generic helpers (jsonErrorText, slug, downloadJSON)
   utils/colors.ts         colour math (randomAccentColor + WCAG contrast)
-  utils/storageVersion.ts generic localStorage "model version" scan/delete helpers, used by
+  utils/storageVersion.ts generic localStorage "schema version" scan/delete helpers, used by
                           instrument/presets.ts and songs/songLibrary.ts (each keeps its own
                           version constant) to find/clear outdated saved records
 
@@ -80,5 +80,5 @@ Shared domain types live in their owning module: `InstrumentSize`/`HandGeom`/
 in `instrument/instrument.ts`, `Preset` in `instrument/presets.ts`,
 `Song`/`Note`/`Difficulty` in `songs/songs.ts`, `Detection`/`ChordReading` in
 `audio/pitch.ts`, `GameResult`/`GameNote`/`EngineState` in
-`engine/gameEngineCore.ts` (re-exported from `engine/useGameEngine.ts` for UI
+`engine/core.ts` (re-exported from `engine/useGameEngine.ts` for UI
 imports).

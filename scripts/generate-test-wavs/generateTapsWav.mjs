@@ -1,6 +1,6 @@
 // Generates e2e/fixtures/taps.wav: a synthetic "performance" of the built-in
-// "Taps" song (src/songs/builtinSongs/taps.json), used as a fake microphone
-// input for e2e/audio-taps.spec.ts.
+// "Taps" song (src/songs/builtin-songs/taps.json), used as a fake microphone
+// input for e2e/audioTaps.spec.ts.
 //
 // Each chart note becomes a concertina-ish tone (see wav.mjs's chordSamples)
 // at that button/direction's exact frequency (derived from the actual chart
@@ -9,7 +9,7 @@
 // onset detection (which delineates a "press" by a note starting after a
 // silent gap, not by pitch changing) sees the same 15 distinct notes, in the
 // same order, as the chart. Run with:
-//   node --experimental-strip-types scripts/generate-test-wavs/generate-taps-wav.mjs
+//   node --experimental-strip-types scripts/generate-test-wavs/generateTapsWav.mjs
 //
 // This script lives outside e2e/fixtures/ (only the generated .wav files do)
 // so Playwright's test discovery never has to look past actual fixtures.
@@ -18,9 +18,9 @@
 // changes.
 //
 // This file loops continuously and is only ever paired with "Wait for
-// correct note" (see audio-taps.spec.ts), so its exact timing relative to the
+// correct note" (see audioTaps.spec.ts), so its exact timing relative to the
 // game clock doesn't matter — for a test that needs real-time-accurate
-// timing (to also exercise *held*-note credit), see generate-taps-held-wav.mjs.
+// timing (to also exercise *held*-note credit), see generateTapsHeldWav.mjs.
 
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'

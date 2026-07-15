@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { parseArgs } = require('node:util')
+import { parseArgs } from 'node:util'
 
 function convertKalimbaToAccordion(kalimbaStr) {
   const noteMap = {
