@@ -40,9 +40,29 @@ export function noteFrequencies(song) {
   return song.notes.map((n) => buttons[n.lane][n.type].freq)
 }
 
-// A single sine tone, with a short linear fade in/out so it doesn't click.
-export function toneSamples(
-  freq,
+// Like noteFrequencies, but notes that share a beat (a chart chord like
+// "(+1 +3)" — parseChart gives every button in it the same `time`) come back
+// grouped into one sub-array, so each chord can be synthesised as one mix of
+// simultaneous tones rather than several separate ones.
+export function chordFrequencies(song) {
+  const buttons = LAYOUTS[DEFAULT_INSTRUMENT].buttons
+  const groups = []
+  let lastTime = null
+  for (const n of song.notes) {
+    const freq = buttons[n.lane][n.type].freq
+    if (groups.length && n.time === lastTime)
+      groups[groups.length - 1].push(freq)
+    else groups.push([freq])
+    lastTime = n.time
+  }
+  return groups
+}
+
+// One or more sine tones summed together — several make a chord, and a
+// single one is just a plain tone — each with its own short linear fade
+// in/out so the mix doesn't click. `amplitude` is per tone, not the total.
+export function chordSamples(
+  freqs,
   ms,
   fadeMs,
   amplitude,
@@ -51,14 +71,27 @@ export function toneSamples(
   const n = Math.round((ms / 1000) * sampleRate)
   const fadeN = Math.round((fadeMs / 1000) * sampleRate)
   const samples = new Float64Array(n)
-  for (let i = 0; i < n; i++) {
-    let env = 1
-    if (i < fadeN) env = i / fadeN
-    else if (i > n - fadeN) env = (n - i) / fadeN
-    samples[i] =
-      Math.sin((2 * Math.PI * freq * i) / sampleRate) * amplitude * env
+  for (const freq of freqs) {
+    for (let i = 0; i < n; i++) {
+      let env = 1
+      if (i < fadeN) env = i / fadeN
+      else if (i > n - fadeN) env = (n - i) / fadeN
+      samples[i] +=
+        Math.sin((2 * Math.PI * freq * i) / sampleRate) * amplitude * env
+    }
   }
   return samples
+}
+
+// A single sine tone, with a short linear fade in/out so it doesn't click.
+export function toneSamples(
+  freq,
+  ms,
+  fadeMs,
+  amplitude,
+  sampleRate = SAMPLE_RATE,
+) {
+  return chordSamples([freq], ms, fadeMs, amplitude, sampleRate)
 }
 
 export function silenceSamples(ms, sampleRate = SAMPLE_RATE) {
