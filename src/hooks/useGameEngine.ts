@@ -68,19 +68,28 @@ export function useGameEngine(
     setElapsed(stateRef.current.clock)
     setPaused(false)
 
-    // A key/tap press is graded against the engine's last-known clock rather
-    // than extrapolating forward from it: extrapolating (adding the real time
-    // since the last step) looks more precise, but it is wrong whenever the
-    // clock isn't actually advancing in real time between steps — paused,
-    // waiting for a note, or a throttled/backgrounded tab's rAF firing far less
-    // often than every frame — and can then overshoot a frozen note's window
-    // entirely. Reading the last-known clock is at most one frame stale at a
-    // normal frame rate (well inside every hit window) and can never overshoot.
+    // A key/tap press is graded against an estimate of "now" in game time,
+    // extrapolated forward from the engine's last-known clock by the real time
+    // since that step. That is what gives back-to-back presses (a fast run, a
+    // chord struck a beat apart) their own distinct instants instead of all
+    // collapsing onto whatever the clock happened to be at the last processed
+    // frame — at a steady frame rate that staleness is only ~1 frame and
+    // harmless, but any delay (a slow frame, a throttled tab) widens the gap
+    // between "last known clock" and "now", and a run of presses landing in
+    // that gap would otherwise all grade as simultaneous, silently dropping
+    // whichever ones no longer match their note. The extrapolation is capped
+    // (`MAX_EXTRAPOLATION_MS`) so a stalled or paused clock can't be
+    // over-estimated past a frozen note's window either.
+    const MAX_EXTRAPOLATION_MS = 50
+    const gameTimeNow = () => {
+      const drift = Math.min(performance.now() - lastRealRef.current, MAX_EXTRAPOLATION_MS)
+      return stateRef.current.clock + drift * speed
+    }
     const doPress = (lane: number, pull: boolean) => {
       if (pausedRef.current) return
       resumeAudio()
       playNote(lane, pull ? 'pull' : 'push')
-      pendingRef.current.push({ kind: 'press', lane, pull, gameTime: stateRef.current.clock })
+      pendingRef.current.push({ kind: 'press', lane, pull, gameTime: gameTimeNow() })
     }
     const doRelease = (lane: number) => {
       pendingRef.current.push({ kind: 'release', lane })

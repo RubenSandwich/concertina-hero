@@ -68,6 +68,15 @@ auto` with `margin: auto` on its child (centres when it fits, scrolls from the
     instead just resets its dt anchor on `visibilitychange` — so a _genuinely_
     throttled/suspended tab's next frame is one frame's worth of dt, not a wall
     of misses for the whole time away.
+  - A key/tap press is queued with a `gameTime` computed at the instant it
+    happened (extrapolated forward from the last processed step by the real
+    time since then, capped at `MAX_EXTRAPOLATION_MS`), not applied to the
+    engine state until the next `stepEngine` call. Extrapolating (rather than
+    just reading the last-known clock) matters once frames aren't landing every
+    ~16ms: without it, a run of presses arriving before the next step all
+    collapse onto the same stale "now" and can silently miss their notes. The
+    cap keeps that estimate from overshooting a clock that's genuinely frozen
+    (paused, waiting for a note).
 
 ## Reusable building blocks
 
