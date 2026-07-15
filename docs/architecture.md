@@ -62,6 +62,9 @@ src/
     SongEditor/           create/edit a song (name, colour, BPM, blurb, difficulty, chart)
 ```
 
+e2e/ (sibling of src/, own tsconfig.json) — Playwright browser tests; see
+docs/conventions.md's "TypeScript & tooling" section.
+
 Shared domain types live in their owning module: `InstrumentSize`/`HandGeom`/
 `ButtonSpec`/`InstrumentLayout` in `data/layout.ts`, `Direction`/`LaneNote` in
 `data/instrument.ts`, `Preset` in `data/presets.ts`, `Song`/`Note`/`Difficulty`

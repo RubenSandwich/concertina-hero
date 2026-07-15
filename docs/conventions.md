@@ -14,6 +14,14 @@
   as does `useGameEngine.ts`, since nothing in the test graph imports it.
 - Two imports stay relative rather than aliased: `../utils` and the test-graph
   files above.
+- `e2e/` holds Playwright browser tests (`npm run test:e2e`), separate from the
+  `npm test` unit tests above: they drive a real Chromium against the app's own
+  dev server (`playwright.config.ts` starts it automatically) and exist for
+  what a pure-function test can't catch — rAF/keyboard-event timing, audio
+  unlock gestures, the actual screen flow. `e2e/` has its own `tsconfig.json`
+  (`npm run typecheck:e2e`) so its Playwright types don't leak into the main
+  `src` build. `e2e/helpers.ts` has the shared Start-screen setup (expand
+  Settings, flip "Wait for correct note", start a song).
 
 ## CSS
 

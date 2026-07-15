@@ -18,6 +18,8 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test",
+    "test:e2e": "playwright test",
+    "typecheck:e2e": "tsc -p e2e --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -26,6 +28,7 @@
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@types/node": "^22.20.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
