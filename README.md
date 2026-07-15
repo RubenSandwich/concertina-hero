@@ -72,7 +72,8 @@ src/
   data/colors.ts          colour helpers (random accessible accent)
   data/songs.ts           song model: chart parser + buildSong
   data/songLibrary.ts     built-in songs + the user song store (localStorage)
-  hooks/useGameEngine.ts  animation loop, keyboard + mic input, scoring
+  hooks/gameEngineCore.ts the stateless engine core: stepEngine(state, input)
+  hooks/useGameEngine.ts  the impure shell: rAF, keyboard + mic input, sounds
   utils.ts                shared helpers (JSON errors, slugs, downloads)
   ui/                     each component in its own folder with a co-located .css
     components/           Modal, Accordion, SegmentedControl, Switch

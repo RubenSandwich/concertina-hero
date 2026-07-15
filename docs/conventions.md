@@ -7,10 +7,11 @@
 - `npm test` uses Node's native test runner with type-stripping
   (`node --experimental-strip-types --test`), one process per test file. Because
   Node won't rewrite a `.js` specifier to a `.ts` file, every module reachable from
-  a test (pitch, sound, instrument, layout, timing, songs, scoring, presets) uses
-  explicit **`.ts`** relative _value_ imports (e.g. `./layout.ts`); type-only
-  imports are erased, so they can stay extensionless. `.tsx` UI files aren't in the
-  test graph and use the `#…` aliases as normal.
+  a test (pitch, sound, instrument, layout, timing, songs, scoring, presets,
+  gameEngineCore) uses explicit **`.ts`** relative _value_ imports (e.g.
+  `./layout.ts`); type-only imports are erased, so they can stay extensionless.
+  `.tsx` UI files aren't in the test graph and use the `#…` aliases as normal —
+  as does `useGameEngine.ts`, since nothing in the test graph imports it.
 - Two imports stay relative rather than aliased: `../utils` and the test-graph
   files above.
 
@@ -44,11 +45,29 @@ auto` with `margin: auto` on its child (centres when it fits, scrolls from the
 
 ## The game loop
 
-- `useGameEngine` keeps mutable state (notes, score, combo, feedback) in refs and
-  re-renders once per animation frame via `setElapsed`. Don't convert these to
-  React state in the hot loop.
-- The clock auto-pauses when the tab is hidden (and on manual Space pause) so a
-  backgrounded tab doesn't dump a wall of misses.
+- The engine is split into a stateless core and an impure shell:
+  - `hooks/gameEngineCore.ts` exports `createInitialState(song)` and
+    `stepEngine(state, input) -> { state, events }`. It is a plain function of
+    its arguments — no DOM, no audio, no `performance.now()`, no `console.log` —
+    which is what lets `gameEngineCore.test.ts` assert on it directly with
+    made-up input instead of driving a real rAF loop or mic.
+  - `hooks/useGameEngine.ts` is the shell: it owns rAF, keyboard listeners,
+    sampling the mic (`detectChord()`), and applying the `EngineEvent`s a step
+    returns (playing sounds, logging, calling `onFinish`). It keeps the engine
+    state in a single ref (`stateRef`) and re-renders once per animation frame
+    via `setElapsed`. Don't convert that ref to React state in the hot loop.
+  - `stepEngine` mutates and returns its `state` argument's notes/maps/sets in
+    place for speed (a run can have hundreds of notes at 60fps) but always
+    returns a **new top-level object**, so `stateRef.current = next` still gets
+    a fresh reference each frame.
+  - Pausing works by the shell simply not calling `stepEngine` for that frame —
+    there is no clock to rewind on resume, since the step function only ever
+    advances by the `dtMs` it's given. A backgrounded tab isn't gated the same
+    way: `document.hidden` can be true for an otherwise fully interactive page
+    (e.g. under automated browser control), so the loop still steps normally and
+    instead just resets its dt anchor on `visibilitychange` — so a _genuinely_
+    throttled/suspended tab's next frame is one frame's worth of dt, not a wall
+    of misses for the whole time away.
 
 ## Reusable building blocks
 

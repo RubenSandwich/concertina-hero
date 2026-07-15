@@ -31,7 +31,10 @@ src/
   audio/sound.ts          Web Audio "toy concertina" synth (reads LANE_NOTES)
   audio/pitch.ts          mic pitch detection (autocorrelation) → button note
 
-  hooks/useGameEngine.ts  the game loop: rAF, keyboard + mic input, scoring, pause, phases
+  hooks/gameEngineCore.ts the stateless engine: stepEngine(state, input) -> {state, events} —
+                          clock, hit/miss judging, hold accrual, mic onset debounce, scoring
+  hooks/useGameEngine.ts  the impure shell around it: rAF, keyboard + mic input, playing
+                          sounds, logging, pause, calling onFinish
   utils.ts                generic helpers (jsonErrorText, slug, downloadJSON)
 
   ui/components/           reusable UI
@@ -62,5 +65,6 @@ src/
 Shared domain types live in their owning module: `InstrumentSize`/`HandGeom`/
 `ButtonSpec`/`InstrumentLayout` in `data/layout.ts`, `Direction`/`LaneNote` in
 `data/instrument.ts`, `Preset` in `data/presets.ts`, `Song`/`Note`/`Difficulty`
-in `data/songs.ts`, `Detection` in `audio/pitch.ts`, `GameResult`/`GameNote` in
-`hooks/useGameEngine.ts`.
+in `data/songs.ts`, `Detection`/`ChordReading` in `audio/pitch.ts`,
+`GameResult`/`GameNote`/`EngineState` in `hooks/gameEngineCore.ts` (re-exported
+from `hooks/useGameEngine.ts` for UI imports).
