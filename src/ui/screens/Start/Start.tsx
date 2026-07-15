@@ -51,6 +51,10 @@ interface StartProps {
   onInstrumentChange: (size: InstrumentSize) => void
   sections: StartSections
   onSectionToggle: (section: keyof StartSections, open: boolean) => void
+  // Which song card is picked. Held in App (like `sections`) so it survives
+  // the Start screen unmounting during a game and restores on return.
+  selectedId: string | undefined
+  onSelectedIdChange: (id: string) => void
 }
 
 export default function Start({
@@ -63,10 +67,9 @@ export default function Start({
   onInstrumentChange,
   sections,
   onSectionToggle,
+  selectedId,
+  onSelectedIdChange: setSelectedId,
 }: StartProps) {
-  const [selectedId, setSelectedId] = useState<string | undefined>(
-    () => songs[0]?.id,
-  )
   const [speed, setSpeed] = useState(1)
   const [waitForNote, setWaitForNote] = useState(false)
   const [hideFeedback, setHideFeedback] = useState(false)

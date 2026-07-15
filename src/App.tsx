@@ -79,6 +79,13 @@ export default function App() {
   const toggleStartSection = (section: keyof StartSections, open: boolean) =>
     setStartSections((s) => ({ ...s, [section]: open }))
 
+  // Which song card is picked on the Start screen. Kept here (like
+  // `startSections`) so it survives the Start screen unmounting during a game
+  // and is still highlighted when the player quits or finishes back to it.
+  const [selectedSongId, setSelectedSongId] = useState<string | undefined>(
+    () => songs[0]?.id,
+  )
+
   // The active instrument (a global setting): drives geometry/colours/tuning, and
   // gates which songs are playable.
   const [instrumentSize, setInstrumentSize] = useState<InstrumentSize>(() =>
@@ -144,6 +151,8 @@ export default function App() {
             onInstrumentChange={changeInstrument}
             sections={startSections}
             onSectionToggle={toggleStartSection}
+            selectedId={selectedSongId}
+            onSelectedIdChange={setSelectedSongId}
           />
         )}
 
