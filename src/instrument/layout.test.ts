@@ -7,8 +7,10 @@ import {
   LAYOUTS,
   INSTRUMENT_SIZES,
   KEY_ORDER,
+  Hand,
   type InstrumentSize,
 } from './layout.ts'
+import { Direction } from './instrument.ts'
 
 const EPS = 1e-9
 
@@ -45,10 +47,10 @@ test('numbering runs top-to-bottom, left-to-right across the screen', () => {
 })
 
 test('the 7-button is one centred rainbow row, no hands, no divider', () => {
-  const { geom, buttons } = LAYOUTS[7]
-  assert.equal(geom.split, false)
-  assert.equal(geom.rows, 1)
-  assert.ok(buttons.every((b) => b.hand === 'center' && b.row === 0))
+  const { geometry, buttons } = LAYOUTS[7]
+  assert.equal(geometry.split, false)
+  assert.equal(geometry.rows, 1)
+  assert.ok(buttons.every((b) => b.hand === Hand.Single && b.row === 0))
   // Evenly spaced centres at (i + 0.5) / 7.
   buttons.forEach((b, i) =>
     assert.ok(Math.abs(b.x - (i + 0.5) / 7) < EPS, `x of button ${i + 1}`),
@@ -60,12 +62,16 @@ test('the 7-button is one centred rainbow row, no hands, no divider', () => {
 test('two-hand layouts split left | right at the divider', () => {
   for (const size of [10, 20, 30] as InstrumentSize[]) {
     const { buttons } = LAYOUTS[size]
-    assert.ok(buttons.every((b) => b.hand !== 'center'))
-    assert.ok(buttons.filter((b) => b.hand === 'left').every((b) => b.x < 0.5))
-    assert.ok(buttons.filter((b) => b.hand === 'right').every((b) => b.x > 0.5))
+    assert.ok(buttons.every((b) => b.hand !== Hand.Single))
+    assert.ok(
+      buttons.filter((b) => b.hand === Hand.Left).every((b) => b.x < 0.5),
+    )
+    assert.ok(
+      buttons.filter((b) => b.hand === Hand.Right).every((b) => b.x > 0.5),
+    )
     // Equal split between the hands.
-    assert.equal(buttons.filter((b) => b.hand === 'left').length, size / 2)
-    assert.equal(buttons.filter((b) => b.hand === 'right').length, size / 2)
+    assert.equal(buttons.filter((b) => b.hand === Hand.Left).length, size / 2)
+    assert.equal(buttons.filter((b) => b.hand === Hand.Right).length, size / 2)
   }
 })
 
@@ -74,9 +80,10 @@ test('the right hand mirrors the left across the divider', () => {
     const { buttons } = LAYOUTS[size]
     // A left button and its mirror (same hand-column and row on the right) sit at
     // reflected x positions and share the outer→inner colour.
-    for (const left of buttons.filter((b) => b.hand === 'left')) {
+    for (const left of buttons.filter((b) => b.hand === Hand.Left)) {
       const right = buttons.find(
-        (b) => b.hand === 'right' && b.row === left.row && b.col === left.col,
+        (b) =>
+          b.hand === Hand.Right && b.row === left.row && b.col === left.col,
       )
       assert.ok(right, `${size}: mirror of button ${left.number}`)
       assert.ok(
@@ -93,13 +100,13 @@ test('the right hand mirrors the left across the divider', () => {
 })
 
 test('20-button rows are staggered by half a column', () => {
-  const { geom, buttons } = LAYOUTS[20]
-  const unit = 0.5 / geom.cols
+  const { geometry, buttons } = LAYOUTS[20]
+  const unit = 0.5 / geometry.cols
   const row0 = buttons
-    .filter((b) => b.hand === 'left' && b.row === 0)
+    .filter((b) => b.hand === Hand.Left && b.row === 0)
     .map((b) => b.x)
   const row1 = buttons
-    .filter((b) => b.hand === 'left' && b.row === 1)
+    .filter((b) => b.hand === Hand.Left && b.row === 1)
     .map((b) => b.x)
   // Each staggered-row lane sits half a column off the aligned row.
   row0.forEach((x, i) =>
@@ -108,10 +115,10 @@ test('20-button rows are staggered by half a column', () => {
 })
 
 test('30-button top and bottom rows align; the middle row is offset', () => {
-  const { geom, buttons } = LAYOUTS[30]
-  const unit = 0.5 / geom.cols
+  const { geometry, buttons } = LAYOUTS[30]
+  const unit = 0.5 / geometry.cols
   const col = (row: number) =>
-    buttons.filter((b) => b.hand === 'left' && b.row === row).map((b) => b.x)
+    buttons.filter((b) => b.hand === Hand.Left && b.row === row).map((b) => b.x)
   const [top, mid, bottom] = [col(0), col(1), col(2)]
   top.forEach((x, i) => {
     assert.ok(Math.abs(bottom[i] - x) < EPS, `top/bottom aligned at col ${i}`)
@@ -151,7 +158,7 @@ test('smaller instruments use the front of the same key grid', () => {
 test('every lane has a valid push and pull note', () => {
   for (const size of INSTRUMENT_SIZES) {
     for (const b of LAYOUTS[size].buttons) {
-      for (const type of ['push', 'pull'] as const) {
+      for (const type of [Direction.Push, Direction.Pull]) {
         assert.ok(
           b[type].name.length > 0,
           `${size}: button ${b.number} ${type} name`,

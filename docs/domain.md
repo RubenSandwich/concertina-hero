@@ -21,7 +21,7 @@
 
 ## Instrument layouts (`instrument/layout.ts`)
 
-`LAYOUTS[size]` is a pure descriptor: a `HandGeom` (hands / cols / rows / split /
+`LAYOUTS[size]` is a pure descriptor: a `HandGeometry` (hands / cols / rows / split /
 mirror / stagger) plus a flat `ButtonSpec[]` — per button its `lane`, `number`,
 `hand`, `row`, `col`, on-screen `x`, `key`/`keyLabel`, `color`, and default
 push/pull notes. `instrument.ts` derives the live `LANE_NOTES` / `LANE_COLORS` / `KEY_CODES` /

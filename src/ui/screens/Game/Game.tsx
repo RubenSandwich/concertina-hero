@@ -1,6 +1,10 @@
 import { useMemo } from 'react'
 import { useGameEngine } from '#engine/useGameEngine'
-import type { GameNote, GameResult } from '#engine/useGameEngine'
+import {
+  NoteState,
+  type GameNote,
+  type GameResult,
+} from '#engine/useGameEngine'
 import type { Song, Section } from '#songs/songs'
 import {
   LANE_COLORS,
@@ -9,7 +13,7 @@ import {
 } from '#instrument/instrument'
 import type { InstrumentSize } from '#instrument/layout'
 import { LEAD_TIME, noteProgress, noteVisible } from '#scoring/timing'
-import Keyboard from '#components/Keyboard/Keyboard'
+import Keyboard, { LabelMode } from '#components/Keyboard/Keyboard'
 import NoteCard from '#components/NoteCard/NoteCard'
 import HowToPlay from '#components/HowToPlay/HowToPlay'
 import Modal from '#components/Modal/Modal'
@@ -44,7 +48,7 @@ function placeNotes(
 ): PlacedNote[] {
   const placed: PlacedNote[] = []
   for (const note of notes) {
-    if (note.state === 'active' || note.state === 'holding') {
+    if (note.state === NoteState.Active || note.state === NoteState.Holding) {
       const progress = noteProgress(note.time - elapsed)
       if (noteVisible(progress, beatFrac)) placed.push({ note, progress })
     } else if (elapsed - note.judgeElapsed < 340) {
@@ -109,7 +113,10 @@ export default function Game({
 }: GameProps) {
   const g = useGameEngine(song, { speed, micEnabled, waitForNote, onFinish })
   const layout = getActiveLayout()
-  const { buttons, geom } = layout
+  const { buttons, geometry } = layout
+  // What both the falling cards and the drawn keyboard show (Decision 5):
+  // keyboard mode shows the key to press, mic mode shows the note name.
+  const labelMode = micEnabled ? LabelMode.Number : LabelMode.Key
 
   // Each note sustains one beat; its card is that many fall-zone-heights tall, so
   // it covers the hit line for exactly the window in which it can be held.
@@ -188,7 +195,10 @@ export default function Game({
   // was spawned last.
   const activeProgress: number[] = buttons.map(() => -Infinity)
   for (const { note, progress } of placed) {
-    if ((note.state === 'active' || note.state === 'holding') && progress > 0) {
+    if (
+      (note.state === NoteState.Active || note.state === NoteState.Holding) &&
+      progress > 0
+    ) {
       if (progress > activeProgress[note.lane]) {
         activeProgress[note.lane] = progress
         active[note.lane] = note.type
@@ -307,7 +317,7 @@ export default function Game({
             {bandEls}
           </div>
 
-          {geom.split && <div className="hand-divider" />}
+          {geometry.split && <div className="hand-divider" />}
 
           {placed.map(({ note, progress }) => (
             <NoteCard
@@ -316,6 +326,8 @@ export default function Game({
               x={buttons[note.lane].x}
               color={LANE_COLORS[note.lane]}
               progress={progress}
+              labelMode={labelMode}
+              keyLabel={buttons[note.lane].keyLabel}
             />
           ))}
 
@@ -326,10 +338,10 @@ export default function Game({
 
         <Keyboard
           buttons={buttons}
-          geom={geom}
+          geometry={geometry}
           active={active}
           pressed={pressed}
-          labelMode={micEnabled ? 'number' : 'key'}
+          labelMode={labelMode}
           onPress={g.pressLane}
           onRelease={g.releaseLane}
         />

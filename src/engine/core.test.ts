@@ -6,11 +6,14 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { buildSong } from '../songs/songs.ts'
+import { buildSong, Difficulty } from '../songs/songs.ts'
+import { Direction } from '../instrument/instrument.ts'
+import { Rating } from '../scoring/scoring.ts'
 import type { ChordNote, ChordReading } from '../audio/pitch.ts'
 import {
   createInitialState,
   stepEngine,
+  NoteState,
   type EngineState,
   type InputEvent,
 } from './core.ts'
@@ -23,7 +26,7 @@ const song = (chart: string) =>
     blurb: '',
     bpm: 120,
     color: '#fff',
-    difficulty: 'Easy',
+    difficulty: Difficulty.Easy,
     chart: [chart],
   })
 
@@ -46,11 +49,7 @@ function advance(
   })
 }
 
-const chordNote = (
-  lane: number,
-  type: 'push' | 'pull',
-  name = 'x',
-): ChordNote => ({
+const chordNote = (lane: number, type: Direction, name = 'x'): ChordNote => ({
   lane,
   type,
   name,
@@ -65,7 +64,7 @@ test('createInitialState starts before the song, every note active', () => {
   assert.equal(s.finished, false)
   assert.equal(s.score, 0)
   assert.equal(s.notes.length, 1)
-  assert.equal(s.notes[0].state, 'active')
+  assert.equal(s.notes[0].state, NoteState.Active)
 })
 
 test('the countdown and the game clock both advance from real dt', () => {
@@ -83,14 +82,14 @@ test('a perfectly-timed, fully-held press scores full points', () => {
   ;({ state, events } = advance(state, 0, {
     events: [{ kind: 'press', lane: 0, pull: false, gameTime: 0 }],
   }))
-  assert.equal(state.notes[0].state, 'holding')
-  assert.equal(state.notes[0].rating, 'perfect')
+  assert.equal(state.notes[0].state, NoteState.Holding)
+  assert.equal(state.notes[0].rating, Rating.Perfect)
   assert.equal(state.combo, 1)
   assert.equal(events.length, 0)
 
   // Hold it for the full beat: the note finalizes at clock 500.
   ;({ state } = advance(state, 500))
-  assert.equal(state.notes[0].state, 'hit')
+  assert.equal(state.notes[0].state, NoteState.Hit)
   assert.equal(
     state.score,
     100,
@@ -104,11 +103,11 @@ test('a perfectly-timed, fully-held press scores full points', () => {
       { kind: 'press', lane: 0, pull: true, gameTime: 500 },
     ],
   }))
-  assert.equal(state.notes[1].rating, 'perfect')
+  assert.equal(state.notes[1].rating, Rating.Perfect)
   assert.equal(state.combo, 2)
 
   ;({ state } = advance(state, 500))
-  assert.equal(state.notes[1].state, 'hit')
+  assert.equal(state.notes[1].state, NoteState.Hit)
   assert.equal(state.score, 200)
   assert.equal(state.maxCombo, 2)
 })
@@ -120,7 +119,11 @@ test('the wrong bellows direction flags "Wrong Way!" and leaves the note up', ()
   const { state: next, events } = advance(state, 0, {
     events: [{ kind: 'press', lane: 0, pull: true, gameTime: 0 }], // wanted push, played pull
   })
-  assert.equal(next.notes[0].state, 'active', 'still up to be played correctly')
+  assert.equal(
+    next.notes[0].state,
+    NoteState.Active,
+    'still up to be played correctly',
+  )
   assert.equal(next.feedback?.text, 'Wrong Way!')
   assert.deepEqual(events, [{ type: 'miss-sound' }])
 })
@@ -129,10 +132,10 @@ test('a note nobody plays is judged a miss once its beat is gone, and resets com
   let state = createInitialState(song('+1')) // holdMs 500, so missed at clock 500
   state = advance(state, 3000).state // clock 0
   state = advance(state, 400).state // clock 400: comfortably still catchable
-  assert.equal(state.notes[0].state, 'active')
+  assert.equal(state.notes[0].state, NoteState.Active)
 
   const { state: next } = advance(state, 100) // clock 500: gone
-  assert.equal(next.notes[0].state, 'miss')
+  assert.equal(next.notes[0].state, NoteState.Miss)
   assert.equal(next.counts.miss, 1)
   assert.equal(next.combo, 0)
   assert.equal(next.feedback?.text, 'Miss')
@@ -147,7 +150,7 @@ test('waitForNote clamps the clock at the earliest unplayed note until it is hit
   assert.equal(stuck.clock, 0)
   assert.equal(
     stuck.notes[0].state,
-    'active',
+    NoteState.Active,
     'never times out while the clock is held at its beat',
   )
 
@@ -168,20 +171,23 @@ test('a mic onset needs two consecutive stable frames before it registers', () =
   let state = createInitialState(song('+1'))
   state = advance(state, 3195).state // clock 195, so clock - MIC_LATENCY(195) == 0
 
-  const heard: ChordReading = { notes: [chordNote(0, 'push')], stable: true }
+  const heard: ChordReading = {
+    notes: [chordNote(0, Direction.Push)],
+    stable: true,
+  }
 
   const first = advance(state, 0, { micReading: heard })
   assert.equal(
     first.state.notes[0].state,
-    'active',
+    NoteState.Active,
     'first frame is only a debounce candidate',
   )
 
   const second = advance(first.state, 0, { micReading: heard })
-  assert.equal(second.state.notes[0].state, 'holding')
+  assert.equal(second.state.notes[0].state, NoteState.Holding)
   assert.equal(
     second.state.notes[0].rating,
-    'perfect',
+    Rating.Perfect,
     'graded from clock - MIC_LATENCY, not clock',
   )
   assert.ok(
@@ -195,7 +201,10 @@ test('a mic onset needs two consecutive stable frames before it registers', () =
 test('the mic release rides out one silent frame before clearing the held note', () => {
   let state = createInitialState(song('+1'))
   state = advance(state, 3195).state
-  const heard: ChordReading = { notes: [chordNote(0, 'push')], stable: true }
+  const heard: ChordReading = {
+    notes: [chordNote(0, Direction.Push)],
+    stable: true,
+  }
   state = advance(state, 0, { micReading: heard }).state
   state = advance(state, 0, { micReading: heard }).state
   assert.equal(state.micNotes.length, 1)
@@ -216,7 +225,7 @@ test('the song ends once its duration + the end buffer has passed, exactly once'
   assert.equal(next.finished, true)
   assert.equal(
     next.notes[0].state,
-    'miss',
+    NoteState.Miss,
     'the untouched note is judged before the song ends',
   )
   const finished = events.find((e) => e.type === 'finished')

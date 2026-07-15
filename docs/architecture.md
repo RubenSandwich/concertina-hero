@@ -10,7 +10,7 @@ src/
   App.tsx                 screen router (start → game → results), View Transitions
   index.css               global theme + CSS vars + shared primitives (.paper/.btn/.title/.diff)
 
-  instrument/layout.ts    per-size anglo layouts (7/10/20/30): HandGeom + ButtonSpec,
+  instrument/layout.ts    per-size anglo layouts (7/10/20/30): HandGeometry + ButtonSpec,
                           geometry/numbering/colours/key grid/default notes, LAYOUTS,
                           minInstrumentFor, MAX_BUTTONS
   instrument/instrument.ts the active instrument: Direction/LaneNote types, the global
@@ -75,7 +75,7 @@ src/
 e2e/ (sibling of src/, own tsconfig.json) — Playwright browser tests; see
 docs/conventions.md's "TypeScript & tooling" section.
 
-Shared domain types live in their owning module: `InstrumentSize`/`HandGeom`/
+Shared domain types live in their owning module: `InstrumentSize`/`HandGeometry`/
 `ButtonSpec`/`InstrumentLayout` in `instrument/layout.ts`, `Direction`/`LaneNote`
 in `instrument/instrument.ts`, `Preset` in `instrument/presets.ts`,
 `Song`/`Note`/`Difficulty` in `songs/songs.ts`, `Detection`/`ChordReading` in

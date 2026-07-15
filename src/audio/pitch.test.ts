@@ -23,6 +23,8 @@ import {
   LANE_NOTES,
   setNoteFrequencies,
   getDefaultNotes,
+  Direction,
+  DIRECTIONS,
 } from '../instrument/instrument.ts'
 
 // LANE_NOTES is a live, module-level map, so any test that retunes it must put it
@@ -41,8 +43,6 @@ function withTuning(
 
 const SR = 44100
 const SIZE = 2048
-
-const DIRECTIONS = ['push', 'pull'] as const
 
 // Sum several sawtooths into one buffer, as a chord of concertina reeds would.
 // Normalised so the mix never clips, which also stops note count from inflating
@@ -71,7 +71,7 @@ function makeChordBuffer(
 
 // The lanes/direction a chord token like "(+1 +3)" means, as lane indices.
 const lanesOf = (notes: { lane: number }[]) => notes.map((n) => n.lane)
-const freqsOf = (lanes: number[], type: 'push' | 'pull') =>
+const freqsOf = (lanes: number[], type: Direction) =>
   lanes.map((l) => LANE_NOTES[l][type].freq)
 
 // Synthesise a time-domain buffer for a tone. A naive sawtooth is harmonic-rich,
@@ -126,7 +126,7 @@ test('closestNote reports a signed cents offset', () => {
 
 test('a mistuned note within tolerance still matches', () => {
   const c = closestNote(398)! // ~+26 cents from G
-  assert.equal(c.type, 'push')
+  assert.equal(c.type, Direction.Push)
   assert.equal(c.name, 'G')
   assert.ok(Math.abs(c.cents) <= TOLERANCE_CENTS)
 })
@@ -212,12 +212,12 @@ test('analyzeChord finds each single button note, with its direction', () => {
 })
 
 test('analyzeChord resolves the chords Chord Parade actually uses', () => {
-  const chords: [number[], 'push' | 'pull'][] = [
-    [[0, 2], 'push'], // (+1 +3)
-    [[1, 2], 'pull'], // (-2 -3)
-    [[2, 4], 'push'], // (+3 +5)
-    [[2, 3], 'pull'], // (-4 -3)
-    [[0, 2, 4], 'push'], // (+1 +3 +5)
+  const chords: [number[], Direction][] = [
+    [[0, 2], Direction.Push], // (+1 +3)
+    [[1, 2], Direction.Pull], // (-2 -3)
+    [[2, 4], Direction.Push], // (+3 +5)
+    [[2, 3], Direction.Pull], // (-4 -3)
+    [[0, 2, 4], Direction.Push], // (+1 +3 +5)
   ]
   for (const [lanes, type] of chords) {
     const found = analyzeChord(makeChordBuffer(freqsOf(lanes, type)), SR)
@@ -263,7 +263,7 @@ test('an octave chord is heard as its lower note (the octave ambiguity)', () => 
 // Buttons whose frequency is an integer harmonic of a lower button's, same
 // direction. These are the pairs a mic can never separate — button 6 push really
 // is the 3rd harmonic of button 1 push, not only the octaves.
-function harmonicPairs(type: 'push' | 'pull'): string[] {
+function harmonicPairs(type: Direction): string[] {
   const pairs: string[] = []
   for (let low = 0; low < LANE_NOTES.length; low++) {
     for (let high = low + 1; high < LANE_NOTES.length; high++) {
@@ -277,14 +277,14 @@ function harmonicPairs(type: 'push' | 'pull'): string[] {
 }
 
 test('the buttons that collide as harmonics are exactly the known ones', () => {
-  assert.deepEqual(harmonicPairs('push'), [
+  assert.deepEqual(harmonicPairs(Direction.Push), [
     '1->4:h2',
     '1->6:h3',
     '2->5:h2',
     '2->7:h3',
     '3->6:h2',
   ])
-  assert.deepEqual(harmonicPairs('pull'), [
+  assert.deepEqual(harmonicPairs(Direction.Pull), [
     '1->5:h2',
     '1->7:h3',
     '2->6:h2',
@@ -295,12 +295,12 @@ test('the buttons that collide as harmonics are exactly the known ones', () => {
 test('no chord the game ships contains a harmonic of one of its own notes', () => {
   // This is what makes ruling overtones out safe: a real chord never loses a note
   // to the rule, because none of its notes is an overtone of another.
-  const chords: [number[], 'push' | 'pull'][] = [
-    [[0, 2], 'push'],
-    [[1, 2], 'pull'],
-    [[2, 4], 'push'],
-    [[2, 3], 'pull'],
-    [[0, 2, 4], 'push'],
+  const chords: [number[], Direction][] = [
+    [[0, 2], Direction.Push],
+    [[1, 2], Direction.Pull],
+    [[2, 4], Direction.Push],
+    [[2, 3], Direction.Pull],
+    [[0, 2, 4], Direction.Push],
   ]
   for (const [lanes, type] of chords) {
     for (const low of lanes) {
@@ -327,7 +327,7 @@ test('analyzeChord never mixes push and pull notes', () => {
 })
 
 test('analyzeChord honours the maxNotes cap', () => {
-  const freqs = freqsOf([0, 2, 4], 'push')
+  const freqs = freqsOf([0, 2, 4], Direction.Push)
   assert.equal(
     analyzeChord(makeChordBuffer(freqs), SR, { maxNotes: 2 }).length,
     2,
@@ -469,13 +469,13 @@ test('the same pitch on two buttons makes them aliases of each other', () => {
   const rows = getDefaultNotes()
   rows[3].pull.freq = rows[0].push.freq // button 4 pull sounds button 1 push's note
   withTuning(rows, () => {
-    assert.deepEqual(aliasesOf(0, 'push'), [
-      { lane: 0, type: 'push' },
-      { lane: 3, type: 'pull' },
+    assert.deepEqual(aliasesOf(0, Direction.Push), [
+      { lane: 0, type: Direction.Push },
+      { lane: 3, type: Direction.Pull },
     ])
-    assert.deepEqual(aliasesOf(3, 'pull'), [
-      { lane: 0, type: 'push' },
-      { lane: 3, type: 'pull' },
+    assert.deepEqual(aliasesOf(3, Direction.Pull), [
+      { lane: 0, type: Direction.Push },
+      { lane: 3, type: Direction.Pull },
     ])
   })
 })
@@ -485,7 +485,7 @@ test('two buttons a semitone apart down low are aliases; up high they are not', 
   low[1].push.freq = low[0].push.freq * Math.pow(2, 1 / 12) // 15.6Hz apart
   withTuning(low, () => {
     assert.equal(
-      aliasesOf(0, 'push').length,
+      aliasesOf(0, Direction.Push).length,
       2,
       'the mic cannot separate them at middle C',
     )
@@ -498,8 +498,8 @@ test('two buttons a semitone apart down low are aliases; up high they are not', 
   high[6].push.freq = 800 * Math.pow(2, 1 / 12)
   withTuning(high, () => {
     assert.deepEqual(
-      aliasesOf(5, 'push'),
-      [{ lane: 5, type: 'push' }],
+      aliasesOf(5, Direction.Push),
+      [{ lane: 5, type: Direction.Push }],
       'a semitone up high is clear',
     )
   })
@@ -547,7 +547,7 @@ test('TRANSIENT_MAX separates steady windows from straddling ones', () => {
 test('a chord struck partway through the window is still heard', () => {
   // The mic buffer is ~93ms, so an onset lands mid-window. Detection must not
   // wait for the note to fill the whole buffer.
-  const freqs = freqsOf([0, 2], 'push')
+  const freqs = freqsOf([0, 2], Direction.Push)
   const half = makeChordBuffer(freqs, { startAt: MIC_FFT_SIZE / 2 })
   assert.deepEqual(lanesOf(analyzeChord(half, SR)), [0, 2])
 })

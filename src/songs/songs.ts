@@ -22,7 +22,12 @@ export interface Section {
   end: number
 }
 
-export type Difficulty = 'Easy' | 'Medium' | 'Hard'
+export const Difficulty = {
+  Easy: 'Easy',
+  Medium: 'Medium',
+  Hard: 'Hard',
+} as const
+export type Difficulty = (typeof Difficulty)[keyof typeof Difficulty]
 
 // A raw, validated song definition — the form persisted in localStorage and fed
 // to buildSong. `chart` is an array of lines rather than one long string — a
@@ -57,7 +62,11 @@ export interface Song extends SongDef {
   requiredButtons: number
 }
 
-export const DIFFICULTIES: Difficulty[] = ['Easy', 'Medium', 'Hard']
+export const DIFFICULTIES: Difficulty[] = [
+  Difficulty.Easy,
+  Difficulty.Medium,
+  Difficulty.Hard,
+]
 
 // Maps a difficulty to its badge CSS class (shared by every song UI).
 export const DIFF_CLASS: Record<Difficulty, string> = {

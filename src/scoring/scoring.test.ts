@@ -8,39 +8,41 @@ import {
   holdPoints,
   isSustaining,
   gradeFor,
+  Rating,
 } from './scoring.ts'
+import { Direction } from '../instrument/instrument.ts'
 import { PERFECT_WINDOW, GOOD_WINDOW, MIC_WINDOW_SCALE } from './timing.ts'
 
 test('gradeFor grades a press by its distance from the beat', () => {
-  assert.equal(gradeFor(0), 'perfect')
-  assert.equal(gradeFor(PERFECT_WINDOW), 'perfect')
-  assert.equal(gradeFor(PERFECT_WINDOW + 1), 'good')
-  assert.equal(gradeFor(GOOD_WINDOW), 'good')
-  assert.equal(gradeFor(GOOD_WINDOW + 1), 'ok')
+  assert.equal(gradeFor(0), Rating.Perfect)
+  assert.equal(gradeFor(PERFECT_WINDOW), Rating.Perfect)
+  assert.equal(gradeFor(PERFECT_WINDOW + 1), Rating.Good)
+  assert.equal(gradeFor(GOOD_WINDOW), Rating.Good)
+  assert.equal(gradeFor(GOOD_WINDOW + 1), Rating.Ok)
   assert.equal(
     gradeFor(10_000),
-    'ok',
+    Rating.Ok,
     'a very late press still only ever grades Ok',
   )
 })
 
 test('gradeFor treats early and late presses alike', () => {
-  assert.equal(gradeFor(-PERFECT_WINDOW), 'perfect')
-  assert.equal(gradeFor(-GOOD_WINDOW), 'good')
-  assert.equal(gradeFor(-GOOD_WINDOW - 1), 'ok')
+  assert.equal(gradeFor(-PERFECT_WINDOW), Rating.Perfect)
+  assert.equal(gradeFor(-GOOD_WINDOW), Rating.Good)
+  assert.equal(gradeFor(-GOOD_WINDOW - 1), Rating.Ok)
 })
 
 test('gradeFor widens both windows for the microphone', () => {
   const mic = MIC_WINDOW_SCALE
   assert.equal(
     gradeFor(PERFECT_WINDOW + 1, mic),
-    'perfect',
+    Rating.Perfect,
     'would be Good on the keyboard',
   )
-  assert.equal(gradeFor(PERFECT_WINDOW * mic, mic), 'perfect')
-  assert.equal(gradeFor(PERFECT_WINDOW * mic + 1, mic), 'good')
-  assert.equal(gradeFor(GOOD_WINDOW * mic, mic), 'good')
-  assert.equal(gradeFor(GOOD_WINDOW * mic + 1, mic), 'ok')
+  assert.equal(gradeFor(PERFECT_WINDOW * mic, mic), Rating.Perfect)
+  assert.equal(gradeFor(PERFECT_WINDOW * mic + 1, mic), Rating.Good)
+  assert.equal(gradeFor(GOOD_WINDOW * mic, mic), Rating.Good)
+  assert.equal(gradeFor(GOOD_WINDOW * mic + 1, mic), Rating.Ok)
 })
 
 test('holdFraction reports the share of the sustain that was held', () => {
@@ -60,38 +62,38 @@ test('holdFraction clamps over-held, negative, and zero-length notes', () => {
 })
 
 test('holdPoints scales the onset grade by the held fraction', () => {
-  assert.equal(holdPoints('perfect', 1), 100)
-  assert.equal(holdPoints('perfect', 0.8), 80)
-  assert.equal(holdPoints('good', 0.5), 30)
-  assert.equal(holdPoints('ok', 1), 30)
+  assert.equal(holdPoints(Rating.Perfect, 1), 100)
+  assert.equal(holdPoints(Rating.Perfect, 0.8), 80)
+  assert.equal(holdPoints(Rating.Good, 0.5), 30)
+  assert.equal(holdPoints(Rating.Ok, 1), 30)
 })
 
 test('holdPoints rounds to a whole score and floors at zero', () => {
-  assert.equal(holdPoints('ok', 0.5), 15)
-  assert.equal(holdPoints('good', 1 / 3), 20)
-  assert.equal(holdPoints('perfect', 0.125), 13, 'rounds 12.5 up')
+  assert.equal(holdPoints(Rating.Ok, 0.5), 15)
+  assert.equal(holdPoints(Rating.Good, 1 / 3), 20)
+  assert.equal(holdPoints(Rating.Perfect, 0.125), 13, 'rounds 12.5 up')
   assert.equal(
-    holdPoints('perfect', 0),
+    holdPoints(Rating.Perfect, 0),
     0,
     'a note released instantly scores nothing',
   )
 })
 
 test('isSustaining accepts a held key or a matching sustained mic note', () => {
-  assert.equal(isSustaining(2, 'push', { 2: 'push' }, []), true)
+  assert.equal(isSustaining(2, Direction.Push, { 2: Direction.Push }, []), true)
   assert.equal(
-    isSustaining(2, 'push', { 2: 'pull' }, []),
+    isSustaining(2, Direction.Push, { 2: Direction.Pull }, []),
     false,
     'wrong bellows direction',
   )
-  assert.equal(isSustaining(2, 'push', {}, []), false)
+  assert.equal(isSustaining(2, Direction.Push, {}, []), false)
   assert.equal(
-    isSustaining(2, 'push', {}, [{ lane: 2, type: 'push' }]),
+    isSustaining(2, Direction.Push, {}, [{ lane: 2, type: Direction.Push }]),
     true,
     'mic sustains it',
   )
   assert.equal(
-    isSustaining(2, 'push', {}, [{ lane: 3, type: 'push' }]),
+    isSustaining(2, Direction.Push, {}, [{ lane: 3, type: Direction.Push }]),
     false,
     'wrong lane',
   )
@@ -99,24 +101,24 @@ test('isSustaining accepts a held key or a matching sustained mic note', () => {
 
 test('isSustaining holds every note of a chord the mic hears', () => {
   const chord = [
-    { lane: 0, type: 'push' as const },
-    { lane: 2, type: 'push' as const },
-    { lane: 4, type: 'push' as const },
+    { lane: 0, type: Direction.Push },
+    { lane: 2, type: Direction.Push },
+    { lane: 4, type: Direction.Push },
   ]
   for (const lane of [0, 2, 4]) {
     assert.equal(
-      isSustaining(lane, 'push', {}, chord),
+      isSustaining(lane, Direction.Push, {}, chord),
       true,
       `button ${lane + 1} held by mic`,
     )
   }
   assert.equal(
-    isSustaining(1, 'push', {}, chord),
+    isSustaining(1, Direction.Push, {}, chord),
     false,
     'a lane not in the chord is not held',
   )
   assert.equal(
-    isSustaining(0, 'pull', {}, chord),
+    isSustaining(0, Direction.Pull, {}, chord),
     false,
     'right lane, wrong direction',
   )

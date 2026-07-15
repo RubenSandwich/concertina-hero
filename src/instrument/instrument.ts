@@ -16,10 +16,14 @@ export { INSTRUMENT_SIZES } from './layout.ts'
 export type { InstrumentSize, ButtonSpec } from './layout'
 
 // Bellows direction: push = squeeze in, pull = draw out.
-export type Direction = 'push' | 'pull'
+export const Direction = {
+  Push: 'push',
+  Pull: 'pull',
+} as const
+export type Direction = (typeof Direction)[keyof typeof Direction]
 
 // The two directions, for iterating a button's push/pull pair.
-export const DIRECTIONS = ['push', 'pull'] as const
+export const DIRECTIONS = [Direction.Push, Direction.Pull] as const
 
 // A single button/direction sound: its note name and frequency in Hz.
 export interface NoteInfo {

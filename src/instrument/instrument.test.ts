@@ -10,6 +10,7 @@ import {
   LANE_NOTES,
   setActiveInstrument,
   getActiveInstrument,
+  Direction,
 } from './instrument.ts'
 import { aliasesOf } from '../audio/pitch.ts'
 
@@ -73,13 +74,13 @@ test('a pitch the 30-button repeats aliases to every button that sounds it', () 
     assert.equal(LANE_NOTES[15].push.name, 'G')
     assert.equal(LANE_NOTES[12].push.freq, LANE_NOTES[15].push.freq)
 
-    const aliases = aliasesOf(12, 'push')
+    const aliases = aliasesOf(12, Direction.Push)
     assert.ok(
-      aliases.some((a) => a.lane === 12 && a.type === 'push'),
+      aliases.some((a) => a.lane === 12 && a.type === Direction.Push),
       'a note is always its own alias',
     )
     assert.ok(
-      aliases.some((a) => a.lane === 15 && a.type === 'push'),
+      aliases.some((a) => a.lane === 15 && a.type === Direction.Push),
       'and its twin at the same pitch',
     )
   })
@@ -88,7 +89,7 @@ test('a pitch the 30-button repeats aliases to every button that sounds it', () 
 test('under the default 7-button every note is its own only alias', () => {
   withInstrument(7, () => {
     for (let lane = 0; lane < LANE_NOTES.length; lane++) {
-      for (const type of ['push', 'pull'] as const) {
+      for (const type of [Direction.Push, Direction.Pull]) {
         assert.deepEqual(
           aliasesOf(lane, type),
           [{ lane, type }],

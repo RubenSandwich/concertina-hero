@@ -44,10 +44,23 @@ const MIC_SILENT_FRAMES = 2
 // doesn't spam a line every frame.
 const MIC_DEBUG_THROTTLE_MS = 200
 
+// A note's play-state lifecycle: every note starts 'active' (falling, not yet
+// judged); a press turns it 'holding' (correctly struck, sustain in progress);
+// it settles to 'hit' once its beat's hold window ends, or 'miss' if its window
+// passed with no press at all. See useGameEngine's header comment for the full
+// hold/finalize lifecycle.
+export const NoteState = {
+  Active: 'active',
+  Holding: 'holding',
+  Hit: 'hit',
+  Miss: 'miss',
+} as const
+export type NoteState = (typeof NoteState)[keyof typeof NoteState]
+
 // A chart note plus the mutable per-run play state the engine tracks. See
 // useGameEngine's header comment for the hold/finalize lifecycle.
 export interface GameNote extends ChartNote {
-  state: 'active' | 'holding' | 'hit' | 'miss'
+  state: NoteState
   rating: Judgement | null
   heldMs: number
   creditedTo: number
@@ -136,7 +149,7 @@ export function createInitialState(song: Song): EngineState {
     finished: false,
     notes: song.notes.map((n): GameNote => ({
       ...n,
-      state: 'active',
+      state: NoteState.Active,
       rating: null,
       heldMs: 0,
       creditedTo: 0,
@@ -184,7 +197,7 @@ function micPresses(
       (n) =>
         n.lane === a.lane &&
         n.type === a.type &&
-        n.state === 'active' &&
+        n.state === NoteState.Active &&
         isPlayable(now, n.time, state.holdMs),
     ),
   )
@@ -204,7 +217,7 @@ function registerPress(
 ): void {
   let best: GameNote | null = null
   for (const n of state.notes) {
-    if (n.lane !== lane || n.state !== 'active') continue
+    if (n.lane !== lane || n.state !== NoteState.Active) continue
     if (!isPlayable(now, n.time, state.holdMs)) continue
     best = n
     break
@@ -223,7 +236,7 @@ function registerPress(
   const rating: Rating = gradeFor(best.time - now, windowScale)
   state.combo += 1
   state.maxCombo = Math.max(state.maxCombo, state.combo)
-  best.state = 'holding'
+  best.state = NoteState.Holding
   best.rating = rating
   best.heldMs = 0
   best.creditedTo = Math.max(now, best.time)
@@ -263,15 +276,18 @@ export function stepEngine(
   if (input.waitForNote) {
     let barrier = Infinity
     for (const n of state.notes)
-      if (n.state === 'active' && n.time < barrier) barrier = n.time
+      if (n.state === NoteState.Active && n.time < barrier) barrier = n.time
     if (barrier !== Infinity && state.clock > barrier) state.clock = barrier
   }
 
   // Only give up on a note once its beat is all but over and nothing was played
   // for it. Until then a late press can still claim it.
   for (const n of state.notes) {
-    if (n.state === 'active' && state.clock >= missTime(n.time, holdMs)) {
-      n.state = 'miss'
+    if (
+      n.state === NoteState.Active &&
+      state.clock >= missTime(n.time, holdMs)
+    ) {
+      n.state = NoteState.Miss
       n.rating = 'miss'
       n.judgeElapsed = state.clock
       n.judgeAt = noteProgress(n.time - state.clock)
@@ -357,7 +373,7 @@ export function stepEngine(
 
   // Sustained notes bank held time and settle once their beat has run out.
   for (const n of state.notes) {
-    if (n.state !== 'holding') continue
+    if (n.state !== NoteState.Holding) continue
     const held = isSustaining(n.lane, n.type, state.activeKeys, state.micNotes)
     if (held) {
       const from = Math.max(n.creditedTo, n.time)
@@ -369,7 +385,7 @@ export function stepEngine(
       const rating = n.rating as Rating
       state.score +=
         holdPoints(rating, holdFraction(n.heldMs, holdMs)) + n.holdBonus
-      n.state = 'hit'
+      n.state = NoteState.Hit
       n.judgeElapsed = state.clock
       n.judgeAt = noteProgress(n.time - state.clock)
     }

@@ -8,8 +8,10 @@ import {
   chartNoteCount,
   chartRequiredButtons,
   chartOutOfRange,
+  Difficulty,
   type Song,
 } from './songs.ts'
+import { Direction } from '../instrument/instrument.ts'
 import { minInstrumentFor, INSTRUMENT_SIZES } from '../instrument/layout.ts'
 
 const build = (chart: string): Song =>
@@ -19,7 +21,7 @@ const build = (chart: string): Song =>
     blurb: '',
     bpm: 120,
     color: '#fff',
-    difficulty: 'Easy',
+    difficulty: Difficulty.Easy,
     chart: [chart],
   })
 
@@ -30,22 +32,22 @@ const shape = (song: Song) =>
 test('a 7-button chart round-trips to the same notes it always did', () => {
   const song = build('+1 +1 +3 -3 X -2')
   assert.deepEqual(shape(song), [
-    { lane: 0, type: 'push', time: 0 },
-    { lane: 0, type: 'push', time: 500 },
-    { lane: 2, type: 'push', time: 1000 },
-    { lane: 2, type: 'pull', time: 1500 },
+    { lane: 0, type: Direction.Push, time: 0 },
+    { lane: 0, type: Direction.Push, time: 500 },
+    { lane: 2, type: Direction.Push, time: 1000 },
+    { lane: 2, type: Direction.Pull, time: 1500 },
     // the X rest is a silent beat: the next note lands one beat later
-    { lane: 1, type: 'pull', time: 2500 },
+    { lane: 1, type: Direction.Pull, time: 2500 },
   ])
 })
 
 test('parses two-digit buttons and multi-digit chords', () => {
   const song = build('-14 (+21 +26) 30')
   assert.deepEqual(shape(song), [
-    { lane: 13, type: 'pull', time: 0 }, // button 14
-    { lane: 20, type: 'push', time: 500 }, // button 21, in a chord…
-    { lane: 25, type: 'push', time: 500 }, // …with button 26, same beat
-    { lane: 29, type: 'push', time: 1000 }, // bare 30 defaults to push
+    { lane: 13, type: Direction.Pull, time: 0 }, // button 14
+    { lane: 20, type: Direction.Push, time: 500 }, // button 21, in a chord…
+    { lane: 25, type: Direction.Push, time: 500 }, // …with button 26, same beat
+    { lane: 29, type: Direction.Push, time: 1000 }, // bare 30 defaults to push
   ])
 })
 

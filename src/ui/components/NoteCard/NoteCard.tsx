@@ -1,5 +1,6 @@
-import type { GameNote } from '#engine/useGameEngine'
+import { NoteState, type GameNote } from '#engine/useGameEngine'
 import { LANE_NOTES } from '#instrument/instrument'
+import { LabelMode } from '#components/Keyboard/Keyboard'
 import './NoteCard.css'
 
 interface NoteCardProps {
@@ -7,19 +8,41 @@ interface NoteCardProps {
   x: number // lane centre, 0…1
   color: string
   progress: number
+  // What the card shows. Mode-sensitive, matching Keyboard: keyboard mode shows
+  // the key to press (uppercase = pull/Shift+key, lowercase = push/key alone)
+  // and no arrow — the case alone says the direction, so an arrow would be
+  // redundant (and there's no arrow key to point at anyway). Mic mode shows the
+  // note name plus its direction arrow, unchanged.
+  labelMode: LabelMode
+  keyLabel: string
 }
 
 // A single falling note card, positioned at its lane centre (`x`) and vertical
 // `progress` (0 = top of the fall zone, 1 = the hit line). Its `--w`/`--h` sizing
 // vars are inherited from the enclosing .playfield.
-export default function NoteCard({ note, x, color, progress }: NoteCardProps) {
+export default function NoteCard({
+  note,
+  x,
+  color,
+  progress,
+  labelMode,
+  keyLabel,
+}: NoteCardProps) {
   const noteName = LANE_NOTES[note.lane][note.type].name
+  const label =
+    labelMode === LabelMode.Key
+      ? note.type === 'pull'
+        ? keyLabel
+        : keyLabel.toLowerCase()
+      : noteName
   const cls =
     'note note--' +
     note.type +
-    (note.state === 'holding' ? ' note--holding' : '') +
-    (note.state === 'hit' ? ' note--hit note--' + (note.rating ?? '') : '') +
-    (note.state === 'miss' ? ' note--miss' : '')
+    (note.state === NoteState.Holding ? ' note--holding' : '') +
+    (note.state === NoteState.Hit
+      ? ' note--hit note--' + (note.rating ?? '')
+      : '') +
+    (note.state === NoteState.Miss ? ' note--miss' : '')
   return (
     <div
       className={cls}
@@ -33,10 +56,12 @@ export default function NoteCard({ note, x, color, progress }: NoteCardProps) {
         } as React.CSSProperties
       }
     >
-      <span className="note-arrow" aria-hidden="true">
-        {note.type === 'pull' ? '▲' : '▼'}
-      </span>
-      <span className="note-name">{noteName}</span>
+      {labelMode === LabelMode.Number && (
+        <span className="note-arrow" aria-hidden="true">
+          {note.type === 'pull' ? '▲' : '▼'}
+        </span>
+      )}
+      <span className="note-name">{label}</span>
     </div>
   )
 }

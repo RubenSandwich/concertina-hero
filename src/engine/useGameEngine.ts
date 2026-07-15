@@ -11,6 +11,7 @@ import {
   type GameResult,
 } from './core.ts'
 export type { GameNote, GameResult } from './core.ts'
+export { NoteState } from './core.ts'
 
 interface GameOptions {
   speed?: number

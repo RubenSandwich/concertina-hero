@@ -29,7 +29,7 @@ export function minInstrumentFor(buttons: number): InstrumentSize {
 // How one anglo's buttons are arranged. A "hand" is half the keyboard; when split
 // the right hand mirrors the left across the bellows divider. Rows stack
 // vertically, and a staggered layout offsets alternate rows by half a column.
-export interface HandGeom {
+export interface HandGeometry {
   hands: number // 1 (a centred single row) or 2 (left + right hands)
   cols: number // buttons per hand, per row
   rows: number // rows per hand
@@ -38,11 +38,21 @@ export interface HandGeom {
   stagger: boolean // offset alternate rows by half a column
 }
 
+// Which side of the keyboard a button belongs to. 'single' means the layout
+// isn't split into two hands at all (e.g. the 7-button's one centred row) —
+// see HandGeometry.split.
+export const Hand = {
+  Left: 'left',
+  Right: 'right',
+  Single: 'single',
+} as const
+export type Hand = (typeof Hand)[keyof typeof Hand]
+
 // One button: its identity, where it sits, how it is played, and what it sounds.
 export interface ButtonSpec {
   lane: number // 0…N-1, === number − 1
   number: number // 1…N — shown in mic mode, and the index into the key map
-  hand: 'left' | 'right' | 'center'
+  hand: Hand
   row: number // 0 = top row
   col: number // 0…cols-1, counted from the hand's OUTER edge (drives colour + mirror)
   x: number // 0…1, the lane's horizontal centre across the playfield
@@ -55,7 +65,7 @@ export interface ButtonSpec {
 
 export interface InstrumentLayout {
   size: InstrumentSize
-  geom: HandGeom
+  geometry: HandGeometry
   buttons: ButtonSpec[]
 }
 
@@ -275,41 +285,41 @@ const NOTES_30: LaneNote[] = [
 // left hand fills [0, handW]; the right hand is its mirror across the divider, so
 // a staggered row that shifts right on the left shifts left on the right.
 function laneX(
-  geom: HandGeom,
-  hand: 'left' | 'right' | 'center',
+  geometry: HandGeometry,
+  hand: Hand,
   col: number,
   row: number,
 ): number {
-  const handW = geom.split ? 0.5 : 1
-  const unit = handW / geom.cols
-  const off = geom.stagger ? (row % 2 === 1 ? 0.75 : 0.25) : 0.5
+  const handW = geometry.split ? 0.5 : 1
+  const unit = handW / geometry.cols
+  const off = geometry.stagger ? (row % 2 === 1 ? 0.75 : 0.25) : 0.5
   const local = unit * (col + off) // distance inward from the hand's outer edge
-  return hand === 'right' ? 1 - local : local
+  return hand === Hand.Right ? 1 - local : local
 }
 
 // Turn a geometry + note map into the flat button list. Buttons are placed, then
 // numbered by reading the screen top-to-bottom and left-to-right.
 function buildButtons(
-  geom: HandGeom,
+  geometry: HandGeometry,
   notes: LaneNote[],
   palette: string[],
 ): ButtonSpec[] {
   interface Raw {
-    hand: 'left' | 'right' | 'center'
+    hand: Hand
     row: number
     col: number
     x: number
   }
   const raws: Raw[] = []
-  for (let row = 0; row < geom.rows; row++) {
-    for (let h = 0; h < geom.hands; h++) {
-      const hand: 'left' | 'right' | 'center' = !geom.split
-        ? 'center'
+  for (let row = 0; row < geometry.rows; row++) {
+    for (let h = 0; h < geometry.hands; h++) {
+      const hand: Hand = !geometry.split
+        ? Hand.Single
         : h === 0
-          ? 'left'
-          : 'right'
-      for (let col = 0; col < geom.cols; col++) {
-        raws.push({ hand, row, col, x: laneX(geom, hand, col, row) })
+          ? Hand.Left
+          : Hand.Right
+      for (let col = 0; col < geometry.cols; col++) {
+        raws.push({ hand, row, col, x: laneX(geometry, hand, col, row) })
       }
     }
   }
@@ -331,11 +341,15 @@ function buildButtons(
 
 function makeLayout(
   size: InstrumentSize,
-  geom: HandGeom,
+  geometry: HandGeometry,
   notes: LaneNote[],
   palette: string[],
 ): InstrumentLayout {
-  return { size, geom, buttons: buildButtons(geom, notes, palette) }
+  return {
+    size,
+    geometry,
+    buttons: buildButtons(geometry, notes, palette),
+  }
 }
 
 export const LAYOUTS: Record<InstrumentSize, InstrumentLayout> = {

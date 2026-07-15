@@ -19,8 +19,19 @@ import Results from '#screens/Results/Results'
 import ScreenGuard from '#modals/ScreenGuard/ScreenGuard'
 import VersionMismatchModal from '#modals/VersionMismatch/VersionMismatch'
 
-type Screen = 'start' | 'game' | 'results'
-type TransitionDirection = 'forward' | 'backward'
+const Screen = {
+  Start: 'start',
+  Game: 'game',
+  Results: 'results',
+} as const
+type Screen = (typeof Screen)[keyof typeof Screen]
+
+const TransitionDirection = {
+  Forward: 'forward',
+  Backward: 'backward',
+} as const
+type TransitionDirection =
+  (typeof TransitionDirection)[keyof typeof TransitionDirection]
 
 // Run a screen change inside a directional View Transition. `direction` is
 // 'forward' (new screen slides in from the right) or 'backward' (from the left).
@@ -35,7 +46,7 @@ function transition(direction: TransitionDirection, update: () => void) {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>('start') // 'start' | 'game' | 'results'
+  const [screen, setScreen] = useState<Screen>(Screen.Start)
   const [songs, setSongs] = useState<Song[]>(() => getSongs()) // built-in + saved songs
   const [songIndex, setSongIndex] = useState(0)
   const [speed, setSpeed] = useState(1) // practice playback multiplier
@@ -94,7 +105,7 @@ export default function App() {
     spd = speed,
     wait = waitForNote,
     hide = hideFeedback,
-    direction: TransitionDirection = 'forward',
+    direction: TransitionDirection = TransitionDirection.Forward,
   ) => {
     transition(direction, () => {
       setSongIndex(index)
@@ -103,25 +114,26 @@ export default function App() {
       setHideFeedback(hide)
       setRunId((n) => n + 1)
       setResult(null)
-      setScreen('game')
+      setScreen(Screen.Game)
     })
   }
 
   const handleFinish = (r: GameResult) => {
-    transition('forward', () => {
+    transition(TransitionDirection.Forward, () => {
       setResult(r)
-      setScreen('results')
+      setScreen(Screen.Results)
     })
   }
 
-  const goToMenu = () => transition('backward', () => setScreen('start'))
+  const goToMenu = () =>
+    transition(TransitionDirection.Backward, () => setScreen(Screen.Start))
 
   return (
     <div className="app paper-grain">
       <div className="app-bg" aria-hidden="true" />
 
       <div className="screen-stage">
-        {screen === 'start' && (
+        {screen === Screen.Start && (
           <Start
             songs={songs}
             onStart={startGame}
@@ -135,7 +147,7 @@ export default function App() {
           />
         )}
 
-        {screen === 'game' && (
+        {screen === Screen.Game && (
           <Game
             key={runId}
             song={song}
@@ -148,13 +160,19 @@ export default function App() {
           />
         )}
 
-        {screen === 'results' && result && (
+        {screen === Screen.Results && result && (
           <Results
             song={song}
             result={result}
             speed={speed}
             onReplay={() =>
-              startGame(songIndex, speed, waitForNote, hideFeedback, 'backward')
+              startGame(
+                songIndex,
+                speed,
+                waitForNote,
+                hideFeedback,
+                TransitionDirection.Backward,
+              )
             }
             onMenu={goToMenu}
           />

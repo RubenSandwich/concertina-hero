@@ -5,7 +5,12 @@ import type { Direction } from '../instrument/instrument'
 import { PERFECT_WINDOW, GOOD_WINDOW } from './timing.ts'
 
 // The three hit ratings that score; a whiffed note is a 'miss'.
-export type Rating = 'perfect' | 'good' | 'ok'
+export const Rating = {
+  Perfect: 'perfect',
+  Good: 'good',
+  Ok: 'ok',
+} as const
+export type Rating = (typeof Rating)[keyof typeof Rating]
 export type Judgement = Rating | 'miss'
 
 // Grade a press by how far it landed from the note's beat. `scale` widens the
@@ -13,9 +18,9 @@ export type Judgement = Rating | 'miss'
 // key going down.
 export function gradeFor(offsetMs: number, scale = 1): Rating {
   const offset = Math.abs(offsetMs)
-  if (offset <= PERFECT_WINDOW * scale) return 'perfect'
-  if (offset <= GOOD_WINDOW * scale) return 'good'
-  return 'ok'
+  if (offset <= PERFECT_WINDOW * scale) return Rating.Perfect
+  if (offset <= GOOD_WINDOW * scale) return Rating.Good
+  return Rating.Ok
 }
 
 // Points a note is worth at each rating, before the hold scaling and combo bonus.
