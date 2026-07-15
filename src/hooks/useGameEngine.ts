@@ -32,7 +32,12 @@ interface GameOptions {
 //   onFinish    - called with the result when the song ends
 export function useGameEngine(
   song: Song,
-  { speed = 1, micEnabled = false, waitForNote = false, onFinish }: GameOptions = {},
+  {
+    speed = 1,
+    micEnabled = false,
+    waitForNote = false,
+    onFinish,
+  }: GameOptions = {},
 ) {
   // `elapsed` mirrors the engine's clock. It is negative during the countdown
   // and drives every re-render (once per animation frame the engine actually
@@ -55,8 +60,14 @@ export function useGameEngine(
   const pressRef = useRef<(lane: number, pull: boolean) => void>(() => {})
   const releaseRef = useRef<(lane: number) => void>(() => {})
   const togglePauseRef = useRef<() => void>(() => {})
-  const pressLane = useCallback((lane: number, pull: boolean) => pressRef.current(lane, pull), [])
-  const releaseLane = useCallback((lane: number) => releaseRef.current(lane), [])
+  const pressLane = useCallback(
+    (lane: number, pull: boolean) => pressRef.current(lane, pull),
+    [],
+  )
+  const releaseLane = useCallback(
+    (lane: number) => releaseRef.current(lane),
+    [],
+  )
   const togglePause = useCallback(() => togglePauseRef.current(), [])
 
   useEffect(() => {
@@ -82,14 +93,22 @@ export function useGameEngine(
     // over-estimated past a frozen note's window either.
     const MAX_EXTRAPOLATION_MS = 50
     const gameTimeNow = () => {
-      const drift = Math.min(performance.now() - lastRealRef.current, MAX_EXTRAPOLATION_MS)
+      const drift = Math.min(
+        performance.now() - lastRealRef.current,
+        MAX_EXTRAPOLATION_MS,
+      )
       return stateRef.current.clock + drift * speed
     }
     const doPress = (lane: number, pull: boolean) => {
       if (pausedRef.current) return
       resumeAudio()
       playNote(lane, pull ? 'pull' : 'push')
-      pendingRef.current.push({ kind: 'press', lane, pull, gameTime: gameTimeNow() })
+      pendingRef.current.push({
+        kind: 'press',
+        lane,
+        pull,
+        gameTime: gameTimeNow(),
+      })
     }
     const doRelease = (lane: number) => {
       pendingRef.current.push({ kind: 'release', lane })

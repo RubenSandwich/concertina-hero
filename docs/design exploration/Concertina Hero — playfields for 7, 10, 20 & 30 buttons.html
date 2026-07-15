@@ -25,7 +25,10 @@
             let o = Promise.resolve()
             function i(f) {
               const a = new Event('vite:preloadError', { cancelable: !0 })
-              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+              if (
+                ((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)
+              )
+                throw f
             }
             return o.then((f) => {
               for (const a of f || []) a.status === 'rejected' && i(a.reason)
@@ -46,7 +49,8 @@
           return typeof n == 'string' && D.includes(n)
         }
         function M(e) {
-          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          if (window === top || (e.type === 'auxclick' && e.button !== 1))
+            return
           const t = e.composedPath ? e.composedPath() : [e.target]
           let n = null
           for (let f = 0; f < t.length; f++) {
@@ -57,27 +61,34 @@
             }
           }
           if (
-            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+            (!n &&
+              e.target &&
+              e.target.closest &&
+              (n = e.target.closest('a[href],area[href]')),
+            !n)
           )
             return
           const u = n.getAttribute('href')
           if (!u) return
           let o, i
           try {
-            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+            ;((o = new URL(u, document.baseURI)),
+              (i = new URL(document.baseURI).origin))
           } catch {
             return
           }
           ;(o.protocol === 'http:' || o.protocol === 'https:') &&
             o.origin !== i &&
-            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+            (e.preventDefault(),
+            parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
         }
         const L = {}
         function y(e) {
           if (window === top) return
           const t = Date.now()
           t - (L[e] || 0) < 500 ||
-            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+            ((L[e] = t),
+            parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
         }
         const F = 2e3,
           T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
@@ -86,10 +97,12 @@
           e.isTrusted && (k = Date.now())
         }
         function z() {
-          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+          ;(addEventListener('click', M, !0),
+            addEventListener('auxclick', M, !0))
         }
         function W() {
-          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          for (let e = 0; e < T.length; e++)
+            addEventListener(T[e], B, { capture: !0, passive: !0 })
           ;(addEventListener(
             'scroll',
             (e) => {
@@ -113,7 +126,9 @@
             ))
         }
         function x(e, t, n) {
-          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          const u = [...t.values()].filter((o) =>
+            o.targets.some((i) => i.startsWith(e + '.')),
+          )
           return {
             wrap(o, i) {
               const f = `${e}.${o}`,
@@ -157,7 +172,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                              return (
+                                n({ id: h.id, scope: e, leg: 'returns' }),
+                                c
+                              )
                             }
                         }
                         return c
@@ -170,7 +188,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                              return (
+                                n({ id: h.id, scope: e, leg: 'throws' }),
+                                Promise.reject(c)
+                              )
                             }
                         }
                         return Promise.reject(c)
@@ -247,7 +268,9 @@
             else if (e === t) return !0
           return !1
         }
-        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+        const w = Object.freeze({
+            ...(window.__FRAME_PREAMBLE?.capabilities ?? {}),
+          }),
           E = window.__FRAME_PREAMBLE?.transforms,
           C = /^[\w.-]+\.js$/,
           V = /^[a-z][a-z0-9_-]{0,63}$/
@@ -277,7 +300,8 @@
           const t = document.documentElement
           e === 'light' || e === 'dark'
             ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
-            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+            : R &&
+              (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
         }
         const _ = new Map()
         function Q(e, t) {
@@ -319,7 +343,10 @@
             _.set(s, d)
             const m = new Proxy(d.impl, {
               get: (c, l) => {
-                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                if (
+                  typeof l == 'string' &&
+                  !(l === 'then' || l === 'toJSON' || l === 'valueOf')
+                )
                   return l === 'toString'
                     ? Object.prototype.toString
                     : (...h) => {
@@ -327,7 +354,12 @@
                         return p
                           ? p(...h)
                           : new Promise((b, S) => {
-                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                              d.queue.push({
+                                method: l,
+                                args: h,
+                                resolve: b,
+                                reject: S,
+                              })
                             })
                       }
               },
@@ -355,7 +387,8 @@
                 clearTimeout(o),
                 u?.()))
           }
-          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          ;(addEventListener('message', i),
+            parent.postMessage({ __frame_connect: !0 }, '*'))
           const f = new Promise((s) => {
               ;((u = s),
                 (o = setTimeout(() => {
@@ -365,7 +398,9 @@
             a =
               document.readyState === 'loading'
                 ? new Promise((s) =>
-                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                    document.addEventListener('DOMContentLoaded', () => s(), {
+                      once: !0,
+                    }),
                   )
                 : Promise.resolve()
           f.then(async () => {
@@ -373,14 +408,17 @@
               for (const r of _.keys())
                 O(r, {
                   code: 'not_granted',
-                  message: 'frame initialization did not arrive - capability unavailable',
+                  message:
+                    'frame initialization did not arrive - capability unavailable',
                 })
               return
             }
             N(n.theme)
             const s = g
             addEventListener('message', (r) => {
-              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+              r.source !== parent ||
+                r.origin !== s ||
+                (q(r.data) && N(r.data.__frame_theme.theme))
             })
             const d = (r) => U(() => import('/_runtime/' + r), void 0),
               m = Object.keys(n.capabilities ?? {})
@@ -491,8 +529,8 @@
         --accent: #b5461f;
         --red-ink: #b71c1c;
         --display:
-          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
-          system-ui, sans-serif;
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN',
+          'Quicksand', 'Trebuchet MS', system-ui, sans-serif;
         --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
         --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
@@ -705,7 +743,10 @@
         left: 50%;
         width: 3px;
         transform: translateX(-50%);
-        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        background: repeating-linear-gradient(
+          var(--ink) 0 7px,
+          transparent 7px 14px
+        );
         opacity: 0.4;
         z-index: 8;
       }
@@ -836,7 +877,8 @@
       }
       .btn .half.pull {
         background: color-mix(in srgb, #fff 55%, #d8d1bf);
-        border-bottom: 1.2px solid color-mix(in srgb, var(--ink) 40%, transparent);
+        border-bottom: 1.2px solid
+          color-mix(in srgb, var(--ink) 40%, transparent);
       }
       .btn .half.push {
         background: #ddd6c4;
@@ -918,9 +960,9 @@
         <p class="eyebrow">Concertina Hero · playfields by size</p>
         <h1>One game, four instruments</h1>
         <p class="lede">
-          The same falling-note screen, scaled from the seven-button toy up to a thirty-button
-          anglo. Each band is one beat; a note's height is how long to hold it. Below, one mockup
-          per size.
+          The same falling-note screen, scaled from the seven-button toy up to a
+          thirty-button anglo. Each band is one beat; a note's height is how
+          long to hold it. Below, one mockup per size.
         </p>
       </header>
 
@@ -929,14 +971,16 @@
       <section>
         <h2>7-button toy <span class="tag">1 row · no split</span></h2>
         <p>
-          The original. Seven buttons in a single line across the middle — no hands, no bellows
-          divider — so every note falls in its own lane. Rainbow colour by button, as today.
+          The original. Seven buttons in a single line across the middle — no
+          hands, no bellows divider — so every note falls in its own lane.
+          Rainbow colour by button, as today.
         </p>
         <div class="stage">
           <div class="ghud">
             <span class="quit">‹ Quit</span>
             <div class="np">
-              <span class="np-label">Now Playing</span><span class="np-name">Twinkle, Twinkle</span>
+              <span class="np-label">Now Playing</span
+              ><span class="np-name">Twinkle, Twinkle</span>
             </div>
             <div class="stats">
               <div class="stat"><span>Score</span><b>1,240</b></div>
@@ -946,7 +990,9 @@
           </div>
           <div class="field" id="f7" style="height: 440px"></div>
         </div>
-        <p class="caption"><b>7 lanes.</b> One button per lane; push solid, pull striped.</p>
+        <p class="caption">
+          <b>7 lanes.</b> One button per lane; push solid, pull striped.
+        </p>
       </section>
 
       <hr class="rule" />
@@ -954,14 +1000,16 @@
       <section>
         <h2>10-button anglo <span class="tag">2 hands · 1 row each</span></h2>
         <p>
-          Two hands split by the bellows, five buttons each in a single row. Left hand runs cool,
-          right hand warm, so a note's colour already tells you which hand before you read it.
+          Two hands split by the bellows, five buttons each in a single row.
+          Left hand runs cool, right hand warm, so a note's colour already tells
+          you which hand before you read it.
         </p>
         <div class="stage">
           <div class="ghud">
             <span class="quit">‹ Quit</span>
             <div class="np">
-              <span class="np-label">Now Playing</span><span class="np-name">Row Your Boat</span>
+              <span class="np-label">Now Playing</span
+              ><span class="np-name">Row Your Boat</span>
             </div>
             <div class="stats">
               <div class="stat"><span>Score</span><b>2,610</b></div>
@@ -972,25 +1020,30 @@
           <div class="field" id="f10" style="height: 460px"></div>
         </div>
         <p class="caption">
-          <b>10 lanes</b> (5 per hand). No rows to stack yet, so every lane holds one button.
+          <b>10 lanes</b> (5 per hand). No rows to stack yet, so every lane
+          holds one button.
         </p>
       </section>
 
       <hr class="rule" />
 
       <section>
-        <h2>20-button anglo <span class="tag">2 hands · 2 rows staggered</span></h2>
+        <h2>
+          20-button anglo <span class="tag">2 hands · 2 rows staggered</span>
+        </h2>
         <p>
-          Two rows per hand, but offset from each other — the bottom row nudged half a column
-          across, the way the two rows actually sit on the instrument. Because they're staggered
-          rather than stacked, every button gets its own lane; nothing is shared. Shade still marks
-          the row: dark top, light bottom.
+          Two rows per hand, but offset from each other — the bottom row nudged
+          half a column across, the way the two rows actually sit on the
+          instrument. Because they're staggered rather than stacked, every
+          button gets its own lane; nothing is shared. Shade still marks the
+          row: dark top, light bottom.
         </p>
         <div class="stage">
           <div class="ghud">
             <span class="quit">‹ Quit</span>
             <div class="np">
-              <span class="np-label">Now Playing</span><span class="np-name">The Kesh Jig</span>
+              <span class="np-label">Now Playing</span
+              ><span class="np-name">The Kesh Jig</span>
             </div>
             <div class="stats">
               <div class="stat"><span>Score</span><b>4,180</b></div>
@@ -1001,7 +1054,8 @@
           <div class="field" id="f20" style="height: 490px"></div>
         </div>
         <p class="caption">
-          <b>20 lanes</b> (10 per hand): staggered rows, so each button keeps its own lane.
+          <b>20 lanes</b> (10 per hand): staggered rows, so each button keeps
+          its own lane.
         </p>
       </section>
 
@@ -1010,15 +1064,17 @@
       <section>
         <h2>30-button anglo <span class="tag">2 hands · 3 rows</span></h2>
         <p>
-          The full instrument. Top and bottom rows stay stacked in their columns; the middle row is
-          offset by half and nests in the gaps, taking its own five lanes between the columns.
-          Fifteen buttons a hand, ten lanes.
+          The full instrument. Top and bottom rows stay stacked in their
+          columns; the middle row is offset by half and nests in the gaps,
+          taking its own five lanes between the columns. Fifteen buttons a hand,
+          ten lanes.
         </p>
         <div class="stage">
           <div class="ghud">
             <span class="quit">‹ Quit</span>
             <div class="np">
-              <span class="np-label">Now Playing</span><span class="np-name">The Kesh Jig</span>
+              <span class="np-label">Now Playing</span
+              ><span class="np-name">The Kesh Jig</span>
             </div>
             <div class="stats">
               <div class="stat"><span>Score</span><b>4,820</b></div>
@@ -1029,8 +1085,8 @@
           <div class="field" id="f30" style="height: 520px"></div>
         </div>
         <p class="caption">
-          <b>20 lanes</b> (10 per hand): 5 column lanes for the stacked pairs, 5 offset lanes for
-          the middle row.
+          <b>20 lanes</b> (10 per hand): 5 column lanes for the stacked pairs, 5
+          offset lanes for the middle row.
         </p>
       </section>
 
@@ -1039,39 +1095,47 @@
       <section>
         <h2>Held notes <span class="tag">how a hold plays</span></h2>
         <p>
-          A note's height already is its length — a long note is a tall bar. Playing one runs in
-          three beats of motion: press when the head reaches the line, keep the key down as the bar
-          feeds through it, release as the tail clears. The button stays lit the whole way, and
-          points build for the fraction you actually hold.
+          A note's height already is its length — a long note is a tall bar.
+          Playing one runs in three beats of motion: press when the head reaches
+          the line, keep the key down as the bar feeds through it, release as
+          the tail clears. The button stays lit the whole way, and points build
+          for the fraction you actually hold.
         </p>
         <div class="holds">
           <div class="holdframe">
             <div class="lbl"><span class="n">1</span> Approach</div>
-            <div class="stage"><div class="field" id="hA" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="hA" style="height: 300px"></div>
+            </div>
             <p class="cap">
-              The tall bar is the hold. Its rounded head is the moment to press — three beats long
-              here.
+              The tall bar is the hold. Its rounded head is the moment to press
+              — three beats long here.
             </p>
           </div>
           <div class="holdframe">
             <div class="lbl"><span class="n">2</span> Hold</div>
-            <div class="stage"><div class="field" id="hB" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="hB" style="height: 300px"></div>
+            </div>
             <p class="cap">
-              Head past the line, key down. The bar feeds through and shrinks; the button glows as
-              points build.
+              Head past the line, key down. The bar feeds through and shrinks;
+              the button glows as points build.
             </p>
           </div>
           <div class="holdframe">
             <div class="lbl"><span class="n">3</span> Release</div>
-            <div class="stage"><div class="field" id="hC" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="hC" style="height: 300px"></div>
+            </div>
             <p class="cap">
-              The tail reaches the line — let go. A clean full hold banks the note's full value.
+              The tail reaches the line — let go. A clean full hold banks the
+              note's full value.
             </p>
           </div>
         </div>
         <p class="caption">
-          Let go early and the bar stops feeding: you keep the points earned so far, but not the
-          rest. Same on every instrument size.
+          Let go early and the bar stops feeding: you keep the points earned so
+          far, but not the rest. Same on every instrument size.
         </p>
       </section>
     </div>
@@ -1154,9 +1218,15 @@
             : s
         }
         const noteNames = (cfg, hand, row, c) =>
-          cfg.palette === 'rainbow' ? NOTES7[c] : NOTES3[hand][rowMap[cfg.R][row]][c]
+          cfg.palette === 'rainbow'
+            ? NOTES7[c]
+            : NOTES3[hand][rowMap[cfg.R][row]][c]
         const hueVar = (cfg, hand, c) =>
-          cfg.palette === 'rainbow' ? RAINBOW[c] : hand === 0 ? COOL[c] : WARM[c]
+          cfg.palette === 'rainbow'
+            ? RAINBOW[c]
+            : hand === 0
+              ? COOL[c]
+              : WARM[c]
 
         function handGeom(handIdx, W, H, cfg) {
           const { R, cols, bs: BS, colGap, rowGapY, kbH, padY } = cfg
@@ -1169,7 +1239,8 @@
           const kbTop = H - kbH,
             rowsSpan = (R - 1) * rowGapY,
             startY = kbTop + (kbH - (rowsSpan + BS)) / 2 + BS / 2
-          const bx = (row, c) => xOff + originX + c * colGap + (row === 1 ? colGap / 2 : 0)
+          const bx = (row, c) =>
+            xOff + originX + c * colGap + (row === 1 ? colGap / 2 : 0)
           const by = (row, c) => startY + row * rowGapY // flat rows — clean column alignment
           const laneX = (c) => xOff + originX + c * colGap
           const nx = (row, c, split) => {
@@ -1239,7 +1310,8 @@
               b.style.top = y - g.BS / 2 + 'px'
               b.style.width = g.BS + 'px'
               b.style.height = g.BS + 'px'
-              if (on) b.style.setProperty('--hue', `var(${hueVar(cfg, hand, c)})`)
+              if (on)
+                b.style.setProperty('--hue', `var(${hueVar(cfg, hand, c)})`)
               const [pull, push] = noteNames(cfg, hand, row, c),
                 fs = g.BS * 0.3 + 'px'
               const tp = on && on.dir === 'pull',
@@ -1287,7 +1359,11 @@
           })
         }
         const activeMapFor = (list) =>
-          new Map((list || []).filter((n) => n.d < 0.32).map((n) => [n.row + '-' + n.c, n]))
+          new Map(
+            (list || [])
+              .filter((n) => n.d < 0.32)
+              .map((n) => [n.row + '-' + n.c, n]),
+          )
 
         // one-lane zoom showing a held note at a stage: 'approach' | 'hold' | 'release'
         function renderHold(id, stage) {
@@ -1405,7 +1481,15 @@
             layer.style.inset = '0'
             field.appendChild(layer)
             const hk = hand === 'single' ? 'left' : hand
-            const g = drawKeyboard(layer, idx, hk, W, H, cfg, activeMapFor(list))
+            const g = drawKeyboard(
+              layer,
+              idx,
+              hk,
+              W,
+              H,
+              cfg,
+              activeMapFor(list),
+            )
             place(field, idx, hk, list, g, strikeY, sec, cfg)
           })
           if (cfg.hands === 2) {

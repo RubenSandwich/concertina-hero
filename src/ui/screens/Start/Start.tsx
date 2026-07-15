@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { INSTRUMENT_SIZES, minInstrumentFor, type InstrumentSize } from '#data/layout'
+import {
+  INSTRUMENT_SIZES,
+  minInstrumentFor,
+  type InstrumentSize,
+} from '#data/layout'
 import { getActivePreset, type Preset } from '#data/presets'
 import { DIFF_CLASS, type Song } from '#data/songs'
 import Accordion from '#components/Accordion/Accordion'
@@ -26,11 +30,20 @@ const INSTRUMENTS = INSTRUMENT_SIZES.map((size) => ({
 
 // Which collapsible sections are open. Held in App so it survives the Start
 // screen unmounting during a game and restores on return.
-export type StartSections = { howto: boolean; songs: boolean; settings: boolean }
+export type StartSections = {
+  howto: boolean
+  songs: boolean
+  settings: boolean
+}
 
 interface StartProps {
   songs: Song[]
-  onStart: (index: number, speed: number, waitForNote: boolean, hideFeedback: boolean) => void
+  onStart: (
+    index: number,
+    speed: number,
+    waitForNote: boolean,
+    hideFeedback: boolean,
+  ) => void
   onSongsChange: () => void
   micEnabled: boolean
   onMicChange: (enabled: boolean) => void
@@ -51,7 +64,9 @@ export default function Start({
   sections,
   onSectionToggle,
 }: StartProps) {
-  const [selectedId, setSelectedId] = useState<string | undefined>(() => songs[0]?.id)
+  const [selectedId, setSelectedId] = useState<string | undefined>(
+    () => songs[0]?.id,
+  )
   const [speed, setSpeed] = useState(1)
   const [waitForNote, setWaitForNote] = useState(false)
   const [hideFeedback, setHideFeedback] = useState(false)
@@ -59,7 +74,9 @@ export default function Start({
   const [micError, setMicError] = useState('')
   const [showSongLibrary, setShowSongLibrary] = useState(false)
   const [showPresetPicker, setShowPresetPicker] = useState(false)
-  const [activePreset, setActivePreset] = useState<Preset>(() => getActivePreset())
+  const [activePreset, setActivePreset] = useState<Preset>(() =>
+    getActivePreset(),
+  )
 
   // A song needs more buttons than the selected instrument has.
   const isLocked = (song: Song) => song.requiredButtons > instrumentSize
@@ -118,10 +135,16 @@ export default function Start({
   return (
     <div className="start-screen">
       <h1 className="title">
-        <img className="title__logo" src={`${import.meta.env.BASE_URL}concertina.svg`} alt="" />
+        <img
+          className="title__logo"
+          src={`${import.meta.env.BASE_URL}concertina.svg`}
+          alt=""
+        />
         Concertina&nbsp;Hero
       </h1>
-      <p className="subtitle">A squeezebox rhythm game — notes fall onto the keyboard!</p>
+      <p className="subtitle">
+        A squeezebox rhythm game — notes fall onto the keyboard!
+      </p>
 
       <Accordion
         variant="howto"
@@ -139,7 +162,10 @@ export default function Start({
         heading={
           <>
             Song
-            <span className="accordion__current" style={{ '--card': songs[selectedIndex].color }}>
+            <span
+              className="accordion__current"
+              style={{ '--card': songs[selectedIndex].color }}
+            >
               {songs[selectedIndex].name}
             </span>
           </>
@@ -164,10 +190,14 @@ export default function Start({
                 <span className="song-card__name">{song.name}</span>
                 <span className="song-card__blurb">{song.blurb}</span>
                 <span className="song-card__meta">
-                  <span className={'diff ' + DIFF_CLASS[song.difficulty]}>{song.difficulty}</span>
+                  <span className={'diff ' + DIFF_CLASS[song.difficulty]}>
+                    {song.difficulty}
+                  </span>
                   <span className="song-card__bpm">{song.bpm} BPM</span>
                   <span
-                    className={'song-card__supports' + (locked ? ' is-blocked' : '')}
+                    className={
+                      'song-card__supports' + (locked ? ' is-blocked' : '')
+                    }
                     title={`Plays on the ${minSize}-button and any larger concertina`}
                   >
                     <img
@@ -182,7 +212,10 @@ export default function Start({
             )
           })}
         </div>
-        <button className="song-manage-btn" onClick={() => setShowSongLibrary(true)}>
+        <button
+          className="song-manage-btn"
+          onClick={() => setShowSongLibrary(true)}
+        >
           🎵 Add / edit songs
         </button>
       </Accordion>
@@ -197,10 +230,16 @@ export default function Start({
           <div className="practice-row__info">
             <span className="practice-row__label">⏩ Speed</span>
             <span className="practice-row__desc">
-              Slow the notes down while you learn, then work back up to full speed.
+              Slow the notes down while you learn, then work back up to full
+              speed.
             </span>
           </div>
-          <SegmentedControl label="Speed" options={SPEEDS} value={speed} onChange={setSpeed} />
+          <SegmentedControl
+            label="Speed"
+            options={SPEEDS}
+            value={speed}
+            onChange={setSpeed}
+          />
         </div>
 
         <div className="practice-row practice-row--divider practice-row--wait">
@@ -226,7 +265,8 @@ export default function Start({
               🙈 Hide feedback
             </span>
             <span className="practice-row__desc" id="hide-desc">
-              Play without the live score or hit popups — your results still count.
+              Play without the live score or hit popups — your results still
+              count.
             </span>
           </div>
           <Switch
@@ -241,8 +281,8 @@ export default function Start({
           <div className="practice-row__info">
             <span className="practice-row__label">🎛️ Play style</span>
             <span className="practice-row__desc">
-              Press keys, or switch to the mic to play your real concertina — the keyboard stays a
-              fallback. Mic needs permission.
+              Press keys, or switch to the mic to play your real concertina —
+              the keyboard stays a fallback. Mic needs permission.
             </span>
             {micError && <span className="practice-row__err">{micError}</span>}
           </div>
@@ -287,16 +327,25 @@ export default function Start({
             </span>
           </div>
           <div className="note-freq-current">
-            <span className="note-freq-current__caption">Preset · {instrumentSize}-button</span>
+            <span className="note-freq-current__caption">
+              Preset · {instrumentSize}-button
+            </span>
             <span className="note-freq-current__name">{activePreset.name}</span>
           </div>
-          <button className="note-btn" onClick={() => setShowPresetPicker(true)}>
+          <button
+            className="note-btn"
+            onClick={() => setShowPresetPicker(true)}
+          >
             Select preset
           </button>
         </div>
       </Accordion>
 
-      <button className="btn btn--primary btn--big" onClick={handleStart} disabled={selectedLocked}>
+      <button
+        className="btn btn--primary btn--big"
+        onClick={handleStart}
+        disabled={selectedLocked}
+      >
         ▶ Play {songs[selectedIndex].name}
       </button>
 

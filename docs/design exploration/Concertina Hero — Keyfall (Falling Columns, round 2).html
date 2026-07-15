@@ -25,7 +25,10 @@
             let o = Promise.resolve()
             function i(f) {
               const a = new Event('vite:preloadError', { cancelable: !0 })
-              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+              if (
+                ((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)
+              )
+                throw f
             }
             return o.then((f) => {
               for (const a of f || []) a.status === 'rejected' && i(a.reason)
@@ -46,7 +49,8 @@
           return typeof n == 'string' && D.includes(n)
         }
         function M(e) {
-          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          if (window === top || (e.type === 'auxclick' && e.button !== 1))
+            return
           const t = e.composedPath ? e.composedPath() : [e.target]
           let n = null
           for (let f = 0; f < t.length; f++) {
@@ -57,27 +61,34 @@
             }
           }
           if (
-            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+            (!n &&
+              e.target &&
+              e.target.closest &&
+              (n = e.target.closest('a[href],area[href]')),
+            !n)
           )
             return
           const u = n.getAttribute('href')
           if (!u) return
           let o, i
           try {
-            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+            ;((o = new URL(u, document.baseURI)),
+              (i = new URL(document.baseURI).origin))
           } catch {
             return
           }
           ;(o.protocol === 'http:' || o.protocol === 'https:') &&
             o.origin !== i &&
-            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+            (e.preventDefault(),
+            parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
         }
         const L = {}
         function y(e) {
           if (window === top) return
           const t = Date.now()
           t - (L[e] || 0) < 500 ||
-            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+            ((L[e] = t),
+            parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
         }
         const F = 2e3,
           T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
@@ -86,10 +97,12 @@
           e.isTrusted && (k = Date.now())
         }
         function z() {
-          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+          ;(addEventListener('click', M, !0),
+            addEventListener('auxclick', M, !0))
         }
         function W() {
-          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          for (let e = 0; e < T.length; e++)
+            addEventListener(T[e], B, { capture: !0, passive: !0 })
           ;(addEventListener(
             'scroll',
             (e) => {
@@ -113,7 +126,9 @@
             ))
         }
         function x(e, t, n) {
-          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          const u = [...t.values()].filter((o) =>
+            o.targets.some((i) => i.startsWith(e + '.')),
+          )
           return {
             wrap(o, i) {
               const f = `${e}.${o}`,
@@ -157,7 +172,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                              return (
+                                n({ id: h.id, scope: e, leg: 'returns' }),
+                                c
+                              )
                             }
                         }
                         return c
@@ -170,7 +188,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                              return (
+                                n({ id: h.id, scope: e, leg: 'throws' }),
+                                Promise.reject(c)
+                              )
                             }
                         }
                         return Promise.reject(c)
@@ -247,7 +268,9 @@
             else if (e === t) return !0
           return !1
         }
-        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+        const w = Object.freeze({
+            ...(window.__FRAME_PREAMBLE?.capabilities ?? {}),
+          }),
           E = window.__FRAME_PREAMBLE?.transforms,
           C = /^[\w.-]+\.js$/,
           V = /^[a-z][a-z0-9_-]{0,63}$/
@@ -277,7 +300,8 @@
           const t = document.documentElement
           e === 'light' || e === 'dark'
             ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
-            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+            : R &&
+              (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
         }
         const _ = new Map()
         function Q(e, t) {
@@ -319,7 +343,10 @@
             _.set(s, d)
             const m = new Proxy(d.impl, {
               get: (c, l) => {
-                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                if (
+                  typeof l == 'string' &&
+                  !(l === 'then' || l === 'toJSON' || l === 'valueOf')
+                )
                   return l === 'toString'
                     ? Object.prototype.toString
                     : (...h) => {
@@ -327,7 +354,12 @@
                         return p
                           ? p(...h)
                           : new Promise((b, S) => {
-                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                              d.queue.push({
+                                method: l,
+                                args: h,
+                                resolve: b,
+                                reject: S,
+                              })
                             })
                       }
               },
@@ -355,7 +387,8 @@
                 clearTimeout(o),
                 u?.()))
           }
-          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          ;(addEventListener('message', i),
+            parent.postMessage({ __frame_connect: !0 }, '*'))
           const f = new Promise((s) => {
               ;((u = s),
                 (o = setTimeout(() => {
@@ -365,7 +398,9 @@
             a =
               document.readyState === 'loading'
                 ? new Promise((s) =>
-                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                    document.addEventListener('DOMContentLoaded', () => s(), {
+                      once: !0,
+                    }),
                   )
                 : Promise.resolve()
           f.then(async () => {
@@ -373,14 +408,17 @@
               for (const r of _.keys())
                 O(r, {
                   code: 'not_granted',
-                  message: 'frame initialization did not arrive - capability unavailable',
+                  message:
+                    'frame initialization did not arrive - capability unavailable',
                 })
               return
             }
             N(n.theme)
             const s = g
             addEventListener('message', (r) => {
-              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+              r.source !== parent ||
+                r.origin !== s ||
+                (q(r.data) && N(r.data.__frame_theme.theme))
             })
             const d = (r) => U(() => import('/_runtime/' + r), void 0),
               m = Object.keys(n.capabilities ?? {})
@@ -489,8 +527,8 @@
         --accent: #b5461f;
 
         --display:
-          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
-          system-ui, sans-serif;
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN',
+          'Quicksand', 'Trebuchet MS', system-ui, sans-serif;
         --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 
@@ -670,7 +708,10 @@
         left: 50%;
         width: 3px;
         transform: translateX(-50%);
-        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        background: repeating-linear-gradient(
+          var(--ink) 0 7px,
+          transparent 7px 14px
+        );
         opacity: 0.4;
         z-index: 5;
       }
@@ -750,7 +791,8 @@
       }
       .btn .half.pull {
         background: color-mix(in srgb, #fff 55%, #d8d1bf);
-        border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 40%, transparent);
+        border-bottom: 1.5px solid
+          color-mix(in srgb, var(--ink) 40%, transparent);
       }
       .btn .half.push {
         background: #ddd6c4;
@@ -974,9 +1016,10 @@
         <p class="eyebrow">Concertina Hero · Falling Columns · round 2</p>
         <h1>Keyfall</h1>
         <p class="lede">
-          Your mockup fused two of the concepts: keep the real anglo keyboard on the floor of the
-          playfield, and drop each note straight down onto the exact button it wants. Here it is
-          built out at 30 buttons, then four decisions worth settling.
+          Your mockup fused two of the concepts: keep the real anglo keyboard on
+          the floor of the playfield, and drop each note straight down onto the
+          exact button it wants. Here it is built out at 30 buttons, then four
+          decisions worth settling.
         </p>
         <div class="chips">
           <span class="chip">30 buttons · 3 rows × 5 × 2 hands</span>
@@ -992,20 +1035,22 @@
         <p class="eyebrow">The idea, built out</p>
         <h2>The instrument is the bottom of the screen</h2>
         <p>
-          Both hands sit in their true staggered positions, divided by the bellows. A note falls
-          down a coloured track and lands on its button — the top half lights for a pull, the bottom
-          half for a push. Buttons with nothing coming stay grey, so a busy 30-button tune only ever
+          Both hands sit in their true staggered positions, divided by the
+          bellows. A note falls down a coloured track and lands on its button —
+          the top half lights for a pull, the bottom half for a push. Buttons
+          with nothing coming stay grey, so a busy 30-button tune only ever
           lights the handful of buttons in play.
         </p>
         <div class="stage">
           <div class="hud">
-            <span>Now Playing · The Kesh Jig</span><small>score 4,820 · ○○○ 12x</small>
+            <span>Now Playing · The Kesh Jig</span
+            ><small>score 4,820 · ○○○ 12x</small>
           </div>
           <div class="field" id="hero" style="height: 470px"></div>
         </div>
         <p class="caption">
-          Animated to show the fall. Note names are illustrative; the real pairs come from the
-          tuning preset.
+          Animated to show the fall. Note names are illustrative; the real pairs
+          come from the tuning preset.
         </p>
       </section>
 
@@ -1016,23 +1061,31 @@
         <p class="eyebrow">Decision 01</p>
         <h2>Do the empty buttons show their tracks?</h2>
         <p>
-          Thirty faint guide lines make the field busy, but they hold every button in a fixed
-          spatial slot so your eye learns where each one lives. Lighting only the active tracks is
-          calmer and matches your sketch, at the cost of the field looking different every bar.
+          Thirty faint guide lines make the field busy, but they hold every
+          button in a fixed spatial slot so your eye learns where each one
+          lives. Lighting only the active tracks is calmer and matches your
+          sketch, at the cost of the field looking different every bar.
         </p>
         <div class="duo">
           <div class="study">
             <h3><span class="pin">A</span> Active only</h3>
-            <p>Only buttons with an incoming note draw a track. Quietest; closest to the mockup.</p>
-            <div class="stage"><div class="field" id="visA" style="height: 300px"></div></div>
+            <p>
+              Only buttons with an incoming note draw a track. Quietest; closest
+              to the mockup.
+            </p>
+            <div class="stage">
+              <div class="field" id="visA" style="height: 300px"></div>
+            </div>
           </div>
           <div class="study">
             <h3><span class="pin">B</span> All guides</h3>
             <p>
-              Every button trails a faint guide; active ones light up over it. Busier, but spatially
-              stable.
+              Every button trails a faint guide; active ones light up over it.
+              Busier, but spatially stable.
             </p>
-            <div class="stage"><div class="field" id="visB" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="visB" style="height: 300px"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -1044,28 +1097,33 @@
         <p class="eyebrow">Decision 02 · the crux</p>
         <h2>Where does timing happen?</h2>
         <p>
-          Your buttons sit at different heights, so if every note lands on its own button, notes on
-          the back row travel farther than the front row — the hit point moves around the screen.
-          The alternative is a single strike line just above the keyboard, with the keys below as a
-          live map of which finger to move. It keeps timing in one place but breaks the "land on the
-          button" feeling.
+          Your buttons sit at different heights, so if every note lands on its
+          own button, notes on the back row travel farther than the front row —
+          the hit point moves around the screen. The alternative is a single
+          strike line just above the keyboard, with the keys below as a live map
+          of which finger to move. It keeps timing in one place but breaks the
+          "land on the button" feeling.
         </p>
         <div class="duo">
           <div class="study">
             <h3><span class="pin">A</span> Land on the button</h3>
             <p>
-              The button is the hit zone, wherever it sits. Truest to the instrument; timing target
-              roams.
+              The button is the hit zone, wherever it sits. Truest to the
+              instrument; timing target roams.
             </p>
-            <div class="stage"><div class="field" id="anchorA" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="anchorA" style="height: 300px"></div>
+            </div>
           </div>
           <div class="study">
             <h3><span class="pin">B</span> Shared strike line</h3>
             <p>
-              All notes hit one line; the keyboard below just shows which button lit. Steady timing;
-              less physical.
+              All notes hit one line; the keyboard below just shows which button
+              lit. Steady timing; less physical.
             </p>
-            <div class="stage"><div class="field" id="anchorB" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="anchorB" style="height: 300px"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -1077,10 +1135,11 @@
         <p class="eyebrow">Decision 03</p>
         <h2>Push and pull on one button</h2>
         <p>
-          Each button carries two notes. Following your instrument sketch, the pull note sits on the
-          top half and the push on the bottom. A falling pill already says its direction two ways —
-          striped for pull, solid for push — and it lights the matching half as it lands, so the
-          bellows direction reads before you even parse the letter.
+          Each button carries two notes. Following your instrument sketch, the
+          pull note sits on the top half and the push on the bottom. A falling
+          pill already says its direction two ways — striped for pull, solid for
+          push — and it lights the matching half as it lands, so the bellows
+          direction reads before you even parse the letter.
         </p>
         <div class="anatomy">
           <div class="bigbtn">
@@ -1092,7 +1151,11 @@
               <span
                 class="dot"
                 style="
-                  background: repeating-linear-gradient(-45deg, var(--r1) 0 5px, #fff 5px 10px);
+                  background: repeating-linear-gradient(
+                    -45deg,
+                    var(--r1) 0 5px,
+                    #fff 5px 10px
+                  );
                 "
               ></span>
               <strong>Top · pull</strong> — striped, draw the bellows out
@@ -1102,13 +1165,17 @@
               <strong>Bottom · push</strong> — solid, squeeze in
             </div>
             <div class="row">
-              <span class="dot" style="border-style: dashed; background: transparent"></span> The
-              whole button is one target; only the played half fills.
+              <span
+                class="dot"
+                style="border-style: dashed; background: transparent"
+              ></span>
+              The whole button is one target; only the played half fills.
             </div>
           </div>
         </div>
         <p class="caption">
-          A chord is several buttons lit at once — same as today, just more of them.
+          A chord is several buttons lit at once — same as today, just more of
+          them.
         </p>
       </section>
 
@@ -1119,23 +1186,33 @@
         <p class="eyebrow">Decision 04</p>
         <h2>What the colours mean</h2>
         <p>
-          Your mockup used a different colour per falling note so you can track them apart. That
-          works, but a fixed scheme teaches the layout: <strong>hand sets the temperature</strong> —
-          left cool, right warm — and <strong>column sets the hue</strong>, five across each hand.
-          Then a note's colour tells you which hand and roughly which finger before it lands.
+          Your mockup used a different colour per falling note so you can track
+          them apart. That works, but a fixed scheme teaches the layout:
+          <strong>hand sets the temperature</strong> — left cool, right warm —
+          and <strong>column sets the hue</strong>, five across each hand. Then
+          a note's colour tells you which hand and roughly which finger before
+          it lands.
         </p>
         <div class="duo">
           <div class="study">
             <h3><span class="pin">A</span> Fixed by position</h3>
-            <p>Colour = hand + column. The same button is always the same colour, every song.</p>
-            <div class="stage"><div class="field" id="colA" style="height: 280px"></div></div>
+            <p>
+              Colour = hand + column. The same button is always the same colour,
+              every song.
+            </p>
+            <div class="stage">
+              <div class="field" id="colA" style="height: 280px"></div>
+            </div>
           </div>
           <div class="study">
             <h3><span class="pin">B</span> Cycling per note</h3>
             <p>
-              Colour just keeps adjacent notes distinct (your mockup). Simpler, teaches nothing.
+              Colour just keeps adjacent notes distinct (your mockup). Simpler,
+              teaches nothing.
             </p>
-            <div class="stage"><div class="field" id="colB" style="height: 280px"></div></div>
+            <div class="stage">
+              <div class="field" id="colB" style="height: 280px"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -1147,24 +1224,27 @@
         <h2>Questions this round raises</h2>
         <ul>
           <li>
-            <strong>The staggered-track problem.</strong> Real anglo columns aren't evenly spaced,
-            so tracks from neighbouring buttons can sit close together. We either keep true physical
-            spacing (authentic, occasionally cramped) or snap tracks to an even grid and let only
+            <strong>The staggered-track problem.</strong> Real anglo columns
+            aren't evenly spaced, so tracks from neighbouring buttons can sit
+            close together. We either keep true physical spacing (authentic,
+            occasionally cramped) or snap tracks to an even grid and let only
             the button shapes hint at the stagger.
           </li>
           <li>
-            <strong>How tall is the keyboard zone?</strong> The more room the keys take, the shorter
-            the fall — less warning time. There's a trade between "looks like the instrument" and "I
-            can see it coming".
+            <strong>How tall is the keyboard zone?</strong> The more room the
+            keys take, the shorter the fall — less warning time. There's a trade
+            between "looks like the instrument" and "I can see it coming".
           </li>
           <li>
-            <strong>Back-row reachability.</strong> If timing lands on the button (02·A), back-row
-            notes need a longer track and therefore start earlier. Might actually be fine — it
-            mirrors the extra reach — but it needs playtesting.
+            <strong>Back-row reachability.</strong> If timing lands on the
+            button (02·A), back-row notes need a longer track and therefore
+            start earlier. Might actually be fine — it mirrors the extra reach —
+            but it needs playtesting.
           </li>
           <li>
-            <strong>Keyboard keys.</strong> 30 buttons won't fit the number row. Two 3×5 blocks —
-            left hand on <span class="k">Q-T / A-G / Z-B</span>, right on
+            <strong>Keyboard keys.</strong> 30 buttons won't fit the number row.
+            Two 3×5 blocks — left hand on
+            <span class="k">Q-T / A-G / Z-B</span>, right on
             <span class="k">Y-P / H-; / N-/</span> — mirror the on-screen hands.
           </li>
         </ul>
@@ -1254,14 +1334,17 @@
 
           // active lookup
           const active = new Map()
-          ;(cfg.active[hand] || []).forEach((n) => active.set(n.r + '-' + n.c, n))
+          ;(cfg.active[hand] || []).forEach((n) =>
+            active.set(n.r + '-' + n.c, n),
+          )
 
           for (let r = 0; r < g.rows; r++) {
             for (let c = 0; c < g.cols; c++) {
               const x = g.cx(c),
                 y = g.cy(r, c)
               const on = active.get(r + '-' + c)
-              const laneVar = cfg.colour === 'cycle' ? cfgCycle(hand, r, c) : vars[c]
+              const laneVar =
+                cfg.colour === 'cycle' ? cfgCycle(hand, r, c) : vars[c]
 
               // guide track
               if (cfg.guides && !on) {
@@ -1297,15 +1380,20 @@
                 pill.style.fontSize = g.BS * 0.34 + 'px'
                 pill.textContent = (on.dir === 'pull' ? '▲' : '▼') + on.name
                 // fall animation from top to (strikeY - ph)
-                const endTop = strikeY - ph - (cfg.anchor === 'line' ? 2 : g.BS * 0.1)
+                const endTop =
+                  strikeY - ph - (cfg.anchor === 'line' ? 2 : g.BS * 0.1)
                 pill.style.top = '0px'
                 pill.style.setProperty('--from', -ph - 10 + 'px')
                 pill.style.setProperty('--to', endTop + 'px')
-                pill.style.setProperty('--rest', endTop * (on.prog ?? 0.5) + 'px')
+                pill.style.setProperty(
+                  '--rest',
+                  endTop * (on.prog ?? 0.5) + 'px',
+                )
                 pill.style.setProperty('--dur', (cfg.dur || 3.4) + 's')
                 if (cfg.animate) {
                   pill.classList.add('anim')
-                  pill.style.animationDelay = -(on.prog ?? 0.5) * (cfg.dur || 3.4) + 's'
+                  pill.style.animationDelay =
+                    -(on.prog ?? 0.5) * (cfg.dur || 3.4) + 's'
                 } else {
                   pill.style.transform = `translateY(${endTop * (on.prog ?? 0.5)}px)`
                 }
@@ -1376,8 +1464,23 @@
           buildHand(right, 'right', W / 2, H, cfg)
         }
 
-        const base = { bs: 42, padX: 16, padY: 12, kbH: 210, arc: 8, animate: true }
-        const mini = { bs: 26, padX: 10, padY: 8, kbH: 118, arc: 7, animate: true, dur: 3.0 }
+        const base = {
+          bs: 42,
+          padX: 16,
+          padY: 12,
+          kbH: 210,
+          arc: 8,
+          animate: true,
+        }
+        const mini = {
+          bs: 26,
+          padX: 10,
+          padY: 8,
+          kbH: 118,
+          arc: 7,
+          animate: true,
+          dur: 3.0,
+        }
 
         const heroActive = {
           left: [
@@ -1416,7 +1519,13 @@
           anchor: 'button',
           colour: 'fixed',
         })
-        build('visB', { ...mini, active: twoLeft, guides: true, anchor: 'button', colour: 'fixed' })
+        build('visB', {
+          ...mini,
+          active: twoLeft,
+          guides: true,
+          anchor: 'button',
+          colour: 'fixed',
+        })
 
         build('anchorA', {
           ...mini,

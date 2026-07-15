@@ -103,7 +103,9 @@ export default function Keyboard({
                 {b.push.name}
               </button>
             </span>
-            <span className="key-btn__label">{labelMode === 'key' ? b.keyLabel : b.number}</span>
+            <span className="key-btn__label">
+              {labelMode === 'key' ? b.keyLabel : b.number}
+            </span>
           </div>
         )
       })}

@@ -25,7 +25,9 @@
   width: 72px;
   height: auto;
   transform: rotate(-4deg);
-  filter: drop-shadow(3px 4px 0 color-mix(in srgb, var(--ink) 20%, transparent));
+  filter: drop-shadow(
+    3px 4px 0 color-mix(in srgb, var(--ink) 20%, transparent)
+  );
 }
 .screen-guard__title {
   margin: 0;

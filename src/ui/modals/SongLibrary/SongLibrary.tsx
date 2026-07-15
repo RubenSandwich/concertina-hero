@@ -1,5 +1,10 @@
 import { useState } from 'react'
-import { getSongs, deleteSong, saveSong, importSongJSON } from '#data/songLibrary'
+import {
+  getSongs,
+  deleteSong,
+  saveSong,
+  importSongJSON,
+} from '#data/songLibrary'
 import { DIFF_CLASS, type Song } from '#data/songs'
 import Modal from '#components/Modal/Modal'
 import UploadButton from '#components/UploadButton/UploadButton'
@@ -17,7 +22,11 @@ type Editing = 'new' | { song: Song } | null
 // A full-page modal listing every song. Built-in songs are locked; user songs
 // can be edited or deleted, and you can write a new one or upload a chart.
 // Editing/creating opens the SongEditorModal on top of this one.
-export default function SongLibrary({ onClose, onChange, onSelect }: SongLibraryProps) {
+export default function SongLibrary({
+  onClose,
+  onChange,
+  onSelect,
+}: SongLibraryProps) {
   const [songs, setSongs] = useState<Song[]>(() => getSongs())
   const [editing, setEditing] = useState<Editing>(null)
   const [uploadError, setUploadError] = useState('')
@@ -63,7 +72,9 @@ export default function SongLibrary({ onClose, onChange, onSelect }: SongLibrary
                 noun="song"
                 meta={
                   <>
-                    <span className={'diff ' + DIFF_CLASS[s.difficulty]}>{s.difficulty}</span>
+                    <span className={'diff ' + DIFF_CLASS[s.difficulty]}>
+                      {s.difficulty}
+                    </span>
                     <span className="list-row__bpm">{s.bpm} BPM</span>
                   </>
                 }
@@ -85,7 +96,11 @@ export default function SongLibrary({ onClose, onChange, onSelect }: SongLibrary
           >
             ＋ New song
           </button>
-          <UploadButton className="btn btn--ghost" onData={handleUpload} onError={setUploadError}>
+          <UploadButton
+            className="btn btn--ghost"
+            onData={handleUpload}
+            onError={setUploadError}
+          >
             ↑ Upload
           </UploadButton>
           <button className="btn btn--primary" onClick={onClose}>

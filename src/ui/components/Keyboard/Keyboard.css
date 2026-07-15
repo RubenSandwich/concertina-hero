@@ -6,7 +6,11 @@
      the tightest lane gap, so circles never cross the divider), also bounded by
      the vertical room per row (short screens) and a sensible maximum. The
      playfield is min(1180px, 98vw) wide, less its ~5px border. */
-  --key: min(calc(min(1170px, 97vw) * var(--key-frac)), calc(36vh / var(--rows) - 26px), 96px);
+  --key: min(
+    calc(min(1170px, 97vw) * var(--key-frac)),
+    calc(36vh / var(--rows) - 26px),
+    96px
+  );
   /* Each row just fits a circle plus its label, so the keyboard hugs the buttons
      rather than reserving tall fixed bands. */
   --krow: calc(var(--key) * 1.3 + 8px);

@@ -4,8 +4,17 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { setActiveInstrument, getDefaultNotes, LANE_NOTES } from './instrument.ts'
-import { getPresets, savePreset, setActivePreset, getActivePreset } from './presets.ts'
+import {
+  setActiveInstrument,
+  getDefaultNotes,
+  LANE_NOTES,
+} from './instrument.ts'
+import {
+  getPresets,
+  savePreset,
+  setActivePreset,
+  getActivePreset,
+} from './presets.ts'
 
 // A minimal in-memory localStorage so the preset store has somewhere to persist.
 const store = new Map<string, string>()
@@ -53,8 +62,15 @@ test('presets do not leak across instrument sizes', () => {
 
   // A different size never sees it, and falls back to its own Default.
   setActiveInstrument(7)
-  assert.ok(!getPresets().some((p) => p.id === saved.id), 'absent on the 7-button')
-  assert.equal(getActivePreset().name, 'Default', 'the 7-button starts on its own Default')
+  assert.ok(
+    !getPresets().some((p) => p.id === saved.id),
+    'absent on the 7-button',
+  )
+  assert.equal(
+    getActivePreset().name,
+    'Default',
+    'the 7-button starts on its own Default',
+  )
   assert.equal(LANE_NOTES.length, 7)
 
   // Switching back, it is still there.

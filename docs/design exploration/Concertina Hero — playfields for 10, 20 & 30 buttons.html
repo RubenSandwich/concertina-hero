@@ -25,7 +25,10 @@
             let o = Promise.resolve()
             function i(f) {
               const a = new Event('vite:preloadError', { cancelable: !0 })
-              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+              if (
+                ((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)
+              )
+                throw f
             }
             return o.then((f) => {
               for (const a of f || []) a.status === 'rejected' && i(a.reason)
@@ -46,7 +49,8 @@
           return typeof n == 'string' && D.includes(n)
         }
         function M(e) {
-          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          if (window === top || (e.type === 'auxclick' && e.button !== 1))
+            return
           const t = e.composedPath ? e.composedPath() : [e.target]
           let n = null
           for (let f = 0; f < t.length; f++) {
@@ -57,27 +61,34 @@
             }
           }
           if (
-            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+            (!n &&
+              e.target &&
+              e.target.closest &&
+              (n = e.target.closest('a[href],area[href]')),
+            !n)
           )
             return
           const u = n.getAttribute('href')
           if (!u) return
           let o, i
           try {
-            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+            ;((o = new URL(u, document.baseURI)),
+              (i = new URL(document.baseURI).origin))
           } catch {
             return
           }
           ;(o.protocol === 'http:' || o.protocol === 'https:') &&
             o.origin !== i &&
-            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+            (e.preventDefault(),
+            parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
         }
         const L = {}
         function y(e) {
           if (window === top) return
           const t = Date.now()
           t - (L[e] || 0) < 500 ||
-            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+            ((L[e] = t),
+            parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
         }
         const F = 2e3,
           T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
@@ -86,10 +97,12 @@
           e.isTrusted && (k = Date.now())
         }
         function z() {
-          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+          ;(addEventListener('click', M, !0),
+            addEventListener('auxclick', M, !0))
         }
         function W() {
-          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          for (let e = 0; e < T.length; e++)
+            addEventListener(T[e], B, { capture: !0, passive: !0 })
           ;(addEventListener(
             'scroll',
             (e) => {
@@ -113,7 +126,9 @@
             ))
         }
         function x(e, t, n) {
-          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          const u = [...t.values()].filter((o) =>
+            o.targets.some((i) => i.startsWith(e + '.')),
+          )
           return {
             wrap(o, i) {
               const f = `${e}.${o}`,
@@ -157,7 +172,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                              return (
+                                n({ id: h.id, scope: e, leg: 'returns' }),
+                                c
+                              )
                             }
                         }
                         return c
@@ -170,7 +188,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                              return (
+                                n({ id: h.id, scope: e, leg: 'throws' }),
+                                Promise.reject(c)
+                              )
                             }
                         }
                         return Promise.reject(c)
@@ -247,7 +268,9 @@
             else if (e === t) return !0
           return !1
         }
-        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+        const w = Object.freeze({
+            ...(window.__FRAME_PREAMBLE?.capabilities ?? {}),
+          }),
           E = window.__FRAME_PREAMBLE?.transforms,
           C = /^[\w.-]+\.js$/,
           V = /^[a-z][a-z0-9_-]{0,63}$/
@@ -277,7 +300,8 @@
           const t = document.documentElement
           e === 'light' || e === 'dark'
             ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
-            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+            : R &&
+              (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
         }
         const _ = new Map()
         function Q(e, t) {
@@ -319,7 +343,10 @@
             _.set(s, d)
             const m = new Proxy(d.impl, {
               get: (c, l) => {
-                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                if (
+                  typeof l == 'string' &&
+                  !(l === 'then' || l === 'toJSON' || l === 'valueOf')
+                )
                   return l === 'toString'
                     ? Object.prototype.toString
                     : (...h) => {
@@ -327,7 +354,12 @@
                         return p
                           ? p(...h)
                           : new Promise((b, S) => {
-                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                              d.queue.push({
+                                method: l,
+                                args: h,
+                                resolve: b,
+                                reject: S,
+                              })
                             })
                       }
               },
@@ -355,7 +387,8 @@
                 clearTimeout(o),
                 u?.()))
           }
-          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          ;(addEventListener('message', i),
+            parent.postMessage({ __frame_connect: !0 }, '*'))
           const f = new Promise((s) => {
               ;((u = s),
                 (o = setTimeout(() => {
@@ -365,7 +398,9 @@
             a =
               document.readyState === 'loading'
                 ? new Promise((s) =>
-                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                    document.addEventListener('DOMContentLoaded', () => s(), {
+                      once: !0,
+                    }),
                   )
                 : Promise.resolve()
           f.then(async () => {
@@ -373,14 +408,17 @@
               for (const r of _.keys())
                 O(r, {
                   code: 'not_granted',
-                  message: 'frame initialization did not arrive - capability unavailable',
+                  message:
+                    'frame initialization did not arrive - capability unavailable',
                 })
               return
             }
             N(n.theme)
             const s = g
             addEventListener('message', (r) => {
-              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+              r.source !== parent ||
+                r.origin !== s ||
+                (q(r.data) && N(r.data.__frame_theme.theme))
             })
             const d = (r) => U(() => import('/_runtime/' + r), void 0),
               m = Object.keys(n.capabilities ?? {})
@@ -490,8 +528,8 @@
         --accent: #b5461f;
 
         --display:
-          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
-          system-ui, sans-serif;
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN',
+          'Quicksand', 'Trebuchet MS', system-ui, sans-serif;
         --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
 
@@ -840,7 +878,10 @@
       }
       .split {
         width: 3px;
-        background: repeating-linear-gradient(var(--ink) 0 6px, transparent 6px 12px);
+        background: repeating-linear-gradient(
+          var(--ink) 0 6px,
+          transparent 6px 12px
+        );
         opacity: 0.35;
         border-radius: 2px;
       }
@@ -1122,8 +1163,9 @@
         <p class="eyebrow">Concertina Hero · playfield exploration</p>
         <h1>Room for 30 buttons</h1>
         <p class="lede">
-          Four ways the game screen could grow past its seven toy buttons — to a 10, 20, or
-          30-button anglo, where half the instrument sits under each hand.
+          Four ways the game screen could grow past its seven toy buttons — to a
+          10, 20, or 30-button anglo, where half the instrument sits under each
+          hand.
         </p>
         <div class="chips">
           <span class="chip">10 buttons · 1 row</span>
@@ -1139,15 +1181,17 @@
         <p class="eyebrow">The shape of the problem</p>
         <h2>Seven lanes became thirty</h2>
         <p>
-          Today every button owns a horizontal lane, and a lane needs roughly 40 pixels to stay
-          readable. That works at seven. At thirty it wants 1,400 pixels of height, so the naïve
-          scale-up is off the table — the layout has to change shape, not just stretch.
+          Today every button owns a horizontal lane, and a lane needs roughly 40
+          pixels to stay readable. That works at seven. At thirty it wants 1,400
+          pixels of height, so the naïve scale-up is off the table — the layout
+          has to change shape, not just stretch.
         </p>
         <p>
           A real anglo is not a flat list of buttons. It is
-          <strong>two hands × N rows × 5 columns</strong>, and each button already carries two notes
-          — one on the push, one on the pull. The cards encode that already: solid for push, striped
-          for pull. So the new axes are <em>hand</em>, <em>column</em> and <em>row</em>. Every
+          <strong>two hands × N rows × 5 columns</strong>, and each button
+          already carries two notes — one on the push, one on the pull. The
+          cards encode that already: solid for push, striped for pull. So the
+          new axes are <em>hand</em>, <em>column</em> and <em>row</em>. Every
           mockup below is a different answer to where those three go.
         </p>
 
@@ -1202,16 +1246,17 @@
         <p class="eyebrow">Shared vocabulary</p>
         <h2>One chip per button, three ways</h2>
         <p>
-          Three of the four concepts lean on the same encoding, so it is worth naming once. It gives
-          thirty visually distinct buttons without thirty arbitrary colours.
+          Three of the four concepts lean on the same encoding, so it is worth
+          naming once. It gives thirty visually distinct buttons without thirty
+          arbitrary colours.
         </p>
 
         <div class="vocab">
           <div>
             <h3>Hand → colour family</h3>
             <p style="font-size: 0.93rem">
-              Left hand cool, right hand warm. You can tell at a glance which hand a note wants
-              before you read anything else.
+              Left hand cool, right hand warm. You can tell at a glance which
+              hand a note wants before you read anything else.
             </p>
             <div class="swatches" style="margin-top: 10px">
               <div class="ramp">
@@ -1236,8 +1281,8 @@
           <div>
             <h3>Column → hue, row → shade</h3>
             <p style="font-size: 0.93rem">
-              Five hues across, three shades deep. Light is the inner row, dark the outer — the same
-              order your fingers reach.
+              Five hues across, three shades deep. Light is the inner row, dark
+              the outer — the same order your fingers reach.
             </p>
             <div class="swatches" style="margin-top: 10px">
               <div class="ramp">
@@ -1258,8 +1303,8 @@
           <div>
             <h3>Bellows → fill</h3>
             <p style="font-size: 0.93rem">
-              Unchanged. Solid paper is a push, striped is a pull. The button says which finger, the
-              fill says which way the bellows go.
+              Unchanged. Solid paper is a push, striped is a pull. The button
+              says which finger, the fill says which way the bellows go.
             </p>
             <div class="swatches" style="margin-top: 10px">
               <div class="ramp">
@@ -1283,9 +1328,10 @@
         </div>
 
         <p class="caption">
-          A button is then named by position: <code>L2b</code> is left hand, second column, middle
-          row. Charts would read <code>+L2b</code> / <code>-R5a</code> instead of today's
-          <code>+3</code> / <code>-3</code>.
+          A button is then named by position: <code>L2b</code> is left hand,
+          second column, middle row. Charts would read <code>+L2b</code> /
+          <code>-R5a</code> instead of today's <code>+3</code> /
+          <code>-3</code>.
         </p>
       </section>
 
@@ -1297,9 +1343,10 @@
           <p class="eyebrow">Concept 01 · least change</p>
           <h2>Live Lanes</h2>
           <p>
-            Keep everything exactly as it is, but only draw a lane for the buttons the song actually
-            touches. A tune using nine buttons gets nine lanes, bracketed into a left-hand block and
-            a right-hand block. The instrument can have thirty; the screen never does.
+            Keep everything exactly as it is, but only draw a lane for the
+            buttons the song actually touches. A tune using nine buttons gets
+            nine lanes, bracketed into a left-hand block and a right-hand block.
+            The instrument can have thirty; the screen never does.
           </p>
         </div>
 
@@ -1310,22 +1357,30 @@
             <div class="handbar">Left hand</div>
             <div class="lane" style="--lane: var(--l1)">
               <span class="tag">L1b</span>
-              <span class="card" style="--lane: var(--l1); left: 30%; width: 15%"
+              <span
+                class="card"
+                style="--lane: var(--l1); left: 30%; width: 15%"
                 ><span class="dir">▼</span>G</span
               >
-              <span class="card pull" style="--lane: var(--l1); left: 62%; width: 15%"
+              <span
+                class="card pull"
+                style="--lane: var(--l1); left: 62%; width: 15%"
                 ><span class="dir">▲</span>A</span
               >
             </div>
             <div class="lane" style="--lane: var(--l3)">
               <span class="tag">L3a</span>
-              <span class="card" style="--lane: var(--l3); left: 47%; width: 15%"
+              <span
+                class="card"
+                style="--lane: var(--l3); left: 47%; width: 15%"
                 ><span class="dir">▼</span>C</span
               >
             </div>
             <div class="lane" style="--lane: var(--l5)">
               <span class="tag">L5b</span>
-              <span class="card pull" style="--lane: var(--l5); left: 79%; width: 15%"
+              <span
+                class="card pull"
+                style="--lane: var(--l5); left: 79%; width: 15%"
                 ><span class="dir">▲</span>D</span
               >
             </div>
@@ -1334,16 +1389,22 @@
             <div class="handbar">Right hand</div>
             <div class="lane" style="--lane: var(--r1)">
               <span class="tag">R1a</span>
-              <span class="card" style="--lane: var(--r1); left: 17%; width: 15%"
+              <span
+                class="card"
+                style="--lane: var(--r1); left: 17%; width: 15%"
                 ><span class="dir">▼</span>E</span
               >
             </div>
             <div class="lane" style="--lane: var(--r3)">
               <span class="tag">R3b</span>
-              <span class="card pull" style="--lane: var(--r3); left: 30%; width: 15%"
+              <span
+                class="card pull"
+                style="--lane: var(--r3); left: 30%; width: 15%"
                 ><span class="dir">▲</span>F</span
               >
-              <span class="card" style="--lane: var(--r3); left: 62%; width: 15%"
+              <span
+                class="card"
+                style="--lane: var(--r3); left: 62%; width: 15%"
                 ><span class="dir">▼</span>G</span
               >
             </div>
@@ -1354,22 +1415,22 @@
           <div>
             <strong>Reads well</strong>
             <p>
-              Nothing about the game changes. Same scroll, same cards, same timing. The hand bracket
-              teaches you which side to reach for.
+              Nothing about the game changes. Same scroll, same cards, same
+              timing. The hand bracket teaches you which side to reach for.
             </p>
           </div>
           <div>
             <strong>Costs</strong>
             <p>
-              Lane count shifts between songs, so muscle memory does too. A busy 30-button tune
-              using twenty buttons is still twenty lanes.
+              Lane count shifts between songs, so muscle memory does too. A busy
+              30-button tune using twenty buttons is still twenty lanes.
             </p>
           </div>
           <div>
             <strong>Best for</strong>
             <p>
-              Shipping something next week. It is the only concept that needs no new interaction
-              model at all.
+              Shipping something next week. It is the only concept that needs no
+              new interaction model at all.
             </p>
           </div>
         </div>
@@ -1383,10 +1444,11 @@
           <p class="eyebrow">Concept 02 · rotate the world</p>
           <h2>Falling Columns</h2>
           <p>
-            Turn the playfield ninety degrees. Notes fall from the top onto a row of button caps at
-            the bottom, one thin column per button, with the two hands split by a gutter down the
-            middle — the same gap that exists on the real instrument. Screens are wider than they
-            are tall, so thirty columns fit where thirty lanes never could.
+            Turn the playfield ninety degrees. Notes fall from the top onto a
+            row of button caps at the bottom, one thin column per button, with
+            the two hands split by a gutter down the middle — the same gap that
+            exists on the real instrument. Screens are wider than they are tall,
+            so thirty columns fit where thirty lanes never could.
           </p>
         </div>
 
@@ -1399,23 +1461,39 @@
                 <span class="fcard" style="--lane: var(--l1); top: 24px"></span
                 ><span class="cap">L1a</span>
               </div>
-              <div class="col" style="--lane: var(--l1)"><span class="cap">L1b</span></div>
+              <div class="col" style="--lane: var(--l1)">
+                <span class="cap">L1b</span>
+              </div>
               <div class="col" style="--lane: var(--l2)">
-                <span class="fcard pull" style="--lane: var(--l2); top: 96px"></span
+                <span
+                  class="fcard pull"
+                  style="--lane: var(--l2); top: 96px"
+                ></span
                 ><span class="cap">L2a</span>
               </div>
-              <div class="col" style="--lane: var(--l2)"><span class="cap">L2b</span></div>
+              <div class="col" style="--lane: var(--l2)">
+                <span class="cap">L2b</span>
+              </div>
               <div class="col" style="--lane: var(--l3)">
                 <span class="fcard" style="--lane: var(--l3); top: 150px"></span
                 ><span class="cap">L3a</span>
               </div>
-              <div class="col" style="--lane: var(--l3)"><span class="cap">L3b</span></div>
+              <div class="col" style="--lane: var(--l3)">
+                <span class="cap">L3b</span>
+              </div>
               <div class="col" style="--lane: var(--l4)">
-                <span class="fcard pull" style="--lane: var(--l4); top: 56px"></span
+                <span
+                  class="fcard pull"
+                  style="--lane: var(--l4); top: 56px"
+                ></span
                 ><span class="cap">L4a</span>
               </div>
-              <div class="col" style="--lane: var(--l4)"><span class="cap">L4b</span></div>
-              <div class="col" style="--lane: var(--l5)"><span class="cap">L5a</span></div>
+              <div class="col" style="--lane: var(--l4)">
+                <span class="cap">L4b</span>
+              </div>
+              <div class="col" style="--lane: var(--l5)">
+                <span class="cap">L5a</span>
+              </div>
               <div class="col" style="--lane: var(--l5)">
                 <span class="fcard" style="--lane: var(--l5); top: 186px"></span
                 ><span class="cap">L5b</span>
@@ -1429,54 +1507,73 @@
                 <span class="fcard" style="--lane: var(--r1); top: 130px"></span
                 ><span class="cap">R1a</span>
               </div>
-              <div class="col" style="--lane: var(--r1)"><span class="cap">R1b</span></div>
-              <div class="col" style="--lane: var(--r2)"><span class="cap">R2a</span></div>
+              <div class="col" style="--lane: var(--r1)">
+                <span class="cap">R1b</span>
+              </div>
               <div class="col" style="--lane: var(--r2)">
-                <span class="fcard pull" style="--lane: var(--r2); top: 40px"></span
+                <span class="cap">R2a</span>
+              </div>
+              <div class="col" style="--lane: var(--r2)">
+                <span
+                  class="fcard pull"
+                  style="--lane: var(--r2); top: 40px"
+                ></span
                 ><span class="cap">R2b</span>
               </div>
               <div class="col" style="--lane: var(--r3)">
                 <span class="fcard" style="--lane: var(--r3); top: 186px"></span
                 ><span class="cap">R3a</span>
               </div>
-              <div class="col" style="--lane: var(--r3)"><span class="cap">R3b</span></div>
-              <div class="col" style="--lane: var(--r4)"><span class="cap">R4a</span></div>
+              <div class="col" style="--lane: var(--r3)">
+                <span class="cap">R3b</span>
+              </div>
               <div class="col" style="--lane: var(--r4)">
-                <span class="fcard pull" style="--lane: var(--r4); top: 100px"></span
+                <span class="cap">R4a</span>
+              </div>
+              <div class="col" style="--lane: var(--r4)">
+                <span
+                  class="fcard pull"
+                  style="--lane: var(--r4); top: 100px"
+                ></span
                 ><span class="cap">R4b</span>
               </div>
               <div class="col" style="--lane: var(--r5)">
                 <span class="fcard" style="--lane: var(--r5); top: 20px"></span
                 ><span class="cap">R5a</span>
               </div>
-              <div class="col" style="--lane: var(--r5)"><span class="cap">R5b</span></div>
+              <div class="col" style="--lane: var(--r5)">
+                <span class="cap">R5b</span>
+              </div>
             </div>
           </div>
         </div>
         <p class="caption">
-          Shown at 20 buttons. At 30 the same field carries three columns per hue instead of two.
+          Shown at 20 buttons. At 30 the same field carries three columns per
+          hue instead of two.
         </p>
 
         <div class="verdict">
           <div>
             <strong>Reads well</strong>
             <p>
-              Every button visible at all times, so the layout is stable across songs. Columns sit
-              in the same left-to-right order as your fingers.
+              Every button visible at all times, so the layout is stable across
+              songs. Columns sit in the same left-to-right order as your
+              fingers.
             </p>
           </div>
           <div>
             <strong>Costs</strong>
             <p>
-              The largest rewrite: geometry, hit line, ribbon and cards all flip. Note names get
-              cramped in a 30-pixel column, so cards lean on colour instead of text.
+              The largest rewrite: geometry, hit line, ribbon and cards all
+              flip. Note names get cramped in a 30-pixel column, so cards lean
+              on colour instead of text.
             </p>
           </div>
           <div>
             <strong>Best for</strong>
             <p>
-              Players who already read Guitar Hero or Rock Band. It is the familiar idiom for many
-              columns.
+              Players who already read Guitar Hero or Rock Band. It is the
+              familiar idiom for many columns.
             </p>
           </div>
         </div>
@@ -1490,10 +1587,12 @@
           <p class="eyebrow">Concept 03 · look like the instrument</p>
           <h2>Keypad Reader</h2>
           <p>
-            Stop pretending the buttons are lanes. Draw the concertina as it actually is — two
-            keypads, each button a circle split pull-over-push, exactly like a fingering chart — and
-            light up what to press. The upcoming beats ride a strip above, so you still see what's
-            coming, but the screen is a picture of your hands rather than a highway.
+            Stop pretending the buttons are lanes. Draw the concertina as it
+            actually is — two keypads, each button a circle split
+            pull-over-push, exactly like a fingering chart — and light up what
+            to press. The upcoming beats ride a strip above, so you still see
+            what's coming, but the screen is a picture of your hands rather than
+            a highway.
           </p>
         </div>
 
@@ -1514,20 +1613,38 @@
               <div>
                 <div class="keypad">
                   <div class="keyrow">
-                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                    <span class="key"><span class="up">D</span><span class="dn">B</span></span>
+                    <span class="key"
+                      ><span class="up">A</span><span class="dn">G</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">D</span><span class="dn">B</span></span
+                    >
                     <span class="key lit" style="--lane: var(--l3)"
                       ><span class="up">F</span><span class="dn">D</span></span
                     >
-                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                    <span class="key"><span class="up">C</span><span class="dn">B</span></span>
+                    <span class="key"
+                      ><span class="up">A</span><span class="dn">G</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">C</span><span class="dn">B</span></span
+                    >
                   </div>
                   <div class="keyrow">
-                    <span class="key"><span class="up">D</span><span class="dn">C</span></span>
-                    <span class="key"><span class="up">G</span><span class="dn">E</span></span>
-                    <span class="key"><span class="up">B</span><span class="dn">G</span></span>
-                    <span class="key"><span class="up">D</span><span class="dn">C</span></span>
-                    <span class="key"><span class="up">F</span><span class="dn">E</span></span>
+                    <span class="key"
+                      ><span class="up">D</span><span class="dn">C</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">G</span><span class="dn">E</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">B</span><span class="dn">G</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">D</span><span class="dn">C</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">F</span><span class="dn">E</span></span
+                    >
                   </div>
                 </div>
                 <p class="handlabel" style="margin-top: 8px">Left</p>
@@ -1536,18 +1653,38 @@
               <div>
                 <div class="keypad">
                   <div class="keyrow">
-                    <span class="key"><span class="up">B</span><span class="dn">G</span></span>
-                    <span class="key"><span class="up">D</span><span class="dn">C</span></span>
-                    <span class="key"><span class="up">F</span><span class="dn">E</span></span>
-                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                    <span class="key"><span class="up">B</span><span class="dn">C</span></span>
+                    <span class="key"
+                      ><span class="up">B</span><span class="dn">G</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">D</span><span class="dn">C</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">F</span><span class="dn">E</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">A</span><span class="dn">G</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">B</span><span class="dn">C</span></span
+                    >
                   </div>
                   <div class="keyrow">
-                    <span class="key"><span class="up">F</span><span class="dn">D</span></span>
-                    <span class="key"><span class="up">A</span><span class="dn">G</span></span>
-                    <span class="key"><span class="up">C</span><span class="dn">B</span></span>
-                    <span class="key"><span class="up">E</span><span class="dn">D</span></span>
-                    <span class="key"><span class="up">F</span><span class="dn">G</span></span>
+                    <span class="key"
+                      ><span class="up">F</span><span class="dn">D</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">A</span><span class="dn">G</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">C</span><span class="dn">B</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">E</span><span class="dn">D</span></span
+                    >
+                    <span class="key"
+                      ><span class="up">F</span><span class="dn">G</span></span
+                    >
                   </div>
                 </div>
                 <p class="handlabel" style="margin-top: 8px">Right</p>
@@ -1556,30 +1693,32 @@
           </div>
         </div>
         <p class="caption">
-          Note names are illustrative — the real pairs come from the tuning preset. The lit key
-          shows a push (solid); a pull would light with the striped fill.
+          Note names are illustrative — the real pairs come from the tuning
+          preset. The lit key shows a push (solid); a pull would light with the
+          striped fill.
         </p>
 
         <div class="verdict">
           <div>
             <strong>Reads well</strong>
             <p>
-              Scales to any button count for free, and teaches the instrument rather than the game.
-              A chord is simply several lit circles.
+              Scales to any button count for free, and teaches the instrument
+              rather than the game. A chord is simply several lit circles.
             </p>
           </div>
           <div>
             <strong>Costs</strong>
             <p>
-              Loses the approach — you feel the beat arrive rather than watch it travel, so the
-              timing windows have to carry more weight.
+              Loses the approach — you feel the beat arrive rather than watch it
+              travel, so the timing windows have to carry more weight.
             </p>
           </div>
           <div>
             <strong>Best for</strong>
             <p>
               A practice or learn mode. Possibly the right home for
-              <span class="k">wait for correct note</span>, which already pauses on each note.
+              <span class="k">wait for correct note</span>, which already pauses
+              on each note.
             </p>
           </div>
         </div>
@@ -1593,9 +1732,10 @@
           <p class="eyebrow">Concept 04 · constant screen</p>
           <h2>Row-Coded Columns</h2>
           <p>
-            Ten lanes, always: five columns for the left hand, five for the right. The row is not a
-            lane at all — it rides on the card, as a shade and a small pip. A 10, 20 or 30-button
-            instrument all produce exactly the same screen, so the layout never moves under you.
+            Ten lanes, always: five columns for the left hand, five for the
+            right. The row is not a lane at all — it rides on the card, as a
+            shade and a small pip. A 10, 20 or 30-button instrument all produce
+            exactly the same screen, so the layout never moves under you.
           </p>
         </div>
 
@@ -1606,7 +1746,10 @@
             <div class="handbar">Left hand · columns 1–5</div>
             <div class="lane" style="--lane: var(--l2)">
               <span class="tag">L2</span>
-              <span class="card" style="--lane: var(--l2); left: 30%; width: 15%">
+              <span
+                class="card"
+                style="--lane: var(--l2); left: 30%; width: 15%"
+              >
                 <span class="badge a"></span><span class="dir">▼</span>G
               </span>
               <span
@@ -1623,7 +1766,10 @@
             </div>
             <div class="lane" style="--lane: var(--l4)">
               <span class="tag">L4</span>
-              <span class="card" style="--lane: var(--l4); left: 47%; width: 15%">
+              <span
+                class="card"
+                style="--lane: var(--l4); left: 47%; width: 15%"
+              >
                 <span class="badge b"></span><span class="dir">▼</span>C
               </span>
             </div>
@@ -1632,43 +1778,50 @@
             <div class="handbar">Right hand · columns 1–5</div>
             <div class="lane" style="--lane: var(--r1)">
               <span class="tag">R1</span>
-              <span class="card pull" style="--lane: var(--r1); left: 17%; width: 15%">
+              <span
+                class="card pull"
+                style="--lane: var(--r1); left: 17%; width: 15%"
+              >
                 <span class="badge b"></span><span class="dir">▲</span>E
               </span>
             </div>
             <div class="lane" style="--lane: var(--r3)">
               <span class="tag">R3</span>
-              <span class="card" style="--lane: var(--r3); left: 55%; width: 15%">
+              <span
+                class="card"
+                style="--lane: var(--r3); left: 55%; width: 15%"
+              >
                 <span class="badge a"></span><span class="dir">▼</span>G
               </span>
             </div>
           </div>
         </div>
         <p class="caption">
-          Pip: hollow = inner row, half = middle, filled = outer. The card's shade carries the same
-          information at a distance, before the pip is legible.
+          Pip: hollow = inner row, half = middle, filled = outer. The card's
+          shade carries the same information at a distance, before the pip is
+          legible.
         </p>
 
         <div class="verdict">
           <div>
             <strong>Reads well</strong>
             <p>
-              Ten lanes forever. Muscle memory transfers between songs and between instruments, and
-              it fits the screen we already have.
+              Ten lanes forever. Muscle memory transfers between songs and
+              between instruments, and it fits the screen we already have.
             </p>
           </div>
           <div>
             <strong>Costs</strong>
             <p>
-              Row becomes a second thing to decode under time pressure. Two notes in the same column
-              on different rows collide in one lane.
+              Row becomes a second thing to decode under time pressure. Two
+              notes in the same column on different rows collide in one lane.
             </p>
           </div>
           <div>
             <strong>Best for</strong>
             <p>
-              Keeping the current game's feel while supporting the full instrument. The riskiest on
-              legibility, the cheapest on screen.
+              Keeping the current game's feel while supporting the full
+              instrument. The riskiest on legibility, the cheapest on screen.
             </p>
           </div>
         </div>
@@ -1730,10 +1883,11 @@
         <p class="eyebrow">A wildcard, if we want one</p>
         <h2>Bellows Split</h2>
         <p>
-          Left-hand notes fly in from the left edge, right-hand notes from the right, and they meet
-          at a hit line down the middle of the screen — the bellows. It is the most
-          concertina-shaped idea on this page and the hardest to read, because your eye has to track
-          two opposing streams. Worth a paper sketch before anyone builds it.
+          Left-hand notes fly in from the left edge, right-hand notes from the
+          right, and they meet at a hit line down the middle of the screen — the
+          bellows. It is the most concertina-shaped idea on this page and the
+          hardest to read, because your eye has to track two opposing streams.
+          Worth a paper sketch before anyone builds it.
         </p>
       </section>
 
@@ -1744,31 +1898,36 @@
         <h2>Questions that change the answer</h2>
         <ul>
           <li>
-            <strong>Does the seven-button toy stay the default?</strong> If yes, whatever we build
-            has to look right at seven buttons as well as thirty, which quietly rules against
-            Falling Columns.
+            <strong>Does the seven-button toy stay the default?</strong> If yes,
+            whatever we build has to look right at seven buttons as well as
+            thirty, which quietly rules against Falling Columns.
           </li>
           <li>
-            <strong>What does a keyboard player press?</strong> Thirty buttons will not fit the
-            number row. Two hands of keys — <span class="k">Q W E R T</span> over
-            <span class="k">A S D F G</span> on the left, <span class="k">Y U I O P</span> over
-            <span class="k">H J K L ;</span> on the right — mirrors the instrument and matches every
-            layout here.
+            <strong>What does a keyboard player press?</strong> Thirty buttons
+            will not fit the number row. Two hands of keys —
+            <span class="k">Q W E R T</span> over
+            <span class="k">A S D F G</span> on the left,
+            <span class="k">Y U I O P</span> over
+            <span class="k">H J K L ;</span> on the right — mirrors the
+            instrument and matches every layout here.
           </li>
           <li>
-            <strong>Do we show all buttons, or only the ones in the song?</strong> This is the real
-            fork. Everything else follows from it.
+            <strong
+              >Do we show all buttons, or only the ones in the song?</strong
+            >
+            This is the real fork. Everything else follows from it.
           </li>
           <li>
-            <strong>Chart notation.</strong> <code>+3</code> stops meaning anything on a 30-button.
-            <code>+L2b</code> is unambiguous but noisier to write, and every existing chart needs a
-            migration.
+            <strong>Chart notation.</strong> <code>+3</code> stops meaning
+            anything on a 30-button. <code>+L2b</code> is unambiguous but
+            noisier to write, and every existing chart needs a migration.
           </li>
           <li>
-            <strong>Mic mode is already ready for this.</strong> A 30-button anglo repeats the same
-            pitch in several places, and <code>aliasesOf</code> was built for exactly that — when
-            the mic hears a note, the game credits whichever button the chart is asking for.
-            Duplicated notes are a layout, not an ambiguity.
+            <strong>Mic mode is already ready for this.</strong> A 30-button
+            anglo repeats the same pitch in several places, and
+            <code>aliasesOf</code> was built for exactly that — when the mic
+            hears a note, the game credits whichever button the chart is asking
+            for. Duplicated notes are a layout, not an ambiguity.
           </li>
         </ul>
       </section>

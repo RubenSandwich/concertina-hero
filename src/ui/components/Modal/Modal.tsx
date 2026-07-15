@@ -1,5 +1,9 @@
 import { useEffect, useId, useRef } from 'react'
-import type { ReactNode, SyntheticEvent, MouseEvent as ReactMouseEvent } from 'react'
+import type {
+  ReactNode,
+  SyntheticEvent,
+  MouseEvent as ReactMouseEvent,
+} from 'react'
 import { createPortal } from 'react-dom'
 import './Modal.css'
 
@@ -21,7 +25,12 @@ interface ModalProps {
   children?: ReactNode
 }
 
-export default function Modal({ title, onClose, className = '', children }: ModalProps) {
+export default function Modal({
+  title,
+  onClose,
+  className = '',
+  children,
+}: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const titleId = useId()
@@ -37,7 +46,10 @@ export default function Modal({ title, onClose, className = '', children }: Moda
       if (dialog?.open) dialog.close()
       // React can unmount the <dialog> before the browser restores focus, so
       // send it back to the trigger ourselves.
-      if (prevFocused instanceof HTMLElement && document.contains(prevFocused)) {
+      if (
+        prevFocused instanceof HTMLElement &&
+        document.contains(prevFocused)
+      ) {
         prevFocused.focus()
       }
     }
@@ -64,7 +76,12 @@ export default function Modal({ title, onClose, className = '', children }: Moda
     >
       <div className="paper modal">
         <div className="modal__head">
-          <h2 className="modal__title" id={titleId} tabIndex={-1} ref={titleRef}>
+          <h2
+            className="modal__title"
+            id={titleId}
+            tabIndex={-1}
+            ref={titleRef}
+          >
             {title}
           </h2>
           <button className="modal__close" onClick={onClose} aria-label="Close">

@@ -54,7 +54,11 @@ export default function Accordion({
         </button>
       </h2>
 
-      <div id={panelId} className={'accordion__panel' + (open ? ' is-open' : '')} inert={!open}>
+      <div
+        id={panelId}
+        className={'accordion__panel' + (open ? ' is-open' : '')}
+        inert={!open}
+      >
         <div className="accordion__body">{children}</div>
       </div>
     </div>

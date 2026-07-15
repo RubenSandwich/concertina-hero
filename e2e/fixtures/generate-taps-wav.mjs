@@ -44,7 +44,10 @@ for (const freq of notesHz) {
 }
 const total = chunks.reduce((n, c) => n + c.length, 0)
 
-const outPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'taps.wav')
+const outPath = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  'taps.wav',
+)
 const bytes = writeWav(outPath, chunks)
 console.log(
   `Wrote ${outPath} (${(bytes / 1024).toFixed(1)} KiB, ${(total / SAMPLE_RATE).toFixed(2)}s)`,

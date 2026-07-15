@@ -24,7 +24,12 @@ import {
   noteProgress,
 } from '../data/timing.ts'
 import type { Song, Note } from '../data/songs.ts'
-import { gradeFor, holdFraction, holdPoints, isSustaining } from '../data/scoring.ts'
+import {
+  gradeFor,
+  holdFraction,
+  holdPoints,
+  isSustaining,
+} from '../data/scoring.ts'
 import type { Rating, Judgement } from '../data/scoring.ts'
 import { aliasesOf, type ChordReading } from '../audio/pitch.ts'
 
@@ -154,7 +159,11 @@ export function createInitialState(song: Song): EngineState {
   }
 }
 
-function setFeedback(state: EngineState, text: string, rating: Judgement): void {
+function setFeedback(
+  state: EngineState,
+  text: string,
+  rating: Judgement,
+): void {
   state.feedbackId += 1
   state.feedback = { text, rating, id: state.feedbackId }
 }
@@ -253,7 +262,8 @@ export function stepEngine(
   // doesn't advance past it until it's played correctly.
   if (input.waitForNote) {
     let barrier = Infinity
-    for (const n of state.notes) if (n.state === 'active' && n.time < barrier) barrier = n.time
+    for (const n of state.notes)
+      if (n.state === 'active' && n.time < barrier) barrier = n.time
     if (barrier !== Infinity && state.clock > barrier) state.clock = barrier
   }
 
@@ -277,9 +287,15 @@ export function stepEngine(
   if (reading) {
     const heard = reading.notes
 
-    if (heard.length && reading.stable && state.clock - state.micDebugAt > MIC_DEBUG_THROTTLE_MS) {
+    if (
+      heard.length &&
+      reading.stable &&
+      state.clock - state.micDebugAt > MIC_DEBUG_THROTTLE_MS
+    ) {
       state.micDebugAt = state.clock
-      const played = heard.map((n) => `${n.name} ${n.type} (button ${n.lane + 1})`).join(' + ')
+      const played = heard
+        .map((n) => `${n.name} ${n.type} (button ${n.lane + 1})`)
+        .join(' + ')
       events.push({ type: 'log', message: `[mic] ${played}` })
     }
 
@@ -315,14 +331,26 @@ export function stepEngine(
         const type = typeStr as Direction
         const now = state.clock - MIC_LATENCY
         for (const p of micPresses(state, lane, type, now)) {
-          registerPress(state, p.lane, p.type === 'pull', now, MIC_WINDOW_SCALE, events)
+          registerPress(
+            state,
+            p.lane,
+            p.type === 'pull',
+            now,
+            MIC_WINDOW_SCALE,
+            events,
+          )
         }
-        events.push({ type: 'log', message: `[mic] ▶ onset button ${lane + 1} ${type}` })
+        events.push({
+          type: 'log',
+          message: `[mic] ▶ onset button ${lane + 1} ${type}`,
+        })
       }
 
       // Notes that stopped sounding release, and may be struck again later.
-      for (const key of [...state.micCand.keys()]) if (!sounding.has(key)) state.micCand.delete(key)
-      for (const key of [...state.micHeld]) if (!sounding.has(key)) state.micHeld.delete(key)
+      for (const key of [...state.micCand.keys()])
+        if (!sounding.has(key)) state.micCand.delete(key)
+      for (const key of [...state.micHeld])
+        if (!sounding.has(key)) state.micHeld.delete(key)
     }
     // Otherwise the window straddles a note boundary: believe none of it.
   }
@@ -339,7 +367,8 @@ export function stepEngine(
     n.creditedTo = state.clock
     if (state.clock >= n.time + holdMs) {
       const rating = n.rating as Rating
-      state.score += holdPoints(rating, holdFraction(n.heldMs, holdMs)) + n.holdBonus
+      state.score +=
+        holdPoints(rating, holdFraction(n.heldMs, holdMs)) + n.holdBonus
       n.state = 'hit'
       n.judgeElapsed = state.clock
       n.judgeAt = noteProgress(n.time - state.clock)

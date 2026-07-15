@@ -5,7 +5,12 @@
 
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { KEY_CODES, LANE_NOTES, setActiveInstrument, getActiveInstrument } from './instrument.ts'
+import {
+  KEY_CODES,
+  LANE_NOTES,
+  setActiveInstrument,
+  getActiveInstrument,
+} from './instrument.ts'
 import { aliasesOf } from '../audio/pitch.ts'
 
 // Always hand the module back to the 7-button default after a test mutates it.
@@ -34,8 +39,16 @@ test('a smaller instrument only binds the front of the grid', () => {
   withInstrument(7, () => {
     assert.equal(KEY_CODES.KeyQ, 0)
     assert.equal(KEY_CODES.KeyU, 6, 'button 7')
-    assert.equal(KEY_CODES.KeyI, undefined, 'button 8 is past a 7-button — ignored')
-    assert.equal(KEY_CODES.Digit1, undefined, 'the old number-key controls are gone')
+    assert.equal(
+      KEY_CODES.KeyI,
+      undefined,
+      'button 8 is past a 7-button — ignored',
+    )
+    assert.equal(
+      KEY_CODES.Digit1,
+      undefined,
+      'the old number-key controls are gone',
+    )
   })
 })
 
@@ -76,7 +89,11 @@ test('under the default 7-button every note is its own only alias', () => {
   withInstrument(7, () => {
     for (let lane = 0; lane < LANE_NOTES.length; lane++) {
       for (const type of ['push', 'pull'] as const) {
-        assert.deepEqual(aliasesOf(lane, type), [{ lane, type }], `button ${lane + 1} ${type}`)
+        assert.deepEqual(
+          aliasesOf(lane, type),
+          [{ lane, type }],
+          `button ${lane + 1} ${type}`,
+        )
       }
     }
   })

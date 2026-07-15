@@ -25,7 +25,10 @@
             let o = Promise.resolve()
             function i(f) {
               const a = new Event('vite:preloadError', { cancelable: !0 })
-              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+              if (
+                ((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)
+              )
+                throw f
             }
             return o.then((f) => {
               for (const a of f || []) a.status === 'rejected' && i(a.reason)
@@ -46,7 +49,8 @@
           return typeof n == 'string' && D.includes(n)
         }
         function M(e) {
-          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          if (window === top || (e.type === 'auxclick' && e.button !== 1))
+            return
           const t = e.composedPath ? e.composedPath() : [e.target]
           let n = null
           for (let f = 0; f < t.length; f++) {
@@ -57,27 +61,34 @@
             }
           }
           if (
-            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+            (!n &&
+              e.target &&
+              e.target.closest &&
+              (n = e.target.closest('a[href],area[href]')),
+            !n)
           )
             return
           const u = n.getAttribute('href')
           if (!u) return
           let o, i
           try {
-            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+            ;((o = new URL(u, document.baseURI)),
+              (i = new URL(document.baseURI).origin))
           } catch {
             return
           }
           ;(o.protocol === 'http:' || o.protocol === 'https:') &&
             o.origin !== i &&
-            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+            (e.preventDefault(),
+            parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
         }
         const L = {}
         function y(e) {
           if (window === top) return
           const t = Date.now()
           t - (L[e] || 0) < 500 ||
-            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+            ((L[e] = t),
+            parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
         }
         const F = 2e3,
           T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
@@ -86,10 +97,12 @@
           e.isTrusted && (k = Date.now())
         }
         function z() {
-          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+          ;(addEventListener('click', M, !0),
+            addEventListener('auxclick', M, !0))
         }
         function W() {
-          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          for (let e = 0; e < T.length; e++)
+            addEventListener(T[e], B, { capture: !0, passive: !0 })
           ;(addEventListener(
             'scroll',
             (e) => {
@@ -113,7 +126,9 @@
             ))
         }
         function x(e, t, n) {
-          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          const u = [...t.values()].filter((o) =>
+            o.targets.some((i) => i.startsWith(e + '.')),
+          )
           return {
             wrap(o, i) {
               const f = `${e}.${o}`,
@@ -157,7 +172,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                              return (
+                                n({ id: h.id, scope: e, leg: 'returns' }),
+                                c
+                              )
                             }
                         }
                         return c
@@ -170,7 +188,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                              return (
+                                n({ id: h.id, scope: e, leg: 'throws' }),
+                                Promise.reject(c)
+                              )
                             }
                         }
                         return Promise.reject(c)
@@ -247,7 +268,9 @@
             else if (e === t) return !0
           return !1
         }
-        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+        const w = Object.freeze({
+            ...(window.__FRAME_PREAMBLE?.capabilities ?? {}),
+          }),
           E = window.__FRAME_PREAMBLE?.transforms,
           C = /^[\w.-]+\.js$/,
           V = /^[a-z][a-z0-9_-]{0,63}$/
@@ -277,7 +300,8 @@
           const t = document.documentElement
           e === 'light' || e === 'dark'
             ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
-            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+            : R &&
+              (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
         }
         const _ = new Map()
         function Q(e, t) {
@@ -319,7 +343,10 @@
             _.set(s, d)
             const m = new Proxy(d.impl, {
               get: (c, l) => {
-                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                if (
+                  typeof l == 'string' &&
+                  !(l === 'then' || l === 'toJSON' || l === 'valueOf')
+                )
                   return l === 'toString'
                     ? Object.prototype.toString
                     : (...h) => {
@@ -327,7 +354,12 @@
                         return p
                           ? p(...h)
                           : new Promise((b, S) => {
-                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                              d.queue.push({
+                                method: l,
+                                args: h,
+                                resolve: b,
+                                reject: S,
+                              })
                             })
                       }
               },
@@ -355,7 +387,8 @@
                 clearTimeout(o),
                 u?.()))
           }
-          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          ;(addEventListener('message', i),
+            parent.postMessage({ __frame_connect: !0 }, '*'))
           const f = new Promise((s) => {
               ;((u = s),
                 (o = setTimeout(() => {
@@ -365,7 +398,9 @@
             a =
               document.readyState === 'loading'
                 ? new Promise((s) =>
-                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                    document.addEventListener('DOMContentLoaded', () => s(), {
+                      once: !0,
+                    }),
                   )
                 : Promise.resolve()
           f.then(async () => {
@@ -373,14 +408,17 @@
               for (const r of _.keys())
                 O(r, {
                   code: 'not_granted',
-                  message: 'frame initialization did not arrive - capability unavailable',
+                  message:
+                    'frame initialization did not arrive - capability unavailable',
                 })
               return
             }
             N(n.theme)
             const s = g
             addEventListener('message', (r) => {
-              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+              r.source !== parent ||
+                r.origin !== s ||
+                (q(r.data) && N(r.data.__frame_theme.theme))
             })
             const d = (r) => U(() => import('/_runtime/' + r), void 0),
               m = Object.keys(n.capabilities ?? {})
@@ -491,8 +529,8 @@
         --accent: #b5461f;
         --red-ink: #b71c1c;
         --display:
-          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
-          system-ui, sans-serif;
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN',
+          'Quicksand', 'Trebuchet MS', system-ui, sans-serif;
         --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
         --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
@@ -761,7 +799,10 @@
         left: 50%;
         width: 3px;
         transform: translateX(-50%);
-        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        background: repeating-linear-gradient(
+          var(--ink) 0 7px,
+          transparent 7px 14px
+        );
         opacity: 0.4;
         z-index: 8;
       }
@@ -902,7 +943,8 @@
       }
       .btn .half.pull {
         background: color-mix(in srgb, #fff 55%, #d8d1bf);
-        border-bottom: 1.2px solid color-mix(in srgb, var(--ink) 40%, transparent);
+        border-bottom: 1.2px solid
+          color-mix(in srgb, var(--ink) 40%, transparent);
       }
       .btn .half.push {
         background: #ddd6c4;
@@ -1002,8 +1044,9 @@
         <p class="eyebrow">Concertina Hero · falling notes, animated</p>
         <h1>Notes in motion</h1>
         <p class="lede">
-          Live playfield, not a still. Watch a note drop, snap off cleanly right at the hit line,
-          and watch every button light the moment its note appears up top.
+          Live playfield, not a still. Watch a note drop, snap off cleanly right
+          at the hit line, and watch every button light the moment its note
+          appears up top.
         </p>
       </header>
 
@@ -1044,32 +1087,35 @@
         <div class="card">
           <span class="k">1 · at the line</span><b>Notes cut off at the line</b>
           <p>
-            A falling note is clipped hard at the hit line — a clean, flat edge, nothing shows past
-            it. That crisp cut makes the exact hit moment easy to read, classic rhythm-game style.
+            A falling note is clipped hard at the hit line — a clean, flat edge,
+            nothing shows past it. That crisp cut makes the exact hit moment
+            easy to read, classic rhythm-game style.
           </p>
         </div>
         <div class="card">
           <span class="k">2 · mirrored hands</span><b>Right hand is a mirror</b>
           <p>
-            The two hands mirror across the bellows divider, the way they sit on the real
-            instrument: the left hand's stagger leans one way, the right hand's leans the other.
-            Switch to 10, 20 or 30 to see it.
+            The two hands mirror across the bellows divider, the way they sit on
+            the real instrument: the left hand's stagger leans one way, the
+            right hand's leans the other. Switch to 10, 20 or 30 to see it.
           </p>
         </div>
         <div class="card">
-          <span class="k">3 · keys stay visible</span><b>Every incoming key lights up</b>
+          <span class="k">3 · keys stay visible</span
+          ><b>Every incoming key lights up</b>
           <p>
-            The moment a note appears at the top, its target button lights with the note's colour
-            and letters — so you can find the key long before the note lands, not just as it
-            arrives.
+            The moment a note appears at the top, its target button lights with
+            the note's colour and letters — so you can find the key long before
+            the note lands, not just as it arrives.
           </p>
         </div>
       </div>
 
       <p class="caption">
-        <b>Reading it:</b> each horizontal band is one beat; a note's height is how long to hold. A
-        tall bar feeds through the hit line as you hold it — the button glows and a spark sits on
-        the line while points build for the fraction you actually sustain.
+        <b>Reading it:</b> each horizontal band is one beat; a note's height is
+        how long to hold. A tall bar feeds through the hit line as you hold it —
+        the button glows and a spark sits on the line while points build for the
+        fraction you actually sustain.
       </p>
     </div>
 
@@ -1151,16 +1197,24 @@
             : s
         }
         const noteNames = (cfg, hand, row, c) =>
-          cfg.palette === 'rainbow' ? NOTES7[c] : NOTES3[hand][rowMap[cfg.R][row]][c]
+          cfg.palette === 'rainbow'
+            ? NOTES7[c]
+            : NOTES3[hand][rowMap[cfg.R][row]][c]
         const hueVar = (cfg, hand, c) =>
-          cfg.palette === 'rainbow' ? RAINBOW[c] : hand === 0 ? COOL[c] : WARM[c]
+          cfg.palette === 'rainbow'
+            ? RAINBOW[c]
+            : hand === 0
+              ? COOL[c]
+              : WARM[c]
         // buttons numbered left-to-right across the screen, top row first (1..N).
         // the right hand is mirrored, so its on-screen order runs c=cols-1 .. 0.
         const noteNumber = (cfg, hand, row, c) => {
           const cols = cfg.cols
           if (cfg.hands === 1) return c + 1
           const base = row * (2 * cols)
-          return hand === 'left' ? base + c + 1 : base + cols + (cols - 1 - c) + 1
+          return hand === 'left'
+            ? base + c + 1
+            : base + cols + (cols - 1 - c) + 1
         }
 
         const el = (cls) => {
@@ -1185,7 +1239,8 @@
             rowsSpan = (R - 1) * rowGapY,
             startY = kbTop + (kbH - (rowsSpan + BS)) / 2 + BS / 2
           const refl = (lx) => (mirror ? handW - lx : lx)
-          const bxL = (row, c) => originX + c * colGap + (row === 1 ? colGap / 2 : 0)
+          const bxL = (row, c) =>
+            originX + c * colGap + (row === 1 ? colGap / 2 : 0)
           const laneL = (c) => originX + c * colGap
           const nxL = (row, c, split) => {
             if (R === 1) return bxL(row, c)
@@ -1254,7 +1309,8 @@
           noteLayer.style.cssText = 'position:absolute;inset:0;'
           field.appendChild(noteLayer)
           const sparkLayer = el('')
-          sparkLayer.style.cssText = 'position:absolute;inset:0;pointer-events:none;'
+          sparkLayer.style.cssText =
+            'position:absolute;inset:0;pointer-events:none;'
 
           // keyboard (persistent buttons, blank until lit)
           const btnLayer = el('')
@@ -1304,7 +1360,16 @@
                 numEl.style.top = y + g.BS / 2 + NUMOFF + 'px'
                 numEl.style.fontSize = Math.max(8, g.BS * 0.28) + 'px'
                 btnLayer.appendChild(numEl)
-                keyMap.set(hand + '|' + row + '|' + c, { b, pull: ph, push: pu, x, y, row, c, hk })
+                keyMap.set(hand + '|' + row + '|' + c, {
+                  b,
+                  pull: ph,
+                  push: pu,
+                  x,
+                  y,
+                  row,
+                  c,
+                  hk,
+                })
               }
           })
           if (cfg.hands === 2) {
@@ -1369,7 +1434,8 @@
             const kc = Math.round((t - n.beat) / LOOP)
             for (let k = kc - 1; k <= kc + 1; k++) {
               const d = n.beat + k * LOOP - t
-              if (d <= B + 0.5 && d >= -(n.h + 1.3)) vis.push(Object.assign({}, n, { i, k, d }))
+              if (d <= B + 0.5 && d >= -(n.h + 1.3))
+                vis.push(Object.assign({}, n, { i, k, d }))
             }
           })
 
@@ -1462,8 +1528,10 @@
               b.classList.add('lit')
               b.classList.toggle('holding', !!info.holding)
               // colour the half that matches the incoming direction; letters are already there
-              rec.pull.style.background = info.dir === 'pull' ? fillExpr(rec.row, cfg.R, true) : ''
-              rec.push.style.background = info.dir === 'push' ? fillExpr(rec.row, cfg.R, false) : ''
+              rec.pull.style.background =
+                info.dir === 'pull' ? fillExpr(rec.row, cfg.R, true) : ''
+              rec.push.style.background =
+                info.dir === 'push' ? fillExpr(rec.row, cfg.R, false) : ''
               if (info.holding) {
                 let sp = sparkPool.get(keyid)
                 if (!sp) {
@@ -1473,7 +1541,10 @@
                 }
                 const sw = cfg.bs * 1.7,
                   sh = cfg.bs * 0.55
-                sp.style.setProperty('--hue', `var(${hueVar(cfg, rec.hk, rec.c)})`)
+                sp.style.setProperty(
+                  '--hue',
+                  `var(${hueVar(cfg, rec.hk, rec.c)})`,
+                )
                 sp.style.left = rec.x - sw / 2 + 'px'
                 sp.style.top = strikeY - sh / 2 + 'px'
                 sp.style.width = sw + 'px'

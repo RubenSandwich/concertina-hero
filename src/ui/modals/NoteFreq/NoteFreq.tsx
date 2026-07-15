@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { LANE_COLORS, getDefaultNotes, type Direction } from '#data/instrument'
 import type { Preset } from '#data/presets'
-import { startMic, stopMic, detectNote, tuningIssues, MIC_ERROR } from '#audio/pitch'
+import {
+  startMic,
+  stopMic,
+  detectNote,
+  tuningIssues,
+  MIC_ERROR,
+} from '#audio/pitch'
 import { slug, downloadJSON } from '../../../utils'
 import Modal from '#components/Modal/Modal'
 import './NoteFreq.css'
@@ -51,7 +57,9 @@ export default function NoteFreq({
   onMicStarted,
 }: NoteFreqProps) {
   const [name, setName] = useState(() => preset?.name || '')
-  const [rows, setRows] = useState<EditRow[]>(() => cloneRows(preset?.notes || getDefaultNotes()))
+  const [rows, setRows] = useState<EditRow[]>(() =>
+    cloneRows(preset?.notes || getDefaultNotes()),
+  )
   const [listening, setListening] = useState<Listening | null>(null)
   const [micErr, setMicErr] = useState('')
   const [nameErr, setNameErr] = useState('')
@@ -64,7 +72,9 @@ export default function NoteFreq({
   const issues = useMemo(() => tuningIssues(rows), [rows])
   const blocking = issues.some((issue) => issue.level === 'error')
   const cellHasIssue = (lane: number, type: Direction) =>
-    issues.some((issue) => issue.notes.some((n) => n.lane === lane && n.type === type))
+    issues.some((issue) =>
+      issue.notes.some((n) => n.lane === lane && n.type === type),
+    )
 
   // On unmount, stop any listening loop and release the mic (unless the game's
   // own mic mode is using it).
@@ -167,14 +177,18 @@ export default function NoteFreq({
       {nameErr && <p className="modal__err">{nameErr}</p>}
 
       <p className="modal__hint">
-        Tune each button to your instrument — type a frequency, or click 🎤 and play the note.
+        Tune each button to your instrument — type a frequency, or click 🎤 and
+        play the note.
       </p>
 
       <div className="modal__body">
         <div className="freq-list">
           {rows.map((row, lane) => (
             <div className="freq-row" key={lane}>
-              <span className="freq-row__btn" style={{ '--lane': LANE_COLORS[lane] }}>
+              <span
+                className="freq-row__btn"
+                style={{ '--lane': LANE_COLORS[lane] }}
+              >
                 {lane + 1}
               </span>
               {(['push', 'pull'] as const).map((type) => {
@@ -183,7 +197,9 @@ export default function NoteFreq({
                 return (
                   <div
                     className={
-                      'freq-cell' + (on ? ' is-listening' : '') + (flagged ? ' has-issue' : '')
+                      'freq-cell' +
+                      (on ? ' is-listening' : '') +
+                      (flagged ? ' has-issue' : '')
                     }
                     key={type}
                   >

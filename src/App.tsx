@@ -2,7 +2,11 @@ import { useMemo, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { getSongs } from '#data/songLibrary'
 import { withLeadIn, type Song } from '#data/songs'
-import { getActiveInstrument, setActiveInstrument, type InstrumentSize } from '#data/instrument'
+import {
+  getActiveInstrument,
+  setActiveInstrument,
+  type InstrumentSize,
+} from '#data/instrument'
 import { applyActivePreset } from '#data/presets'
 import type { GameResult } from '#hooks/useGameEngine'
 import Start, { type StartSections } from '#screens/Start/Start'
@@ -48,7 +52,9 @@ export default function App() {
 
   // The active instrument (a global setting): drives geometry/colours/tuning, and
   // gates which songs are playable.
-  const [instrumentSize, setInstrumentSize] = useState<InstrumentSize>(() => getActiveInstrument())
+  const [instrumentSize, setInstrumentSize] = useState<InstrumentSize>(() =>
+    getActiveInstrument(),
+  )
 
   // Switch instruments: rebuild the note map from the new layout, re-apply that
   // size's own saved tuning on top, then re-render everything that reads them.
@@ -129,7 +135,9 @@ export default function App() {
             song={song}
             result={result}
             speed={speed}
-            onReplay={() => startGame(songIndex, speed, waitForNote, hideFeedback, 'backward')}
+            onReplay={() =>
+              startGame(songIndex, speed, waitForNote, hideFeedback, 'backward')
+            }
             onMenu={goToMenu}
           />
         )}

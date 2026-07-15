@@ -40,15 +40,25 @@ export default function ListRow({
     </span>
   )
 
-  const hasTrailing = Boolean(tags?.length) || Boolean(onEdit) || Boolean(onDelete)
+  const hasTrailing =
+    Boolean(tags?.length) || Boolean(onEdit) || Boolean(onDelete)
 
   return (
     <li
-      className={'list-row' + (onSelect ? ' is-selectable' : '') + (selected ? ' is-selected' : '')}
+      className={
+        'list-row' +
+        (onSelect ? ' is-selectable' : '') +
+        (selected ? ' is-selected' : '')
+      }
       style={color ? { '--card': color } : undefined}
     >
       {onSelect ? (
-        <button type="button" className="list-row__main" onClick={onSelect} aria-pressed={selected}>
+        <button
+          type="button"
+          className="list-row__main"
+          onClick={onSelect}
+          aria-pressed={selected}
+        >
           <span className="list-row__check" aria-hidden="true">
             ✓
           </span>

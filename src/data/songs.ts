@@ -143,7 +143,10 @@ function deriveSections(notes: Note[], duration: number): Section[] {
 }
 
 // buildSong accepts a definition whose `subdivision`/`builtin` may be omitted.
-type BuildInput = Omit<SongDef, 'subdivision'> & { subdivision?: number; builtin?: boolean }
+type BuildInput = Omit<SongDef, 'subdivision'> & {
+  subdivision?: number
+  builtin?: boolean
+}
 
 // Build a raw definition into a playable song: parse its chart into notes and
 // push/pull sections, keeping the raw fields so it round-trips through the editor.
@@ -158,7 +161,10 @@ export function buildSong({
   chart,
   builtin = false,
 }: BuildInput): Song {
-  const { notes, duration, requiredButtons } = parseChart(chart.join('\n'), { bpm, subdivision })
+  const { notes, duration, requiredButtons } = parseChart(chart.join('\n'), {
+    bpm,
+    subdivision,
+  })
   const sections = deriveSections(notes, duration)
   return {
     id,

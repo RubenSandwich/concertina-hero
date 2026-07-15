@@ -23,7 +23,8 @@ export default function ScreenGuard() {
 
   // If the physical screen can reach the width in *some* orientation, the player
   // can just resize (or rotate); otherwise the device itself is too small.
-  const canWiden = Math.max(window.screen.width, window.screen.height) >= MIN_APP_WIDTH
+  const canWiden =
+    Math.max(window.screen.width, window.screen.height) >= MIN_APP_WIDTH
 
   return (
     <div
@@ -44,13 +45,15 @@ export default function ScreenGuard() {
         <p className="screen-guard__body">
           {canWiden ? (
             <>
-              Concertina Hero needs a window at least <b>{MIN_APP_WIDTH}px</b> wide so the whole
-              keyboard fits. Widen your browser window to keep playing.
+              Concertina Hero needs a window at least <b>{MIN_APP_WIDTH}px</b>{' '}
+              wide so the whole keyboard fits. Widen your browser window to keep
+              playing.
             </>
           ) : (
             <>
-              Concertina Hero needs a screen at least <b>{MIN_APP_WIDTH}px</b> wide — the keyboard
-              can be up to 30 buttons across. Please switch to a tablet or desktop.
+              Concertina Hero needs a screen at least <b>{MIN_APP_WIDTH}px</b>{' '}
+              wide — the keyboard can be up to 30 buttons across. Please switch
+              to a tablet or desktop.
             </>
           )}
         </p>

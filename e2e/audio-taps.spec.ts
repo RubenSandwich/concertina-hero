@@ -1,9 +1,18 @@
 import { test, expect } from '@playwright/test'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { setWaitForNote, enableMic, startFakeMic, mockMicFromWav, startSong } from './helpers'
+import {
+  setWaitForNote,
+  enableMic,
+  startFakeMic,
+  mockMicFromWav,
+  startSong,
+} from './helpers'
 
-const TAPS_WAV = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures/taps.wav')
+const TAPS_WAV = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  'fixtures/taps.wav',
+)
 
 // Real end-to-end audio test: rather than mocking `detectChord()` at the JS
 // level, this feeds an actual synthesized recording of "Taps" into a fake
@@ -23,7 +32,9 @@ const TAPS_WAV = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtur
 // plays next always eventually satisfies it, in order, however many loop
 // cycles that takes ("-5" the only note that occurs once per 14s loop, so the
 // worst case is a small number of loops — hence the long test timeout below).
-test('the mic recognizes every note of a real "Taps" performance', async ({ page }) => {
+test('the mic recognizes every note of a real "Taps" performance', async ({
+  page,
+}) => {
   test.setTimeout(120_000)
   await mockMicFromWav(page, TAPS_WAV, { loop: true })
   await page.goto('/')
@@ -32,7 +43,9 @@ test('the mic recognizes every note of a real "Taps" performance', async ({ page
   await startFakeMic(page)
   await startSong(page, 'Taps')
 
-  await expect(page.getByRole('heading', { name: 'Song Complete!' })).toBeVisible({
+  await expect(
+    page.getByRole('heading', { name: 'Song Complete!' }),
+  ).toBeVisible({
     timeout: 100_000,
   })
   // Every note was eventually heard and played correctly — none timed out,

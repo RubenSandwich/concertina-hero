@@ -58,7 +58,9 @@ function convertKalimbaToAccordion(kalimbaStr) {
 
           const mappedToken = noteMap[cleanToken]
           if (!mappedToken) {
-            throw new Error(`No mapping found for token "${token}", on line "${line}"`)
+            throw new Error(
+              `No mapping found for token "${token}", on line "${line}"`,
+            )
           }
 
           return mappedToken

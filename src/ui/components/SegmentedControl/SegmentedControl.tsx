@@ -33,7 +33,9 @@ export default function SegmentedControl<T extends string | number>({
   const ref = useRef<HTMLDivElement>(null)
 
   const focusOption = (index: number) => {
-    ref.current?.querySelectorAll<HTMLElement>('.segmented__option')[index]?.focus()
+    ref.current
+      ?.querySelectorAll<HTMLElement>('.segmented__option')
+      [index]?.focus()
   }
 
   const select = (index: number) => {
@@ -68,7 +70,13 @@ export default function SegmentedControl<T extends string | number>({
   }
 
   return (
-    <div className="segmented" role="radiogroup" aria-label={label} ref={ref} onKeyDown={onKeyDown}>
+    <div
+      className="segmented"
+      role="radiogroup"
+      aria-label={label}
+      ref={ref}
+      onKeyDown={onKeyDown}
+    >
       {options.map((opt) => {
         const selected = opt.value === value
         return (

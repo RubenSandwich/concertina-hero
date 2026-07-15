@@ -27,7 +27,9 @@ const HEX_RE = /^#[0-9a-f]{3,8}$/i
 const SONGS_KEY = 'accordion-user-songs'
 
 function makeSongId(): string {
-  return 'song-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
+  return (
+    'song-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)
+  )
 }
 
 function isBuiltinId(id: string): boolean {
@@ -36,13 +38,18 @@ function isBuiltinId(id: string): boolean {
 
 // Validate + normalize a raw song definition (from the editor or an upload) into
 // the fields buildSong needs. Throws a friendly Error when something's missing.
-export function normalizeSongDef(data: unknown, { id }: { id?: string } = {}): SongDef {
-  if (!data || typeof data !== 'object') throw new Error('The file must contain a song object.')
+export function normalizeSongDef(
+  data: unknown,
+  { id }: { id?: string } = {},
+): SongDef {
+  if (!data || typeof data !== 'object')
+    throw new Error('The file must contain a song object.')
   const d = data as Record<string, unknown>
   const name = typeof d.name === 'string' ? d.name.trim() : ''
   if (!name) throw new Error('Song needs a name.')
   const bpm = Number(d.bpm)
-  if (!Number.isFinite(bpm) || bpm <= 0) throw new Error('Song needs a positive BPM.')
+  if (!Number.isFinite(bpm) || bpm <= 0)
+    throw new Error('Song needs a positive BPM.')
   // chart is an array of lines (see SongDef); accept a plain string too, for a
   // hand-written upload that didn't split it up.
   const chart = Array.isArray(d.chart)
@@ -54,7 +61,9 @@ export function normalizeSongDef(data: unknown, { id }: { id?: string } = {}): S
     throw new Error('Song needs a chart (tokens like +3 or -4).')
   }
   if (!chartNoteCount(chart.join('\n'))) {
-    throw new Error('The chart has no playable notes (use tokens like +3 or -4).')
+    throw new Error(
+      'The chart has no playable notes (use tokens like +3 or -4).',
+    )
   }
   const sub = Number(d.subdivision)
   const subdivision = Number.isFinite(sub) && sub > 0 ? sub : 1
@@ -62,11 +71,15 @@ export function normalizeSongDef(data: unknown, { id }: { id?: string } = {}): S
     typeof d.color === 'string' && HEX_RE.test(d.color.trim())
       ? d.color.trim()
       : randomAccentColor()
-  const difficulty: Difficulty = DIFFICULTIES.includes(d.difficulty as Difficulty)
+  const difficulty: Difficulty = DIFFICULTIES.includes(
+    d.difficulty as Difficulty,
+  )
     ? (d.difficulty as Difficulty)
     : 'Medium'
   const blurb =
-    typeof d.blurb === 'string' && d.blurb.trim() ? d.blurb.trim().slice(0, 120) : 'A custom song.'
+    typeof d.blurb === 'string' && d.blurb.trim()
+      ? d.blurb.trim().slice(0, 120)
+      : 'A custom song.'
   return {
     id: id || makeSongId(),
     name: name.slice(0, 60),
@@ -106,7 +119,9 @@ export function getSongs(): Song[] {
   for (const raw of readUserDefs()) {
     try {
       const rawId = (raw as { id?: unknown })?.id
-      const def = normalizeSongDef(raw, { id: typeof rawId === 'string' ? rawId : undefined })
+      const def = normalizeSongDef(raw, {
+        id: typeof rawId === 'string' ? rawId : undefined,
+      })
       user.push(buildSong({ ...def, builtin: false }))
     } catch {
       /* skip an unusable stored song */
@@ -118,10 +133,15 @@ export function getSongs(): Song[] {
 // Create or update a user song from a raw definition. Returns the built song.
 export function saveSong(data: unknown): Song {
   const dataId = (data as { id?: unknown })?.id
-  const keepId = typeof dataId === 'string' && dataId && !isBuiltinId(dataId) ? dataId : undefined
+  const keepId =
+    typeof dataId === 'string' && dataId && !isBuiltinId(dataId)
+      ? dataId
+      : undefined
   const def = normalizeSongDef(data, { id: keepId })
   const song = buildSong({ ...def, builtin: false })
-  const defs = readUserDefs().filter((d): d is SongDef => !!d && typeof d === 'object')
+  const defs = readUserDefs().filter(
+    (d): d is SongDef => !!d && typeof d === 'object',
+  )
   const i = defs.findIndex((d) => d.id === def.id)
   if (i >= 0) defs[i] = def
   else defs.push(def)
@@ -133,7 +153,8 @@ export function saveSong(data: unknown): Song {
 export function deleteSong(id: string): void {
   if (isBuiltinId(id)) return
   const defs = readUserDefs().filter(
-    (d): d is SongDef => !!d && typeof d === 'object' && (d as SongDef).id !== id,
+    (d): d is SongDef =>
+      !!d && typeof d === 'object' && (d as SongDef).id !== id,
   )
   writeUserDefs(defs)
 }

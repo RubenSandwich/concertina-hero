@@ -19,11 +19,18 @@ import {
   TRANSIENT_MAX,
   MIC_FFT_SIZE,
 } from './pitch.ts'
-import { LANE_NOTES, setNoteFrequencies, getDefaultNotes } from '../data/instrument.ts'
+import {
+  LANE_NOTES,
+  setNoteFrequencies,
+  getDefaultNotes,
+} from '../data/instrument.ts'
 
 // LANE_NOTES is a live, module-level map, so any test that retunes it must put it
 // back — the whole file shares one instrument.
-function withTuning(rows: { push: { freq: number }; pull: { freq: number } }[], run: () => void) {
+function withTuning(
+  rows: { push: { freq: number }; pull: { freq: number } }[],
+  run: () => void,
+) {
   try {
     setNoteFrequencies(rows)
     run()
@@ -146,7 +153,10 @@ test('analyzeBuffer maps each button note to the right button and direction', ()
     for (const type of DIRECTIONS) {
       const { freq, name } = LANE_NOTES[lane][type]
       const r = analyzeBuffer(makeBuffer(freq, { type: 'saw' }), SR)
-      assert.ok(r && r.matched, `no match for button ${lane + 1} ${type} (${name})`)
+      assert.ok(
+        r && r.matched,
+        `no match for button ${lane + 1} ${type} (${name})`,
+      )
       assert.equal(r.lane, lane, `wrong button for ${name} ${type}`)
       assert.equal(r.type, type)
       assert.equal(r.name, name)
@@ -161,7 +171,10 @@ test('analyzeBuffer returns null for silence', () => {
 // ---------- Chord (multi-pitch) detection ----------
 
 test('spectrum peaks in the bin holding the tone', () => {
-  const { mag, binHz } = spectrum(makeBuffer(440, { type: 'sine', size: MIC_FFT_SIZE }), SR)
+  const { mag, binHz } = spectrum(
+    makeBuffer(440, { type: 'sine', size: MIC_FFT_SIZE }),
+    SR,
+  )
   let peak = 0
   let peakBin = -1
   for (let k = 0; k < mag.length; k++) {
@@ -170,7 +183,10 @@ test('spectrum peaks in the bin holding the tone', () => {
       peakBin = k
     }
   }
-  assert.ok(Math.abs(peakBin * binHz - 440) <= binHz, `peak at ${(peakBin * binHz).toFixed(1)} Hz`)
+  assert.ok(
+    Math.abs(peakBin * binHz - 440) <= binHz,
+    `peak at ${(peakBin * binHz).toFixed(1)} Hz`,
+  )
 })
 
 test('spectrum of silence is flat zero', () => {
@@ -183,7 +199,11 @@ test('analyzeChord finds each single button note, with its direction', () => {
     for (const type of DIRECTIONS) {
       const { freq, name } = LANE_NOTES[lane][type]
       const found = analyzeChord(makeChordBuffer([freq]), SR)
-      assert.equal(found.length, 1, `button ${lane + 1} ${type} (${name}) -> ${found.length} notes`)
+      assert.equal(
+        found.length,
+        1,
+        `button ${lane + 1} ${type} (${name}) -> ${found.length} notes`,
+      )
       assert.equal(found[0].lane, lane)
       assert.equal(found[0].type, type)
       assert.equal(found[0].name, name)
@@ -201,7 +221,11 @@ test('analyzeChord resolves the chords Chord Parade actually uses', () => {
   ]
   for (const [lanes, type] of chords) {
     const found = analyzeChord(makeChordBuffer(freqsOf(lanes, type)), SR)
-    assert.deepEqual(lanesOf(found), lanes, `${type} chord on buttons ${lanes.map((l) => l + 1)}`)
+    assert.deepEqual(
+      lanesOf(found),
+      lanes,
+      `${type} chord on buttons ${lanes.map((l) => l + 1)}`,
+    )
     assert.ok(
       found.every((n) => n.type === type),
       'every note of a chord shares one bellows direction',
@@ -253,8 +277,19 @@ function harmonicPairs(type: 'push' | 'pull'): string[] {
 }
 
 test('the buttons that collide as harmonics are exactly the known ones', () => {
-  assert.deepEqual(harmonicPairs('push'), ['1->4:h2', '1->6:h3', '2->5:h2', '2->7:h3', '3->6:h2'])
-  assert.deepEqual(harmonicPairs('pull'), ['1->5:h2', '1->7:h3', '2->6:h2', '3->7:h2'])
+  assert.deepEqual(harmonicPairs('push'), [
+    '1->4:h2',
+    '1->6:h3',
+    '2->5:h2',
+    '2->7:h3',
+    '3->6:h2',
+  ])
+  assert.deepEqual(harmonicPairs('pull'), [
+    '1->5:h2',
+    '1->7:h3',
+    '2->6:h2',
+    '3->7:h2',
+  ])
 })
 
 test('no chord the game ships contains a harmonic of one of its own notes', () => {
@@ -293,8 +328,14 @@ test('analyzeChord never mixes push and pull notes', () => {
 
 test('analyzeChord honours the maxNotes cap', () => {
   const freqs = freqsOf([0, 2, 4], 'push')
-  assert.equal(analyzeChord(makeChordBuffer(freqs), SR, { maxNotes: 2 }).length, 2)
-  assert.equal(analyzeChord(makeChordBuffer(freqs), SR, { maxNotes: 1 }).length, 1)
+  assert.equal(
+    analyzeChord(makeChordBuffer(freqs), SR, { maxNotes: 2 }).length,
+    2,
+  )
+  assert.equal(
+    analyzeChord(makeChordBuffer(freqs), SR, { maxNotes: 1 }).length,
+    1,
+  )
 })
 
 test('analyzeChord returns nothing for silence', () => {
@@ -312,10 +353,19 @@ test('analyzeChord follows a retuned instrument', () => {
   }))
   withTuning(down2, () => {
     const freqs = [0, 2, 4].map((l) => LANE_NOTES[l].push.freq)
-    assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer(freqs), SR)), [0, 2, 4])
-    assert.ok(Math.abs(LANE_NOTES[0].push.freq - 233.08) < 0.1, 'tuning really did change')
+    assert.deepEqual(
+      lanesOf(analyzeChord(makeChordBuffer(freqs), SR)),
+      [0, 2, 4],
+    )
+    assert.ok(
+      Math.abs(LANE_NOTES[0].push.freq - 233.08) < 0.1,
+      'tuning really did change',
+    )
   })
-  assert.ok(Math.abs(LANE_NOTES[0].push.freq - 261.63) < 0.01, 'defaults restored')
+  assert.ok(
+    Math.abs(LANE_NOTES[0].push.freq - 261.63) < 0.01,
+    'defaults restored',
+  )
 })
 
 test('a tuning where lane order is not ascending still resolves', () => {
@@ -328,8 +378,16 @@ test('a tuning where lane order is not ascending still resolves', () => {
     pull: { freq: n.pull.freq },
   }))
   withTuning(swapped, () => {
-    assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer([300]), SR)), [1], 'only button 2 sounds')
-    assert.deepEqual(lanesOf(analyzeChord(makeChordBuffer([600]), SR)), [0], 'only button 1 sounds')
+    assert.deepEqual(
+      lanesOf(analyzeChord(makeChordBuffer([300]), SR)),
+      [1],
+      'only button 2 sounds',
+    )
+    assert.deepEqual(
+      lanesOf(analyzeChord(makeChordBuffer([600]), SR)),
+      [0],
+      'only button 1 sounds',
+    )
   })
 })
 
@@ -339,7 +397,8 @@ const freqRows = (push: number[], pull: number[]) =>
   push.map((f, i) => ({ push: { freq: f }, pull: { freq: pull[i] } }))
 
 // A chromatic run of 7 semitones starting at `base`.
-const chromatic = (base: number) => Array.from({ length: 7 }, (_, i) => base * Math.pow(2, i / 12))
+const chromatic = (base: number) =>
+  Array.from({ length: 7 }, (_, i) => base * Math.pow(2, i / 12))
 
 test('the default tuning raises no issues', () => {
   assert.deepEqual(tuningIssues(getDefaultNotes()), [])
@@ -350,7 +409,9 @@ test('a missing frequency is an error, not a warning', () => {
     push: { freq: number | string }
     pull: { freq: number | string }
   }[]
-  const broken = rows.map((r, i) => (i === 2 ? { push: { freq: '' }, pull: r.pull } : r))
+  const broken = rows.map((r, i) =>
+    i === 2 ? { push: { freq: '' }, pull: r.pull } : r,
+  )
   const errors = tuningIssues(broken).filter((x) => x.level === 'error')
   assert.equal(errors.length, 1)
   assert.match(errors[0].message, /Button 3 push needs a frequency/)
@@ -361,7 +422,10 @@ test('a note outside the microphone band warns but does not block', () => {
   rows[0].push.freq = 60
   const issues = tuningIssues(rows)
   assert.ok(
-    issues.some((x) => x.level === 'warning' && /outside the 150–1200Hz range/.test(x.message)),
+    issues.some(
+      (x) =>
+        x.level === 'warning' && /outside the 150–1200Hz range/.test(x.message),
+    ),
   )
   assert.equal(issues.filter((x) => x.level === 'error').length, 0)
 })
@@ -392,7 +456,11 @@ test('a chromatic row raises no issues at any pitch inside the mic band', () => 
 test('under the default tuning every note is its own only alias', () => {
   for (let lane = 0; lane < LANE_NOTES.length; lane++) {
     for (const type of DIRECTIONS) {
-      assert.deepEqual(aliasesOf(lane, type), [{ lane, type }], `button ${lane + 1} ${type}`)
+      assert.deepEqual(
+        aliasesOf(lane, type),
+        [{ lane, type }],
+        `button ${lane + 1} ${type}`,
+      )
     }
   }
 })
@@ -416,7 +484,11 @@ test('two buttons a semitone apart down low are aliases; up high they are not', 
   const low = getDefaultNotes()
   low[1].push.freq = low[0].push.freq * Math.pow(2, 1 / 12) // 15.6Hz apart
   withTuning(low, () => {
-    assert.equal(aliasesOf(0, 'push').length, 2, 'the mic cannot separate them at middle C')
+    assert.equal(
+      aliasesOf(0, 'push').length,
+      2,
+      'the mic cannot separate them at middle C',
+    )
   })
 
   // 800Hz clears every default pull note by more than CROSS_DIRECTION_ALIAS_HZ,
@@ -436,8 +508,15 @@ test('two buttons a semitone apart down low are aliases; up high they are not', 
 // ---------- Transient rejection ----------
 
 test('transience is ~0 for a steady tone and for silence', () => {
-  assert.ok(transience(makeChordBuffer([440])) < 0.05, 'a steady tone is stationary')
-  assert.equal(transience(new Float32Array(MIC_FFT_SIZE)), 0, 'silence has no change in level')
+  assert.ok(
+    transience(makeChordBuffer([440])) < 0.05,
+    'a steady tone is stationary',
+  )
+  assert.equal(
+    transience(new Float32Array(MIC_FFT_SIZE)),
+    0,
+    'silence has no change in level',
+  )
 })
 
 test('transience is high when a note starts partway through the window', () => {
@@ -455,9 +534,14 @@ test('transience is high when a note stops partway through the window', () => {
 
 test('TRANSIENT_MAX separates steady windows from straddling ones', () => {
   const steady = transience(makeChordBuffer([261.63, 392]))
-  const straddling = transience(makeChordBuffer([261.63, 392], { startAt: MIC_FFT_SIZE / 2 }))
+  const straddling = transience(
+    makeChordBuffer([261.63, 392], { startAt: MIC_FFT_SIZE / 2 }),
+  )
   assert.ok(steady <= TRANSIENT_MAX, `steady ${steady} should be believed`)
-  assert.ok(straddling > TRANSIENT_MAX, `straddling ${straddling} should be rejected`)
+  assert.ok(
+    straddling > TRANSIENT_MAX,
+    `straddling ${straddling} should be rejected`,
+  )
 })
 
 test('a chord struck partway through the window is still heard', () => {

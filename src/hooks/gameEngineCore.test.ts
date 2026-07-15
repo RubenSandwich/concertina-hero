@@ -46,7 +46,11 @@ function advance(
   })
 }
 
-const chordNote = (lane: number, type: 'push' | 'pull', name = 'x'): ChordNote => ({
+const chordNote = (
+  lane: number,
+  type: 'push' | 'pull',
+  name = 'x',
+): ChordNote => ({
   lane,
   type,
   name,
@@ -87,7 +91,11 @@ test('a perfectly-timed, fully-held press scores full points', () => {
   // Hold it for the full beat: the note finalizes at clock 500.
   ;({ state } = advance(state, 500))
   assert.equal(state.notes[0].state, 'hit')
-  assert.equal(state.score, 100, 'a fully-held perfect note is worth its full 100 points')
+  assert.equal(
+    state.score,
+    100,
+    'a fully-held perfect note is worth its full 100 points',
+  )
 
   // Release, then press pull on lane 0 dead on its beat (500).
   ;({ state } = advance(state, 0, {
@@ -149,7 +157,11 @@ test('waitForNote clamps the clock at the earliest unplayed note until it is hit
     events: [{ kind: 'press', lane: 0, pull: false, gameTime: 0 }],
   })
   const { state: freed } = advance(played, 10_000, { waitForNote: true })
-  assert.equal(freed.clock, 10_000, 'no more active note left to hold the barrier')
+  assert.equal(
+    freed.clock,
+    10_000,
+    'no more active note left to hold the barrier',
+  )
 })
 
 test('a mic onset needs two consecutive stable frames before it registers', () => {
@@ -159,7 +171,11 @@ test('a mic onset needs two consecutive stable frames before it registers', () =
   const heard: ChordReading = { notes: [chordNote(0, 'push')], stable: true }
 
   const first = advance(state, 0, { micReading: heard })
-  assert.equal(first.state.notes[0].state, 'active', 'first frame is only a debounce candidate')
+  assert.equal(
+    first.state.notes[0].state,
+    'active',
+    'first frame is only a debounce candidate',
+  )
 
   const second = advance(first.state, 0, { micReading: heard })
   assert.equal(second.state.notes[0].state, 'holding')
@@ -169,7 +185,9 @@ test('a mic onset needs two consecutive stable frames before it registers', () =
     'graded from clock - MIC_LATENCY, not clock',
   )
   assert.ok(
-    second.events.some((e) => e.type === 'log' && e.message.includes('▶ onset')),
+    second.events.some(
+      (e) => e.type === 'log' && e.message.includes('▶ onset'),
+    ),
     'the onset is reported as a log event, not printed directly',
   )
 })
@@ -196,7 +214,11 @@ test('the song ends once its duration + the end buffer has passed, exactly once'
 
   const { state: next, events } = advance(state, 6000) // clock 3000, well past 500 + 1800
   assert.equal(next.finished, true)
-  assert.equal(next.notes[0].state, 'miss', 'the untouched note is judged before the song ends')
+  assert.equal(
+    next.notes[0].state,
+    'miss',
+    'the untouched note is judged before the song ends',
+  )
   const finished = events.find((e) => e.type === 'finished')
   assert.ok(finished && finished.type === 'finished')
   assert.deepEqual(finished.result, {

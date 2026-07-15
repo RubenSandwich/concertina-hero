@@ -92,7 +92,13 @@ body,
 }
 
 body {
-  background: linear-gradient(180deg, #a7e5ff 0%, #cdefff 26%, #ffe9b0 72%, #ffd7a1 100%);
+  background: linear-gradient(
+    180deg,
+    #a7e5ff 0%,
+    #cdefff 26%,
+    #ffe9b0 72%,
+    #ffd7a1 100%
+  );
   overflow: hidden;
 }
 
@@ -282,7 +288,9 @@ html[data-transition='backward']::view-transition-old(screen) {
   margin-right: var(--sp-8);
   vertical-align: middle;
   transform: rotate(4deg);
-  filter: drop-shadow(3px 4px 0 color-mix(in srgb, var(--ink) 20%, transparent));
+  filter: drop-shadow(
+    3px 4px 0 color-mix(in srgb, var(--ink) 20%, transparent)
+  );
 }
 .title--small {
   font-size: clamp(2rem, 5vw, 3rem);

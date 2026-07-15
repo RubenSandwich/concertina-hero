@@ -11,7 +11,13 @@ interface ResultsProps {
   onMenu: () => void
 }
 
-export default function Results({ song, result, speed = 1, onReplay, onMenu }: ResultsProps) {
+export default function Results({
+  song,
+  result,
+  speed = 1,
+  onReplay,
+  onMenu,
+}: ResultsProps) {
   const rank = rankFor(result.accuracy)
   const { counts } = result
 

@@ -20,7 +20,15 @@ const dirname = path.dirname(fileURLToPath(import.meta.url))
 // Loads and builds a built-in song from its raw JSON definition
 // (src/data/builtinSongs/<id>.json — see src/data/songLibrary.ts).
 export function loadBuiltinSong(id) {
-  const defPath = path.join(dirname, '..', '..', 'src', 'data', 'builtinSongs', `${id}.json`)
+  const defPath = path.join(
+    dirname,
+    '..',
+    '..',
+    'src',
+    'data',
+    'builtinSongs',
+    `${id}.json`,
+  )
   const def = JSON.parse(readFileSync(defPath, 'utf8'))
   return buildSong(def)
 }
@@ -33,7 +41,13 @@ export function noteFrequencies(song) {
 }
 
 // A single sine tone, with a short linear fade in/out so it doesn't click.
-export function toneSamples(freq, ms, fadeMs, amplitude, sampleRate = SAMPLE_RATE) {
+export function toneSamples(
+  freq,
+  ms,
+  fadeMs,
+  amplitude,
+  sampleRate = SAMPLE_RATE,
+) {
   const n = Math.round((ms / 1000) * sampleRate)
   const fadeN = Math.round((fadeMs / 1000) * sampleRate)
   const samples = new Float64Array(n)
@@ -41,7 +55,8 @@ export function toneSamples(freq, ms, fadeMs, amplitude, sampleRate = SAMPLE_RAT
     let env = 1
     if (i < fadeN) env = i / fadeN
     else if (i > n - fadeN) env = (n - i) / fadeN
-    samples[i] = Math.sin((2 * Math.PI * freq * i) / sampleRate) * amplitude * env
+    samples[i] =
+      Math.sin((2 * Math.PI * freq * i) / sampleRate) * amplitude * env
   }
   return samples
 }

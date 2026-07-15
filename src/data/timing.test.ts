@@ -22,15 +22,35 @@ test('missTime lands at the end of the note s one-beat hold window', () => {
 })
 
 test('isPlayable opens HIT_WINDOW before the beat', () => {
-  assert.equal(isPlayable(1000 - HIT_WINDOW, 1000, BEAT), true, 'earliest allowed press')
-  assert.equal(isPlayable(1000 - HIT_WINDOW - 1, 1000, BEAT), false, 'too early to count')
+  assert.equal(
+    isPlayable(1000 - HIT_WINDOW, 1000, BEAT),
+    true,
+    'earliest allowed press',
+  )
+  assert.equal(
+    isPlayable(1000 - HIT_WINDOW - 1, 1000, BEAT),
+    false,
+    'too early to count',
+  )
 })
 
 test('isPlayable keeps a late note catchable until it is all the way gone', () => {
   assert.equal(isPlayable(1000, 1000, BEAT), true, 'right on the beat')
-  assert.equal(isPlayable(1300, 1000, BEAT), true, 'half a beat late still catches it')
-  assert.equal(isPlayable(1599, 1000, BEAT), true, 'a hair before it leaves the line')
-  assert.equal(isPlayable(1600, 1000, BEAT), false, 'missed once the card has fully gone')
+  assert.equal(
+    isPlayable(1300, 1000, BEAT),
+    true,
+    'half a beat late still catches it',
+  )
+  assert.equal(
+    isPlayable(1599, 1000, BEAT),
+    true,
+    'a hair before it leaves the line',
+  )
+  assert.equal(
+    isPlayable(1600, 1000, BEAT),
+    false,
+    'missed once the card has fully gone',
+  )
   assert.equal(isPlayable(1700, 1000, BEAT), false, 'well past the note')
 })
 
@@ -44,9 +64,17 @@ test('a note is never both missed and still playable', () => {
 test('short beats shrink the late window below the early one', () => {
   const fast = 100 // a 16th at speed, shorter than HIT_WINDOW
   assert.equal(missTime(0, fast), 100)
-  assert.equal(isPlayable(-HIT_WINDOW, 0, fast), true, 'early tolerance is unchanged')
+  assert.equal(
+    isPlayable(-HIT_WINDOW, 0, fast),
+    true,
+    'early tolerance is unchanged',
+  )
   assert.equal(isPlayable(99, 0, fast), true)
-  assert.equal(isPlayable(100, 0, fast), false, 'the beat is over, so the note is gone')
+  assert.equal(
+    isPlayable(100, 0, fast),
+    false,
+    'the beat is over, so the note is gone',
+  )
 })
 
 test('noteProgress maps time-until-hit to a fall from the top (0) to the line (1)', () => {
@@ -59,9 +87,21 @@ test('noteProgress maps time-until-hit to a fall from the top (0) to the line (1
 test('noteVisible spans spawn to one beat past the line, and nothing else', () => {
   const beatFrac = 0.2 // a one-beat-tall card
   assert.equal(noteVisible(-0.01, beatFrac), false, 'not spawned yet')
-  assert.equal(noteVisible(0.0, beatFrac), false, 'exactly at the top edge is not yet in')
+  assert.equal(
+    noteVisible(0.0, beatFrac),
+    false,
+    'exactly at the top edge is not yet in',
+  )
   assert.equal(noteVisible(0.5, beatFrac), true, 'falling through the zone')
   assert.equal(noteVisible(1, beatFrac), true, 'on the hit line')
-  assert.equal(noteVisible(1 + beatFrac - 0.01, beatFrac), true, 'still clipping away')
-  assert.equal(noteVisible(1 + beatFrac, beatFrac), false, 'fully past the line — gone')
+  assert.equal(
+    noteVisible(1 + beatFrac - 0.01, beatFrac),
+    true,
+    'still clipping away',
+  )
+  assert.equal(
+    noteVisible(1 + beatFrac, beatFrac),
+    false,
+    'fully past the line — gone',
+  )
 })

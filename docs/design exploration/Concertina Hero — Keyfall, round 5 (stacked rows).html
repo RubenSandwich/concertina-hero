@@ -25,7 +25,10 @@
             let o = Promise.resolve()
             function i(f) {
               const a = new Event('vite:preloadError', { cancelable: !0 })
-              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+              if (
+                ((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)
+              )
+                throw f
             }
             return o.then((f) => {
               for (const a of f || []) a.status === 'rejected' && i(a.reason)
@@ -46,7 +49,8 @@
           return typeof n == 'string' && D.includes(n)
         }
         function M(e) {
-          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          if (window === top || (e.type === 'auxclick' && e.button !== 1))
+            return
           const t = e.composedPath ? e.composedPath() : [e.target]
           let n = null
           for (let f = 0; f < t.length; f++) {
@@ -57,27 +61,34 @@
             }
           }
           if (
-            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+            (!n &&
+              e.target &&
+              e.target.closest &&
+              (n = e.target.closest('a[href],area[href]')),
+            !n)
           )
             return
           const u = n.getAttribute('href')
           if (!u) return
           let o, i
           try {
-            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+            ;((o = new URL(u, document.baseURI)),
+              (i = new URL(document.baseURI).origin))
           } catch {
             return
           }
           ;(o.protocol === 'http:' || o.protocol === 'https:') &&
             o.origin !== i &&
-            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+            (e.preventDefault(),
+            parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
         }
         const L = {}
         function y(e) {
           if (window === top) return
           const t = Date.now()
           t - (L[e] || 0) < 500 ||
-            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+            ((L[e] = t),
+            parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
         }
         const F = 2e3,
           T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
@@ -86,10 +97,12 @@
           e.isTrusted && (k = Date.now())
         }
         function z() {
-          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+          ;(addEventListener('click', M, !0),
+            addEventListener('auxclick', M, !0))
         }
         function W() {
-          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          for (let e = 0; e < T.length; e++)
+            addEventListener(T[e], B, { capture: !0, passive: !0 })
           ;(addEventListener(
             'scroll',
             (e) => {
@@ -113,7 +126,9 @@
             ))
         }
         function x(e, t, n) {
-          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          const u = [...t.values()].filter((o) =>
+            o.targets.some((i) => i.startsWith(e + '.')),
+          )
           return {
             wrap(o, i) {
               const f = `${e}.${o}`,
@@ -157,7 +172,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                              return (
+                                n({ id: h.id, scope: e, leg: 'returns' }),
+                                c
+                              )
                             }
                         }
                         return c
@@ -170,7 +188,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                              return (
+                                n({ id: h.id, scope: e, leg: 'throws' }),
+                                Promise.reject(c)
+                              )
                             }
                         }
                         return Promise.reject(c)
@@ -247,7 +268,9 @@
             else if (e === t) return !0
           return !1
         }
-        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+        const w = Object.freeze({
+            ...(window.__FRAME_PREAMBLE?.capabilities ?? {}),
+          }),
           E = window.__FRAME_PREAMBLE?.transforms,
           C = /^[\w.-]+\.js$/,
           V = /^[a-z][a-z0-9_-]{0,63}$/
@@ -277,7 +300,8 @@
           const t = document.documentElement
           e === 'light' || e === 'dark'
             ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
-            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+            : R &&
+              (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
         }
         const _ = new Map()
         function Q(e, t) {
@@ -319,7 +343,10 @@
             _.set(s, d)
             const m = new Proxy(d.impl, {
               get: (c, l) => {
-                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                if (
+                  typeof l == 'string' &&
+                  !(l === 'then' || l === 'toJSON' || l === 'valueOf')
+                )
                   return l === 'toString'
                     ? Object.prototype.toString
                     : (...h) => {
@@ -327,7 +354,12 @@
                         return p
                           ? p(...h)
                           : new Promise((b, S) => {
-                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                              d.queue.push({
+                                method: l,
+                                args: h,
+                                resolve: b,
+                                reject: S,
+                              })
                             })
                       }
               },
@@ -355,7 +387,8 @@
                 clearTimeout(o),
                 u?.()))
           }
-          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          ;(addEventListener('message', i),
+            parent.postMessage({ __frame_connect: !0 }, '*'))
           const f = new Promise((s) => {
               ;((u = s),
                 (o = setTimeout(() => {
@@ -365,7 +398,9 @@
             a =
               document.readyState === 'loading'
                 ? new Promise((s) =>
-                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                    document.addEventListener('DOMContentLoaded', () => s(), {
+                      once: !0,
+                    }),
                   )
                 : Promise.resolve()
           f.then(async () => {
@@ -373,14 +408,17 @@
               for (const r of _.keys())
                 O(r, {
                   code: 'not_granted',
-                  message: 'frame initialization did not arrive - capability unavailable',
+                  message:
+                    'frame initialization did not arrive - capability unavailable',
                 })
               return
             }
             N(n.theme)
             const s = g
             addEventListener('message', (r) => {
-              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+              r.source !== parent ||
+                r.origin !== s ||
+                (q(r.data) && N(r.data.__frame_theme.theme))
             })
             const d = (r) => U(() => import('/_runtime/' + r), void 0),
               m = Object.keys(n.capabilities ?? {})
@@ -484,8 +522,8 @@
         --accent: #b5461f;
         --red-ink: #b71c1c;
         --display:
-          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
-          system-ui, sans-serif;
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN',
+          'Quicksand', 'Trebuchet MS', system-ui, sans-serif;
         --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
         --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
@@ -709,7 +747,10 @@
         left: 50%;
         width: 3px;
         transform: translateX(-50%);
-        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        background: repeating-linear-gradient(
+          var(--ink) 0 7px,
+          transparent 7px 14px
+        );
         opacity: 0.4;
         z-index: 8;
       }
@@ -853,7 +894,8 @@
       }
       .btn .half.pull {
         background: color-mix(in srgb, #fff 55%, #d8d1bf);
-        border-bottom: 1.2px solid color-mix(in srgb, var(--ink) 40%, transparent);
+        border-bottom: 1.2px solid
+          color-mix(in srgb, var(--ink) 40%, transparent);
       }
       .btn .half.push {
         background: #ddd6c4;
@@ -976,9 +1018,10 @@
         <p class="eyebrow">Concertina Hero · Keyfall · round 5</p>
         <h1>Stacked rows, done right</h1>
         <p class="lede">
-          Corrected: on a real anglo the top and bottom rows sit in the same columns, one above the
-          other, and only the middle row is offset. So a column's two buttons share a lane — and
-          that is exactly the case to design for.
+          Corrected: on a real anglo the top and bottom rows sit in the same
+          columns, one above the other, and only the middle row is offset. So a
+          column's two buttons share a lane — and that is exactly the case to
+          design for.
         </p>
         <div class="chips">
           <span class="chip">top + bottom stacked</span>
@@ -993,16 +1036,18 @@
         <p class="eyebrow">The corrected layout</p>
         <h2>Ten lanes, wider notes</h2>
         <p>
-          Because the top and bottom rows share a column, there are ten lanes per hand, not fifteen
-          — five column lanes plus five offset lanes for the middle row. Wider lanes mean the note
-          can carry its letter again, not just a colour. Shade still tells the row apart: dark is
-          the top row, light is the bottom.
+          Because the top and bottom rows share a column, there are ten lanes
+          per hand, not fifteen — five column lanes plus five offset lanes for
+          the middle row. Wider lanes mean the note can carry its letter again,
+          not just a colour. Shade still tells the row apart: dark is the top
+          row, light is the bottom.
         </p>
         <div class="stage">
           <div class="ghud">
             <span class="quit">‹ Quit</span>
             <div class="np">
-              <span class="np-label">Now Playing</span><span class="np-name">The Kesh Jig</span>
+              <span class="np-label">Now Playing</span
+              ><span class="np-name">The Kesh Jig</span>
             </div>
             <div class="stats">
               <div class="stat"><span>Score</span><b>4,820</b></div>
@@ -1013,8 +1058,8 @@
           <div class="field" id="hero" style="height: 520px"></div>
         </div>
         <p class="caption">
-          Buttons only, no fretwork. Each column stacks a top and bottom button; the middle row
-          nests in the gaps.
+          Buttons only, no fretwork. Each column stacks a top and bottom button;
+          the middle row nests in the gaps.
         </p>
       </section>
 
@@ -1024,40 +1069,52 @@
         <p class="eyebrow">Your question · two notes on a stacked pair</p>
         <h2>When the shared lane has two notes</h2>
         <p>
-          A top button and the bottom button beneath it share one column lane. What happens depends
-          entirely on whether they sound together.
+          A top button and the bottom button beneath it share one column lane.
+          What happens depends entirely on whether they sound together.
         </p>
         <div class="duo">
           <div class="study">
             <h3><span class="pin">1</span> At different times</h3>
             <p>
-              They simply queue in the lane, one above the other. Shade says which row; only the
-              near one lights its key. No conflict — different beats never overlap.
+              They simply queue in the lane, one above the other. Shade says
+              which row; only the near one lights its key. No conflict —
+              different beats never overlap.
             </p>
-            <div class="stage"><div class="field" id="diff" style="height: 340px"></div></div>
+            <div class="stage">
+              <div class="field" id="diff" style="height: 340px"></div>
+            </div>
           </div>
           <div class="study">
             <h3><span class="pin">2</span> At the same time</h3>
             <p>
-              They would cover each other, so on that beat they split — top slides left, bottom
-              slides right. Both keys light. It reads as the two-finger press it is.
+              They would cover each other, so on that beat they split — top
+              slides left, bottom slides right. Both keys light. It reads as the
+              two-finger press it is.
             </p>
-            <div class="stage"><div class="field" id="same" style="height: 340px"></div></div>
+            <div class="stage">
+              <div class="field" id="same" style="height: 340px"></div>
+            </div>
           </div>
         </div>
         <div class="diag">
           <div class="legend">
             <div class="row">
-              <span class="sw" style="background: color-mix(in srgb, var(--l2) 82%, #000)"></span>
+              <span
+                class="sw"
+                style="background: color-mix(in srgb, var(--l2) 82%, #000)"
+              ></span>
               <strong>Dark</strong> — top row
             </div>
             <div class="row">
-              <span class="sw" style="background: color-mix(in srgb, var(--l2) 58%, #fff)"></span>
+              <span
+                class="sw"
+                style="background: color-mix(in srgb, var(--l2) 58%, #fff)"
+              ></span>
               <strong>Light</strong> — bottom row
             </div>
             <div class="row">
-              <span class="sw" style="background: var(--l1)"></span> Same hue = same column; the
-              shade separates the stack.
+              <span class="sw" style="background: var(--l1)"></span> Same hue =
+              same column; the shade separates the stack.
             </div>
           </div>
         </div>
@@ -1070,24 +1127,27 @@
         <h2>What this settles</h2>
         <ul>
           <li>
-            <strong>The stack is a two-way call, not a guess.</strong> A shared lane only ever holds
-            the top or the bottom button of one column, and shade plus the lit key name which — far
-            simpler than the five-column grid's three-way guess.
+            <strong>The stack is a two-way call, not a guess.</strong> A shared
+            lane only ever holds the top or the bottom button of one column, and
+            shade plus the lit key name which — far simpler than the five-column
+            grid's three-way guess.
           </li>
           <li>
-            <strong>The split only fires when it must.</strong> Notes stay centred on the lane and
-            land true; the left/right slide happens only on a beat where a stacked pair sounds
-            together, so the layout stays stable the rest of the time.
+            <strong>The split only fires when it must.</strong> Notes stay
+            centred on the lane and land true; the left/right slide happens only
+            on a beat where a stacked pair sounds together, so the layout stays
+            stable the rest of the time.
           </li>
           <li>
-            <strong>Ten lanes buys width back.</strong> The earlier fifteen-lane fear came from the
-            wrong (sheared) layout. With the real stacking, notes are wide enough to keep their
-            letter.
+            <strong>Ten lanes buys width back.</strong> The earlier fifteen-lane
+            fear came from the wrong (sheared) layout. With the real stacking,
+            notes are wide enough to keep their letter.
           </li>
           <li>
-            <strong>Open:</strong> the middle row's offset lanes fall between the column lanes —
-            should a middle-row note read as clearly "between" two columns, or do we want a subtle
-            marker so it isn't mistaken for a column note?
+            <strong>Open:</strong> the middle row's offset lanes fall between
+            the column lanes — should a middle-row note read as clearly
+            "between" two columns, or do we want a subtle marker so it isn't
+            mistaken for a column note?
           </li>
         </ul>
       </section>
@@ -1171,8 +1231,10 @@
             const t = (c - 2) / 2
             return -o.arc * (1 - t * t)
           }
-          const bx = (r, c) => originX + (r === 1 ? c * colGap + colGap / 2 : c * colGap)
-          const by = (r, c) => kbTop + o.padY + r * rowGapY + BS / 2 + (r === 1 ? arc(c) : arc(c))
+          const bx = (r, c) =>
+            originX + (r === 1 ? c * colGap + colGap / 2 : c * colGap)
+          const by = (r, c) =>
+            kbTop + o.padY + r * rowGapY + BS / 2 + (r === 1 ? arc(c) : arc(c))
           // note lane x: middle on its own lane; top & bottom share the column lane (optional split)
           const nx = (r, c, split) =>
             r === 1 ? bx(1, c) : bx(r, c) + (split ? (r === 0 ? -q : q) : 0)
@@ -1286,7 +1348,11 @@
         }
 
         function activeMapFor(list, split) {
-          return new Map((list || []).filter((n) => n.d < 0.32).map((n) => [n.r + '-' + n.c, n]))
+          return new Map(
+            (list || [])
+              .filter((n) => n.d < 0.32)
+              .map((n) => [n.r + '-' + n.c, n]),
+          )
         }
 
         function buildPlay(id, active, o, split, opts = {}) {
@@ -1305,8 +1371,22 @@
           const right = document.createElement('div')
           right.className = 'hand right'
           field.appendChild(right)
-          const gL = drawKeyboard(left, 'left', W / 2, H, o, activeMapFor(active.left))
-          const gR = drawKeyboard(right, 'right', W / 2, H, o, activeMapFor(active.right))
+          const gL = drawKeyboard(
+            left,
+            'left',
+            W / 2,
+            H,
+            o,
+            activeMapFor(active.left),
+          )
+          const gR = drawKeyboard(
+            right,
+            'right',
+            W / 2,
+            H,
+            o,
+            activeMapFor(active.right),
+          )
           if (opts.labels !== false) {
             const ll = document.createElement('div')
             ll.className = 'kblabel'
@@ -1357,7 +1437,15 @@
           field.innerHTML = ''
           const W = field.clientWidth || 520,
             H = field.clientHeight
-          const o = { bs: 34, colGap: 82, rowGapY: 44, arc: 8, padY: 11, kbH: 172, splitFrac: 0.2 }
+          const o = {
+            bs: 34,
+            colGap: 82,
+            rowGapY: 44,
+            arc: 8,
+            padY: 11,
+            kbH: 172,
+            splitFrac: 0.2,
+          }
           const { strikeY, sec } = grid(field, W, H, o.kbH)
           // one hand fills the whole field
           const hand = document.createElement('div')
@@ -1394,13 +1482,21 @@
               ],
             }
           }
-          const g = drawKeyboard(hand, 'left', W, H, o, activeMapFor(active.left))
+          const g = drawKeyboard(
+            hand,
+            'left',
+            W,
+            H,
+            o,
+            activeMapFor(active.left),
+          )
           place(field, 'left', active.left, g, 0, strikeY, sec, mode === 'same')
           const lab = document.createElement('div')
           lab.className = 'kblabel'
           lab.style.left = '14px'
           lab.style.top = strikeY + 10 + 'px'
-          lab.textContent = mode === 'diff' ? 'shared lane · queued' : 'shared lane · split'
+          lab.textContent =
+            mode === 'diff' ? 'shared lane · queued' : 'shared lane · split'
           field.appendChild(lab)
         }
 

@@ -47,7 +47,11 @@ export function missTime(noteTime: number, holdMs: number): number {
 
 // Whether a note can still be played at `now`: from HIT_WINDOW before its beat
 // right up until the instant it would be missed.
-export function isPlayable(now: number, noteTime: number, holdMs: number): boolean {
+export function isPlayable(
+  now: number,
+  noteTime: number,
+  holdMs: number,
+): boolean {
   return now >= noteTime - HIT_WINDOW && now < missTime(noteTime, holdMs)
 }
 

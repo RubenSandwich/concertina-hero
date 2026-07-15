@@ -16,7 +16,9 @@ import { setWaitForNote, startSong, pressUntilCombo } from './helpers'
 // happens to take. "Chord Parade" opens with two single notes on button 1
 // (push, key Q), then its first chord: buttons 1 and 3 together, both push
 // ("(+1 +3)", keys Q/E).
-test('a simultaneous chord registers every note, not just one', async ({ page }) => {
+test('a simultaneous chord registers every note, not just one', async ({
+  page,
+}) => {
   await page.goto('/')
   await setWaitForNote(page, true)
   await startSong(page, 'Chord Parade')

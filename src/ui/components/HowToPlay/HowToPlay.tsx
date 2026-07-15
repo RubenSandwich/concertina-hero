@@ -15,18 +15,33 @@ export default function HowToPlay() {
   const pullName = LANE_NOTES[0].pull.name
 
   return (
-    <div className="howto-play" style={{ '--lane': LANE_COLORS[0] } as React.CSSProperties}>
+    <div
+      className="howto-play"
+      style={{ '--lane': LANE_COLORS[0] } as React.CSSProperties}
+    >
       <p className="howto-play__lead">
-        Every button is <b>two notes</b> — one as you squeeze the bellows in, one as you draw them
-        back out.
+        Every button is <b>two notes</b> — one as you squeeze the bellows in,
+        one as you draw them back out.
       </p>
 
       <div className="howto-play__dirs">
-        <Dir dir="push" pushName={pushName} pullName={pullName} keyLabel={keyLabel} />
-        <Dir dir="pull" pushName={pushName} pullName={pullName} keyLabel={keyLabel} />
+        <Dir
+          dir="push"
+          pushName={pushName}
+          pullName={pullName}
+          keyLabel={keyLabel}
+        />
+        <Dir
+          dir="pull"
+          pushName={pushName}
+          pullName={pullName}
+          keyLabel={keyLabel}
+        />
       </div>
 
-      <p className="howto-play__flow-lead">In a song those notes fall onto your keyboard:</p>
+      <p className="howto-play__flow-lead">
+        In a song those notes fall onto your keyboard:
+      </p>
 
       <ol className="howto-play__steps">
         <li className="howto-play__step">
@@ -37,13 +52,18 @@ export default function HowToPlay() {
         <li className="howto-play__step">
           <StepHead n={2} title="At the line" />
           <MiniLane name={pushName} />
-          <p className="howto-play__step-sub">Play the moment one lands on the dashed line.</p>
+          <p className="howto-play__step-sub">
+            Play the moment one lands on the dashed line.
+          </p>
         </li>
         <li className="howto-play__step">
           <StepHead n={3} title="Play it" />
           <div className="howto-play__acts">
             <p className="howto-play__act">
-              <span className="howto-play__achip howto-play__achip--push" aria-hidden="true">
+              <span
+                className="howto-play__achip howto-play__achip--push"
+                aria-hidden="true"
+              >
                 ▼
               </span>
               <span>
@@ -52,7 +72,10 @@ export default function HowToPlay() {
               <kbd className="howto-play__kc">{keyLabel}</kbd>
             </p>
             <p className="howto-play__act">
-              <span className="howto-play__achip howto-play__achip--pull" aria-hidden="true">
+              <span
+                className="howto-play__achip howto-play__achip--pull"
+                aria-hidden="true"
+              >
                 ▲
               </span>
               <span>
@@ -67,7 +90,8 @@ export default function HowToPlay() {
       </ol>
 
       <p className="howto-play__hint">
-        No keyboard? <b>Tap</b> the button on screen — its top half pulls, its bottom half pushes.
+        No keyboard? <b>Tap</b> the button on screen — its top half pulls, its
+        bottom half pushes.
       </p>
     </div>
   )
@@ -87,7 +111,10 @@ function Dir({ dir, pushName, pullName, keyLabel }: DirProps) {
   return (
     <div className="howto-play__dir">
       <div className="howto-play__dirhd">
-        <span className={'howto-play__badge howto-play__badge--' + dir} aria-hidden="true">
+        <span
+          className={'howto-play__badge howto-play__badge--' + dir}
+          aria-hidden="true"
+        >
           {isPull ? '▲' : '▼'}
         </span>
         <span className="howto-play__dirword">{isPull ? 'Pull' : 'Push'}</span>
@@ -97,8 +124,12 @@ function Dir({ dir, pushName, pullName, keyLabel }: DirProps) {
 
       <div className={'howto-play__key howto-play__key--' + dir}>
         <span className="howto-play__circle">
-          <span className="howto-play__half howto-play__half--pull">{pullName}</span>
-          <span className="howto-play__half howto-play__half--push">{pushName}</span>
+          <span className="howto-play__half howto-play__half--pull">
+            {pullName}
+          </span>
+          <span className="howto-play__half howto-play__half--push">
+            {pushName}
+          </span>
         </span>
         <span className="howto-play__keylabel">{keyLabel}</span>
       </div>
@@ -106,7 +137,8 @@ function Dir({ dir, pushName, pullName, keyLabel }: DirProps) {
       <p className="howto-play__how">
         {isPull ? (
           <>
-            Draw out — hold <span className="howto-play__shift">⇧ Shift</span> + key.
+            Draw out — hold <span className="howto-play__shift">⇧ Shift</span> +
+            key.
           </>
         ) : (
           <>
@@ -145,12 +177,19 @@ function Bellows({ dir }: { dir: 'push' | 'pull' }) {
 
 // A push note card in the mini fall zone — falling on a loop, or resting on the
 // hit line when `falling` is omitted.
-function MiniLane({ name, falling = false }: { name: string; falling?: boolean }) {
+function MiniLane({
+  name,
+  falling = false,
+}: {
+  name: string
+  falling?: boolean
+}) {
   return (
     <div className="howto-play__lane">
       <div
         className={
-          'howto-play__note howto-play__note--push' + (falling ? ' howto-play__note--falling' : '')
+          'howto-play__note howto-play__note--push' +
+          (falling ? ' howto-play__note--falling' : '')
         }
       >
         <span className="howto-play__arrow" aria-hidden="true">

@@ -239,7 +239,11 @@
   width: 100%;
   height: 88px;
   background:
-    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 4px),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 0 2px,
+      transparent 2px 4px
+    ),
     linear-gradient(
       180deg,
       color-mix(in srgb, var(--lane) 6%, #fff),

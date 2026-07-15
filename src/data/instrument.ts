@@ -66,7 +66,10 @@ export interface NoteCandidate {
 // default tuning, but a custom one may invert them.
 //
 // Rebuilt whenever the tuning or the instrument changes, and nowhere else.
-export const NOTE_CANDIDATES: Record<Direction, NoteCandidate[]> = { push: [], pull: [] }
+export const NOTE_CANDIDATES: Record<Direction, NoteCandidate[]> = {
+  push: [],
+  pull: [],
+}
 
 // Map physical key codes to lane indices, from the active layout's spatial grid
 // (`Q W E … /`, Decision 4). Using `event.code` means the lane is the same

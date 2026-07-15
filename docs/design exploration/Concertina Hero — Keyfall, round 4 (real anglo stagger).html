@@ -25,7 +25,10 @@
             let o = Promise.resolve()
             function i(f) {
               const a = new Event('vite:preloadError', { cancelable: !0 })
-              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+              if (
+                ((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)
+              )
+                throw f
             }
             return o.then((f) => {
               for (const a of f || []) a.status === 'rejected' && i(a.reason)
@@ -46,7 +49,8 @@
           return typeof n == 'string' && D.includes(n)
         }
         function M(e) {
-          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          if (window === top || (e.type === 'auxclick' && e.button !== 1))
+            return
           const t = e.composedPath ? e.composedPath() : [e.target]
           let n = null
           for (let f = 0; f < t.length; f++) {
@@ -57,27 +61,34 @@
             }
           }
           if (
-            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+            (!n &&
+              e.target &&
+              e.target.closest &&
+              (n = e.target.closest('a[href],area[href]')),
+            !n)
           )
             return
           const u = n.getAttribute('href')
           if (!u) return
           let o, i
           try {
-            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+            ;((o = new URL(u, document.baseURI)),
+              (i = new URL(document.baseURI).origin))
           } catch {
             return
           }
           ;(o.protocol === 'http:' || o.protocol === 'https:') &&
             o.origin !== i &&
-            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+            (e.preventDefault(),
+            parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
         }
         const L = {}
         function y(e) {
           if (window === top) return
           const t = Date.now()
           t - (L[e] || 0) < 500 ||
-            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+            ((L[e] = t),
+            parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
         }
         const F = 2e3,
           T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
@@ -86,10 +97,12 @@
           e.isTrusted && (k = Date.now())
         }
         function z() {
-          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+          ;(addEventListener('click', M, !0),
+            addEventListener('auxclick', M, !0))
         }
         function W() {
-          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          for (let e = 0; e < T.length; e++)
+            addEventListener(T[e], B, { capture: !0, passive: !0 })
           ;(addEventListener(
             'scroll',
             (e) => {
@@ -113,7 +126,9 @@
             ))
         }
         function x(e, t, n) {
-          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          const u = [...t.values()].filter((o) =>
+            o.targets.some((i) => i.startsWith(e + '.')),
+          )
           return {
             wrap(o, i) {
               const f = `${e}.${o}`,
@@ -157,7 +172,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                              return (
+                                n({ id: h.id, scope: e, leg: 'returns' }),
+                                c
+                              )
                             }
                         }
                         return c
@@ -170,7 +188,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                              return (
+                                n({ id: h.id, scope: e, leg: 'throws' }),
+                                Promise.reject(c)
+                              )
                             }
                         }
                         return Promise.reject(c)
@@ -247,7 +268,9 @@
             else if (e === t) return !0
           return !1
         }
-        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+        const w = Object.freeze({
+            ...(window.__FRAME_PREAMBLE?.capabilities ?? {}),
+          }),
           E = window.__FRAME_PREAMBLE?.transforms,
           C = /^[\w.-]+\.js$/,
           V = /^[a-z][a-z0-9_-]{0,63}$/
@@ -277,7 +300,8 @@
           const t = document.documentElement
           e === 'light' || e === 'dark'
             ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
-            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+            : R &&
+              (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
         }
         const _ = new Map()
         function Q(e, t) {
@@ -319,7 +343,10 @@
             _.set(s, d)
             const m = new Proxy(d.impl, {
               get: (c, l) => {
-                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                if (
+                  typeof l == 'string' &&
+                  !(l === 'then' || l === 'toJSON' || l === 'valueOf')
+                )
                   return l === 'toString'
                     ? Object.prototype.toString
                     : (...h) => {
@@ -327,7 +354,12 @@
                         return p
                           ? p(...h)
                           : new Promise((b, S) => {
-                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                              d.queue.push({
+                                method: l,
+                                args: h,
+                                resolve: b,
+                                reject: S,
+                              })
                             })
                       }
               },
@@ -355,7 +387,8 @@
                 clearTimeout(o),
                 u?.()))
           }
-          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          ;(addEventListener('message', i),
+            parent.postMessage({ __frame_connect: !0 }, '*'))
           const f = new Promise((s) => {
               ;((u = s),
                 (o = setTimeout(() => {
@@ -365,7 +398,9 @@
             a =
               document.readyState === 'loading'
                 ? new Promise((s) =>
-                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                    document.addEventListener('DOMContentLoaded', () => s(), {
+                      once: !0,
+                    }),
                   )
                 : Promise.resolve()
           f.then(async () => {
@@ -373,14 +408,17 @@
               for (const r of _.keys())
                 O(r, {
                   code: 'not_granted',
-                  message: 'frame initialization did not arrive - capability unavailable',
+                  message:
+                    'frame initialization did not arrive - capability unavailable',
                 })
               return
             }
             N(n.theme)
             const s = g
             addEventListener('message', (r) => {
-              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+              r.source !== parent ||
+                r.origin !== s ||
+                (q(r.data) && N(r.data.__frame_theme.theme))
             })
             const d = (r) => U(() => import('/_runtime/' + r), void 0),
               m = Object.keys(n.capabilities ?? {})
@@ -485,8 +523,8 @@
         --accent: #b5461f;
         --red-ink: #b71c1c;
         --display:
-          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
-          system-ui, sans-serif;
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN',
+          'Quicksand', 'Trebuchet MS', system-ui, sans-serif;
         --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
         --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
@@ -712,7 +750,10 @@
         left: 50%;
         width: 3px;
         transform: translateX(-50%);
-        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        background: repeating-linear-gradient(
+          var(--ink) 0 7px,
+          transparent 7px 14px
+        );
         opacity: 0.4;
         z-index: 8;
       }
@@ -785,7 +826,16 @@
         z-index: 3;
         background: color-mix(in srgb, var(--felt) 70%, var(--paper));
         border: 2px solid color-mix(in srgb, var(--ink) 30%, transparent);
-        clip-path: polygon(8% 0, 92% 0, 100% 26%, 100% 74%, 92% 100%, 8% 100%, 0 74%, 0 26%);
+        clip-path: polygon(
+          8% 0,
+          92% 0,
+          100% 26%,
+          100% 74%,
+          92% 100%,
+          8% 100%,
+          0 74%,
+          0 26%
+        );
       }
 
       /* thin true-lane track */
@@ -871,7 +921,8 @@
       }
       .btn .half.pull {
         background: color-mix(in srgb, #fff 55%, #d8d1bf);
-        border-bottom: 1.2px solid color-mix(in srgb, var(--ink) 40%, transparent);
+        border-bottom: 1.2px solid
+          color-mix(in srgb, var(--ink) 40%, transparent);
       }
       .btn .half.push {
         background: #ddd6c4;
@@ -895,7 +946,8 @@
         position: absolute;
         z-index: 1;
         width: 0;
-        border-left: 1.5px dashed color-mix(in srgb, var(--ink) 22%, transparent);
+        border-left: 1.5px dashed
+          color-mix(in srgb, var(--ink) 22%, transparent);
       }
 
       .duo {
@@ -965,9 +1017,10 @@
         <p class="eyebrow">Concertina Hero · Keyfall · round 4</p>
         <h1>The real stagger</h1>
         <p class="lede">
-          A 30-button anglo is fifteen buttons per hand, so clean columns can't give each one a wide
-          lane. But the instrument's own staggered rows solve it — they fan the buttons out into
-          fifteen even lanes, and each lane holds exactly one button.
+          A 30-button anglo is fifteen buttons per hand, so clean columns can't
+          give each one a wide lane. But the instrument's own staggered rows
+          solve it — they fan the buttons out into fifteen even lanes, and each
+          lane holds exactly one button.
         </p>
         <div class="chips">
           <span class="chip">15 buttons per hand</span>
@@ -982,21 +1035,24 @@
         <p class="eyebrow">The problem, then the instrument's own answer</p>
         <h2>Why five columns stopped working</h2>
         <p>
-          Rounds two and three grouped the buttons into five columns per hand, three rows stacked in
-          each. That kept notes chunky, but three buttons shared a lane, so the row was a guess you
-          resolved from the keyboard below. With fifteen buttons the columns get crowded fast.
+          Rounds two and three grouped the buttons into five columns per hand,
+          three rows stacked in each. That kept notes chunky, but three buttons
+          shared a lane, so the row was a guess you resolved from the keyboard
+          below. With fifteen buttons the columns get crowded fast.
         </p>
         <p>
-          A real anglo doesn't stack its rows — it <strong>shears</strong> them, each row nudged
-          over from the one above, the way the buttons actually sit under your fingers. Project that
-          downward and the fifteen buttons land on fifteen evenly-spaced lanes. A note's horizontal
-          position now names its button outright.
+          A real anglo doesn't stack its rows — it <strong>shears</strong> them,
+          each row nudged over from the one above, the way the buttons actually
+          sit under your fingers. Project that downward and the fifteen buttons
+          land on fifteen evenly-spaced lanes. A note's horizontal position now
+          names its button outright.
         </p>
         <div class="stage">
           <div class="ghud">
             <span class="quit">‹ Quit</span>
             <div class="np">
-              <span class="np-label">Now Playing</span><span class="np-name">The Kesh Jig</span>
+              <span class="np-label">Now Playing</span
+              ><span class="np-name">The Kesh Jig</span>
             </div>
             <div class="stats">
               <div class="stat"><span>Score</span><b>4,820</b></div>
@@ -1007,8 +1063,8 @@
           <div class="field" id="hero" style="height: 520px"></div>
         </div>
         <p class="caption">
-          Each lower row shears right (left hand) or left (right hand), so the rows fan
-          symmetrically around the bellows.
+          Each lower row shears right (left hand) or left (right hand), so the
+          rows fan symmetrically around the bellows.
         </p>
       </section>
 
@@ -1018,12 +1074,16 @@
         <p class="eyebrow">The geometry</p>
         <h2>Fifteen buttons, fifteen lanes</h2>
         <p>
-          With the shear, no two buttons share a horizontal position, so a track can fall straight
-          onto its button with nothing to disambiguate. The dashed guides show where each lane sits.
+          With the shear, no two buttons share a horizontal position, so a track
+          can fall straight onto its button with nothing to disambiguate. The
+          dashed guides show where each lane sits.
         </p>
-        <div class="stage"><div class="field" id="geom" style="height: 280px"></div></div>
+        <div class="stage">
+          <div class="field" id="geom" style="height: 280px"></div>
+        </div>
         <p class="caption">
-          The keyboard alone, with a guide rising from every button. Even spacing, one lane each.
+          The keyboard alone, with a guide rising from every button. Even
+          spacing, one lane each.
         </p>
       </section>
 
@@ -1033,25 +1093,31 @@
         <p class="eyebrow">The one thing the stagger costs</p>
         <h2>Thin lanes mean a choice about note width</h2>
         <p>
-          Fifteen lanes per hand are naturally narrow, so a note can't be a fat card and sit exactly
-          over its button. Two honest ways out.
+          Fifteen lanes per hand are naturally narrow, so a note can't be a fat
+          card and sit exactly over its button. Two honest ways out.
         </p>
         <div class="duo">
           <div class="study">
             <h3><span class="pin">A</span> Thin bars, land true</h3>
             <p>
-              Notes are slim and fall straight down their lane onto the button. Most faithful; leans
-              on colour and the lit key rather than a big letter.
+              Notes are slim and fall straight down their lane onto the button.
+              Most faithful; leans on colour and the lit key rather than a big
+              letter.
             </p>
-            <div class="stage"><div class="field" id="thin" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="thin" style="height: 300px"></div>
+            </div>
           </div>
           <div class="study">
             <h3><span class="pin">B</span> Wide cards, lean to land</h3>
             <p>
-              Notes stay chunky and readable up high, then a connector angles down to the true
-              button at the line. Keeps the letters; adds a lean.
+              Notes stay chunky and readable up high, then a connector angles
+              down to the true button at the line. Keeps the letters; adds a
+              lean.
             </p>
-            <div class="stage"><div class="field" id="wide" style="height: 300px"></div></div>
+            <div class="stage">
+              <div class="field" id="wide" style="height: 300px"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -1063,23 +1129,27 @@
         <h2>Notes</h2>
         <ul>
           <li>
-            <strong>The stagger fixes two things at once.</strong> It fans the lanes so they don't
-            crowd, and because each lane owns one button it removes the row guess the five-column
-            grid needed.
+            <strong>The stagger fixes two things at once.</strong> It fans the
+            lanes so they don't crowd, and because each lane owns one button it
+            removes the row guess the five-column grid needed.
           </li>
           <li>
-            <strong>Chords still read.</strong> Notes sounding together land in their own lanes side
-            by side; the hand's fan keeps them apart rather than piling them in one column.
+            <strong>Chords still read.</strong> Notes sounding together land in
+            their own lanes side by side; the hand's fan keeps them apart rather
+            than piling them in one column.
           </li>
           <li>
-            <strong>The lean (B) is the same idea as a Guitar Hero note-highway curve</strong> —
-            familiar, and it keeps the chunky card you can read at a distance. The cost is a busier
-            field.
+            <strong
+              >The lean (B) is the same idea as a Guitar Hero note-highway
+              curve</strong
+            >
+            — familiar, and it keeps the chunky card you can read at a distance.
+            The cost is a busier field.
           </li>
           <li>
-            <strong>Open:</strong> does the toy 7-button still use five plain lanes, and we only
-            switch to the fan at 20+ buttons? Mixing two playfield shapes across instruments is
-            worth a deliberate call.
+            <strong>Open:</strong> does the toy 7-button still use five plain
+            lanes, and we only switch to the fan at 20+ buttons? Mixing two
+            playfield shapes across instruments is worth a deliberate call.
           </li>
         </ul>
       </section>
@@ -1324,7 +1394,11 @@
         }
 
         function activeMapFor(list) {
-          return new Map((list || []).filter((n) => n.d < 0.35).map((n) => [n.r + '-' + n.c, n]))
+          return new Map(
+            (list || [])
+              .filter((n) => n.d < 0.35)
+              .map((n) => [n.r + '-' + n.c, n]),
+          )
         }
 
         function place(field, hand, list, g, xOff, strikeY, sec, mode, o) {
@@ -1398,13 +1472,22 @@
           field.innerHTML = ''
           const W = field.clientWidth || 1000,
             H = field.clientHeight
-          const o = { bs: 26, colGap: 84, rowGapY: 40, arc: 10, padY: 10, kbH: 150 }
+          const o = {
+            bs: 26,
+            colGap: 84,
+            rowGapY: 40,
+            arc: 10,
+            padY: 10,
+            kbH: 150,
+          }
           const { left, right } = makeHands(field)
           ;[
             ['left', left, 0],
             ['right', right, W / 2],
           ].forEach(([hand, host, xOff]) => {
-            const g = drawKeyboard(host, W / 2, H, { ...o, hand }, new Map(), { endplate: true })
+            const g = drawKeyboard(host, W / 2, H, { ...o, hand }, new Map(), {
+              endplate: true,
+            })
             for (let r = 0; r < 3; r++)
               for (let c = 0; c < 5; c++) {
                 const x = g.cx(r, c),
@@ -1455,8 +1538,22 @@
             { r: 0, c: 0, dir: 'pull', d: 2.2, h: 1 },
           ],
         }
-        const heroO = { bs: 28, colGap: 86, rowGapY: 42, arc: 10, padY: 11, kbH: 168 }
-        const miniO = { bs: 18, colGap: 40, rowGapY: 27, arc: 6, padY: 8, kbH: 104 }
+        const heroO = {
+          bs: 28,
+          colGap: 86,
+          rowGapY: 42,
+          arc: 10,
+          padY: 11,
+          kbH: 168,
+        }
+        const miniO = {
+          bs: 18,
+          colGap: 40,
+          rowGapY: 27,
+          arc: 6,
+          padY: 8,
+          kbH: 104,
+        }
         // give wide-mode a read-lane spread: fan the notes to even wide slots across the hand
         function attachReadX(g, o, W) {
           g.colGap = o.colGap
@@ -1486,21 +1583,45 @@
           const { strikeY, sec } = grid(field, W, H, o.kbH)
           const { left, right } = makeHands(field)
           const gL = attachReadX(
-            drawKeyboard(left, W / 2, H, { ...o, hand: 'left' }, activeMapFor(active.left), {
-              endplate: true,
-            }),
+            drawKeyboard(
+              left,
+              W / 2,
+              H,
+              { ...o, hand: 'left' },
+              activeMapFor(active.left),
+              {
+                endplate: true,
+              },
+            ),
             o,
             W,
           )
           const gR = attachReadX(
-            drawKeyboard(right, W / 2, H, { ...o, hand: 'right' }, activeMapFor(active.right), {
-              endplate: true,
-            }),
+            drawKeyboard(
+              right,
+              W / 2,
+              H,
+              { ...o, hand: 'right' },
+              activeMapFor(active.right),
+              {
+                endplate: true,
+              },
+            ),
             o,
             W,
           )
           place(field, 'left', active.left, gL, 0, strikeY, sec, 'wide', o)
-          place(field, 'right', active.right, gR, W / 2, strikeY, sec, 'wide', o)
+          place(
+            field,
+            'right',
+            active.right,
+            gR,
+            W / 2,
+            strikeY,
+            sec,
+            'wide',
+            o,
+          )
         }
         render()
         let t

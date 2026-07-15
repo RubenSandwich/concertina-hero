@@ -36,7 +36,11 @@ export default function UploadButton({
 
   return (
     <>
-      <button type="button" className={className} onClick={() => fileRef.current?.click()}>
+      <button
+        type="button"
+        className={className}
+        onClick={() => fileRef.current?.click()}
+      >
         {children}
       </button>
       <input

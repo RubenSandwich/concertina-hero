@@ -72,7 +72,8 @@ export default function PresetPicker({
     <>
       <Modal title="Note-frequency presets" onClose={onClose}>
         <p className="modal__hint">
-          Pick which tuning the game uses, or build your own from a real instrument.
+          Pick which tuning the game uses, or build your own from a real
+          instrument.
         </p>
 
         <div className="modal__body">
@@ -108,7 +109,11 @@ export default function PresetPicker({
           >
             ＋ New preset
           </button>
-          <UploadButton className="btn btn--ghost" onData={handleUpload} onError={setUploadError}>
+          <UploadButton
+            className="btn btn--ghost"
+            onData={handleUpload}
+            onError={setUploadError}
+          >
             ↑ Upload
           </UploadButton>
           <button className="btn btn--primary" onClick={onClose}>

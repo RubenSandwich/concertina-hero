@@ -121,7 +121,11 @@
   height: 84vh;
   min-height: 480px;
   background:
-    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0 2px, transparent 2px 4px),
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5) 0 2px,
+      transparent 2px 4px
+    ),
     linear-gradient(180deg, #fff7e2, #ffeccb);
   border: 5px solid var(--ink);
   border-radius: 20px 24px 20px 24px / 24px 20px 24px 20px;

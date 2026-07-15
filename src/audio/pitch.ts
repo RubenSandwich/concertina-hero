@@ -6,7 +6,12 @@
 //
 // Both map what they hear onto the concertina's button notes.
 
-import { LANE_NOTES, DIRECTIONS, NOTE_CANDIDATES, type Direction } from '../data/instrument.ts'
+import {
+  LANE_NOTES,
+  DIRECTIONS,
+  NOTE_CANDIDATES,
+  type Direction,
+} from '../data/instrument.ts'
 import { getAudioContext, resumeAudio } from './sound.ts'
 
 let stream: MediaStream | null = null
@@ -34,8 +39,22 @@ interface ClosestNote {
 // A confident pitch reading. `matched` says whether it landed close enough to a
 // button note; when it didn't, lane is -1 and type is null.
 export type Detection =
-  | { matched: true; freq: number; lane: number; type: Direction; name: string; cents: number }
-  | { matched: false; freq: number; lane: -1; type: null; name: string | null; cents: number }
+  | {
+      matched: true
+      freq: number
+      lane: number
+      type: Direction
+      name: string
+      cents: number
+    }
+  | {
+      matched: false
+      freq: number
+      lane: -1
+      type: null
+      name: string | null
+      cents: number
+    }
 
 // How far off a played note may be (in cents) and still count as a button note.
 export const TOLERANCE_CENTS = 60
@@ -45,7 +64,8 @@ export const MIC_MIN_HZ = 150
 export const MIC_MAX_HZ = 1200
 
 // User-facing message when mic access fails or is denied.
-export const MIC_ERROR = 'Could not access the microphone. Check browser permissions.'
+export const MIC_ERROR =
+  'Could not access the microphone. Check browser permissions.'
 
 // Ask for the mic and wire it into an analyser on the shared audio graph. Must
 // be called from a user gesture (e.g. a button click).
@@ -109,7 +129,11 @@ export function autoCorrelate(b: Float32Array, sampleRate: number): number {
   let chosen = bestLag
   const thr = 0.9 * bestCorr
   for (let lag = minLag + 1; lag < maxLag; lag++) {
-    if (corr[lag] >= thr && corr[lag] >= corr[lag - 1] && corr[lag] >= corr[lag + 1]) {
+    if (
+      corr[lag] >= thr &&
+      corr[lag] >= corr[lag - 1] &&
+      corr[lag] >= corr[lag + 1]
+    ) {
       chosen = lag
       break
     }
@@ -150,15 +174,33 @@ export function closestNote(freq: number): ClosestNote | null {
 // pitch, otherwise a Detection where lane is -1 (and matched false) when the
 // pitch isn't close enough to a button note. This is the whole detection
 // pipeline, factored out so it can be unit-tested.
-export function analyzeBuffer(b: Float32Array, sampleRate: number): Detection | null {
+export function analyzeBuffer(
+  b: Float32Array,
+  sampleRate: number,
+): Detection | null {
   const freq = autoCorrelate(b, sampleRate)
   if (freq <= 0) return null
   const c = closestNote(freq)
-  if (!c) return { matched: false, freq, lane: -1, type: null, name: null, cents: 0 }
+  if (!c)
+    return { matched: false, freq, lane: -1, type: null, name: null, cents: 0 }
   if (Math.abs(c.cents) <= TOLERANCE_CENTS) {
-    return { matched: true, freq, lane: c.lane, type: c.type, name: c.name, cents: c.cents }
+    return {
+      matched: true,
+      freq,
+      lane: c.lane,
+      type: c.type,
+      name: c.name,
+      cents: c.cents,
+    }
   }
-  return { matched: false, freq, lane: -1, type: null, name: c.name, cents: c.cents }
+  return {
+    matched: false,
+    freq,
+    lane: -1,
+    type: null,
+    name: c.name,
+    cents: c.cents,
+  }
 }
 
 // Sample the mic once and analyse it. Returns null if the mic isn't running or
@@ -168,7 +210,8 @@ export function detectNote(): Detection | null {
   const ctx = getAudioContext()
   if (!ctx) return null
   analyser.getFloatTimeDomainData(buf)
-  const window = buf.length > MONO_WINDOW ? buf.subarray(buf.length - MONO_WINDOW) : buf
+  const window =
+    buf.length > MONO_WINDOW ? buf.subarray(buf.length - MONO_WINDOW) : buf
   return analyzeBuffer(window, ctx.sampleRate)
 }
 
@@ -278,7 +321,12 @@ export function spectrum(
 
 // The strongest bin within +/- span of `freq` — a peak that may be a little
 // detuned still counts.
-function peakNear(mag: Float64Array, binHz: number, freq: number, span: number): number {
+function peakNear(
+  mag: Float64Array,
+  binHz: number,
+  freq: number,
+  span: number,
+): number {
   const centre = Math.round(freq / binHz)
   let best = 0
   for (let k = centre - span; k <= centre + span; k++) {
@@ -313,7 +361,8 @@ function fundamentalResidual(
     }
   }
   if (bestBin <= 0 || bestBin >= orig.length - 1) return 0
-  if (orig[bestBin] < orig[bestBin - 1] || orig[bestBin] < orig[bestBin + 1]) return 0
+  if (orig[bestBin] < orig[bestBin - 1] || orig[bestBin] < orig[bestBin + 1])
+    return 0
   return work[bestBin]
 }
 
@@ -325,7 +374,12 @@ function fundamentalResidual(
 //
 // The span is deliberately narrower than SEARCH_BINS: flattening a neighbour's
 // lobe skirt would turn the bin beside it into a phantom local maximum.
-function subtractHarmonics(mag: Float64Array, binHz: number, freq: number, amp: number): void {
+function subtractHarmonics(
+  mag: Float64Array,
+  binHz: number,
+  freq: number,
+  amp: number,
+): void {
   for (let h = 1; h <= HARMONICS; h++) {
     const centre = Math.round((freq * h) / binHz)
     const explained = amp / h
@@ -346,12 +400,17 @@ function subtractHarmonics(mag: Float64Array, binHz: number, freq: number, amp: 
 // The cost is that a true octave chord is heard as its lower note alone. No chart
 // uses one, and none of the concertina's other intervals are integer ratios, so
 // no real chord note is ever ruled out this way.
-function overtoneLanes(binHz: number, freq: number, type: Direction): Set<number> {
+function overtoneLanes(
+  binHz: number,
+  freq: number,
+  type: Direction,
+): Set<number> {
   const ruled = new Set<number>()
   for (const candidate of NOTE_CANDIDATES[type]) {
     const bin = Math.round(candidate.freq / binHz)
     for (let h = 2; h <= HARMONICS; h++) {
-      if (Math.abs(bin - Math.round((freq * h) / binHz)) <= CANCEL_BINS) ruled.add(candidate.lane)
+      if (Math.abs(bin - Math.round((freq * h) / binHz)) <= CANCEL_BINS)
+        ruled.add(candidate.lane)
     }
   }
   return ruled
@@ -407,7 +466,8 @@ function pickNotes(
     if (!picked.length) ref = chosenFund
     picked.push(chosen)
     ruledOut.add(chosen.lane)
-    for (const lane of overtoneLanes(binHz, chosen.freq, type)) ruledOut.add(lane)
+    for (const lane of overtoneLanes(binHz, chosen.freq, type))
+      ruledOut.add(lane)
     subtractHarmonics(work, binHz, chosen.freq, chosenFund)
   }
   return picked
@@ -514,14 +574,19 @@ export const CROSS_DIRECTION_ALIAS_HZ = 12
 
 // Every button/direction the microphone could have meant when it reported this
 // one — itself, plus anything tuned too close to tell apart. Usually just itself.
-export function aliasesOf(lane: number, type: Direction): { lane: number; type: Direction }[] {
+export function aliasesOf(
+  lane: number,
+  type: Direction,
+): { lane: number; type: Direction }[] {
   const freq = LANE_NOTES[lane]?.[type]?.freq
   if (!freq) return [{ lane, type }]
   const found: { lane: number; type: Direction }[] = []
   for (const other of DIRECTIONS) {
-    const limit = other === type ? SAME_DIRECTION_ALIAS_HZ : CROSS_DIRECTION_ALIAS_HZ
+    const limit =
+      other === type ? SAME_DIRECTION_ALIAS_HZ : CROSS_DIRECTION_ALIAS_HZ
     LANE_NOTES.forEach((note, otherLane) => {
-      if (Math.abs(note[other].freq - freq) < limit) found.push({ lane: otherLane, type: other })
+      if (Math.abs(note[other].freq - freq) < limit)
+        found.push({ lane: otherLane, type: other })
     })
   }
   return found
@@ -541,7 +606,10 @@ export interface TuningIssue {
 // the same note in several places, so two buttons sharing a frequency is a normal
 // layout, not a mistake — `aliasesOf` sorts that out at play time.
 export function tuningIssues(
-  rows: readonly { push: { freq: number | string }; pull: { freq: number | string } }[],
+  rows: readonly {
+    push: { freq: number | string }
+    pull: { freq: number | string }
+  }[],
 ): TuningIssue[] {
   const issues: TuningIssue[] = []
   rows.forEach((row, lane) => {

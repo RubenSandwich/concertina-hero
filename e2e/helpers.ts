@@ -16,7 +16,8 @@ export async function expandSettings(page: Page): Promise<void> {
 export async function setWaitForNote(page: Page, on: boolean): Promise<void> {
   await expandSettings(page)
   const toggle = page.getByRole('switch', { name: /Wait for correct note/ })
-  if ((await toggle.getAttribute('aria-checked')) !== String(on)) await toggle.click()
+  if ((await toggle.getAttribute('aria-checked')) !== String(on))
+    await toggle.click()
   await expect(toggle).toHaveAttribute('aria-checked', String(on))
 }
 
@@ -34,12 +35,17 @@ export async function enableMic(page: Page): Promise<void> {
 // countdown — use this instead of `startSong` when the caller needs to react
 // at the exact instant the countdown ends (see `waitForCountdownEnd` and
 // audio-taps-held.spec.ts, which starts its fake mic recording right then).
-export async function selectAndPlaySong(page: Page, songName: string): Promise<void> {
+export async function selectAndPlaySong(
+  page: Page,
+  songName: string,
+): Promise<void> {
   await page
     .getByRole('button', { name: new RegExp('^' + songName) })
     .first()
     .click()
-  await page.getByRole('button', { name: new RegExp('Play ' + songName) }).click()
+  await page
+    .getByRole('button', { name: new RegExp('Play ' + songName) })
+    .click()
 }
 
 // Waits out the real-time 3-2-1 countdown. Waits for the overlay to actually
@@ -117,7 +123,9 @@ export async function mockMicFromWav(
   await page.route(fixtureUrl, (route) => route.fulfill({ path: wavPath }))
   await page.addInitScript(
     ({ url, loop }: { url: string; loop: boolean }) => {
-      const realGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices)
+      const realGetUserMedia = navigator.mediaDevices.getUserMedia.bind(
+        navigator.mediaDevices,
+      )
       navigator.mediaDevices.getUserMedia = async (constraints) => {
         if (!constraints?.audio) return realGetUserMedia(constraints)
         const ctx = new AudioContext()
@@ -141,7 +149,9 @@ export async function mockMicFromWav(
 // been enabled in the app (which is what actually calls `getUserMedia` and
 // arms `__startFakeMic`).
 export async function startFakeMic(page: Page): Promise<void> {
-  await page.evaluate(() => (window as unknown as { __startFakeMic: () => void }).__startFakeMic())
+  await page.evaluate(() =>
+    (window as unknown as { __startFakeMic: () => void }).__startFakeMic(),
+  )
 }
 
 // Waits for the countdown to end, then *immediately* starts the fake mic
@@ -158,7 +168,9 @@ export async function startFakeMic(page: Page): Promise<void> {
 // `waitForCountdownEnd`): otherwise, if this ran before the Game screen had
 // even mounted it, the "gone" check would pass instantly and fire the trigger
 // long before the countdown really starts.
-export async function waitForCountdownEndAndStartFakeMic(page: Page): Promise<void> {
+export async function waitForCountdownEndAndStartFakeMic(
+  page: Page,
+): Promise<void> {
   await page.locator('.countdown').waitFor({ state: 'visible' })
   await page.waitForFunction(() => {
     if (document.querySelector('.countdown')) return false

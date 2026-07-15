@@ -18,7 +18,12 @@ const MAX_CARD_FRAC = 0.42
 // The note letter/arrow are sized in viewport units, but the sparse 7/10-button
 // layouts have far fewer lanes, so their cards are much wider — scale the text up
 // to fill them. The dense 20/30-button layouts keep the base size.
-const NOTE_TEXT_SCALE: Record<InstrumentSize, number> = { 7: 1.5, 10: 1.25, 20: 1, 30: 1 }
+const NOTE_TEXT_SCALE: Record<InstrumentSize, number> = {
+  7: 1.5,
+  10: 1.25,
+  20: 1,
+  30: 1,
+}
 
 // A falling note with the vertical progress at which to draw it (0 = top of the
 // fall zone, 1 = the hit line). Active/holding notes track the clock; a just-
@@ -28,7 +33,11 @@ interface PlacedNote {
   progress: number
 }
 
-function placeNotes(notes: GameNote[], elapsed: number, beatFrac: number): PlacedNote[] {
+function placeNotes(
+  notes: GameNote[],
+  elapsed: number,
+  beatFrac: number,
+): PlacedNote[] {
   const placed: PlacedNote[] = []
   for (const note of notes) {
     if (note.state === 'active' || note.state === 'holding') {
@@ -66,7 +75,10 @@ function buildBandStrip(song: Song): BandStripItem[] {
   return song.sections.map((s) => ({
     id: s.id,
     dir: s.dir,
-    count: song.notes.reduce((c, n) => (n.time >= s.start && n.time < s.end ? c + 1 : c), 0),
+    count: song.notes.reduce(
+      (c, n) => (n.time >= s.start && n.time < s.end ? c + 1 : c),
+      0,
+    ),
     bottom: (s.start / LEAD_TIME) * 100,
     height: ((s.end - s.start) / LEAD_TIME) * 100,
   }))
@@ -106,7 +118,8 @@ export default function Game({
   // even the staggered 30-button rows stay visibly apart.
   const xs = [...new Set(buttons.map((b) => b.x))].sort((a, b) => a - b)
   let minGap = 1
-  for (let i = 1; i < xs.length; i++) minGap = Math.min(minGap, xs[i] - xs[i - 1])
+  for (let i = 1; i < xs.length; i++)
+    minGap = Math.min(minGap, xs[i] - xs[i - 1])
   const cardW = `max(34px, ${(minGap * 82).toFixed(2)}%)`
   // Keyboard circle diameter as a fraction of the playfield width — a bit under the
   // tightest lane gap, so even the staggered 20/30-button rows never collide across
@@ -120,7 +133,9 @@ export default function Game({
 
   const judged = g.counts.perfect + g.counts.good + g.counts.ok + g.counts.miss
   const accuracy = judged
-    ? Math.round(((g.counts.perfect + g.counts.good + g.counts.ok) / judged) * 100)
+    ? Math.round(
+        ((g.counts.perfect + g.counts.good + g.counts.ok) / judged) * 100,
+      )
     : 100
   const mode = currentDir(song.sections, Math.max(g.elapsed, 0))
 
@@ -136,14 +151,21 @@ export default function Game({
           <div
             key={b.id}
             className={'breath-band breath-band--' + b.dir}
-            style={{ bottom: b.bottom.toFixed(3) + '%', height: b.height.toFixed(3) + '%' }}
+            style={{
+              bottom: b.bottom.toFixed(3) + '%',
+              height: b.height.toFixed(3) + '%',
+            }}
           >
             <span className="breath-band__arrow" aria-hidden="true">
               {b.dir === 'pull' ? '▲' : '▼'}
             </span>
             {/* Repeated on both edges so the count is readable wherever the eyes are. */}
-            <span className="breath-band__label breath-band__label--left">{label}</span>
-            <span className="breath-band__label breath-band__label--right">{label}</span>
+            <span className="breath-band__label breath-band__label--left">
+              {label}
+            </span>
+            <span className="breath-band__label breath-band__label--right">
+              {label}
+            </span>
           </div>
         )
       }),
@@ -188,7 +210,9 @@ export default function Game({
           <span className="hud__song-name">
             {song.name}
             {speed < 1 && <span className="speed-tag">{speed}× slow</span>}
-            {waitForNote && <span className="speed-tag speed-tag--wait">wait mode</span>}
+            {waitForNote && (
+              <span className="speed-tag speed-tag--wait">wait mode</span>
+            )}
           </span>
         </div>
 
@@ -197,7 +221,9 @@ export default function Game({
             <span className="mic-chip__dot" />
             <span className="mic-chip__note">
               {/* Aliases share a pitch, so the same name can appear more than once. */}
-              {g.micNotes.length ? [...new Set(g.micNotes.map((n) => n.name))].join(' ') : '…'}
+              {g.micNotes.length
+                ? [...new Set(g.micNotes.map((n) => n.name))].join(' ')
+                : '…'}
             </span>
           </div>
         )}
@@ -212,7 +238,11 @@ export default function Game({
               <span className="hud__label">Accuracy</span>
               <span className="hud__value">{accuracy}%</span>
             </div>
-            <div className={'hud__block combo' + (g.combo >= 5 ? ' combo--hot' : '')}>
+            <div
+              className={
+                'hud__block combo' + (g.combo >= 5 ? ' combo--hot' : '')
+              }
+            >
               <span className="hud__label">Combo</span>
               <span className="hud__value">{g.combo}</span>
             </div>
@@ -223,7 +253,10 @@ export default function Game({
         {!hideFeedback && (
           <div className="feedback-bar">
             {g.feedback && (
-              <div key={g.feedback.id} className={'feedback feedback--' + g.feedback.rating}>
+              <div
+                key={g.feedback.id}
+                className={'feedback feedback--' + g.feedback.rating}
+              >
                 {g.feedback.text}
               </div>
             )}
@@ -250,7 +283,10 @@ export default function Game({
               key={b.lane}
               className="lane-band"
               style={
-                { '--x': (b.x * 100).toFixed(3) + '%', '--band': b.color } as React.CSSProperties
+                {
+                  '--x': (b.x * 100).toFixed(3) + '%',
+                  '--band': b.color,
+                } as React.CSSProperties
               }
             />
           ))}
@@ -301,7 +337,11 @@ export default function Game({
         )}
 
         {g.paused && (
-          <Modal title="⏸ Paused" onClose={g.togglePause} className="pause-modal">
+          <Modal
+            title="⏸ Paused"
+            onClose={g.togglePause}
+            className="pause-modal"
+          >
             <div className="modal__body">
               <HowToPlay />
             </div>

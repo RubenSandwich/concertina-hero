@@ -54,7 +54,11 @@ interface SongEditorProps {
 // A full-page modal for creating or editing a song: name, colour, BPM, blurb,
 // difficulty and the note chart. Nothing is applied until "Save & Close", which
 // hands the draft back to the parent via onSave; it can also be downloaded.
-export default function SongEditor({ song = null, onSave, onClose }: SongEditorProps) {
+export default function SongEditor({
+  song = null,
+  onSave,
+  onClose,
+}: SongEditorProps) {
   const [draft, setDraft] = useState<DraftState>(() =>
     song
       ? {
@@ -92,10 +96,14 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
   const save = () => {
     if (!draft.name.trim()) return setError('Give your song a name.')
     const bpm = Number(draft.bpm)
-    if (!Number.isFinite(bpm) || bpm <= 0) return setError('BPM must be a positive number.')
-    if (!noteCount) return setError('Add some notes to the chart (tokens like +3 or -4).')
+    if (!Number.isFinite(bpm) || bpm <= 0)
+      return setError('BPM must be a positive number.')
+    if (!noteCount)
+      return setError('Add some notes to the chart (tokens like +3 or -4).')
     if (outOfRange.length) {
-      return setError(`Buttons must be 1–30. Out of range: ${outOfRange.join(', ')}.`)
+      return setError(
+        `Buttons must be 1–30. Out of range: ${outOfRange.join(', ')}.`,
+      )
     }
     try {
       onSave({
@@ -111,7 +119,9 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
     }
   }
 
-  const colorValue = /^#[0-9a-f]{6}$/i.test(draft.color) ? draft.color : '#8ac926'
+  const colorValue = /^#[0-9a-f]{6}$/i.test(draft.color)
+    ? draft.color
+    : '#8ac926'
 
   return (
     <Modal title={song ? 'Edit song' : 'New song'} onClose={onClose}>
@@ -206,7 +216,8 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
                 {required > 0 && (
                   <>
                     {' '}
-                    · needs a {minInstrumentFor(required)}-button (up to {required})
+                    · needs a {minInstrumentFor(required)}-button (up to{' '}
+                    {required})
                   </>
                 )}
               </span>
@@ -220,9 +231,10 @@ export default function SongEditor({ song = null, onSave, onClose }: SongEditorP
               onChange={(e) => set({ chart: e.target.value })}
             />
             <span className="modal__field-hint">
-              One token per beat: <b>+N</b> push, <b>−N</b> pull (button 1–30). <b>X</b> is a rest,
-              and <b>(−4 −3)</b> plays a chord. Line breaks are just for readability. A song's
-              highest button sets the smallest concertina that can play it.
+              One token per beat: <b>+N</b> push, <b>−N</b> pull (button 1–30).{' '}
+              <b>X</b> is a rest, and <b>(−4 −3)</b> plays a chord. Line breaks
+              are just for readability. A song's highest button sets the
+              smallest concertina that can play it.
             </span>
           </label>
         </div>

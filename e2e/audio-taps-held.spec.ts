@@ -39,7 +39,9 @@ const TAPS_HELD_WAV = path.join(
 // fall back on — see above), so it needs the CPU headroom `workers` is
 // capped for in playwright.config.ts: under heavy contention, the single
 // frame the recording starts on can land a note just outside its window.
-test('the mic credits a held note in real time, not just its onset', async ({ page }) => {
+test('the mic credits a held note in real time, not just its onset', async ({
+  page,
+}) => {
   test.setTimeout(60_000)
   await mockMicFromWav(page, TAPS_HELD_WAV)
   await page.goto('/')
@@ -48,7 +50,9 @@ test('the mic credits a held note in real time, not just its onset', async ({ pa
   await selectAndPlaySong(page, 'Taps')
   await waitForCountdownEndAndStartFakeMic(page)
 
-  await expect(page.getByRole('heading', { name: 'Song Complete!' })).toBeVisible({
+  await expect(
+    page.getByRole('heading', { name: 'Song Complete!' }),
+  ).toBeVisible({
     timeout: 40_000,
   })
 
@@ -60,6 +64,8 @@ test('the mic credits a held note in real time, not just its onset', async ({ pa
   // shows sustained credit was accruing, not just onset detection - kept low
   // enough to tolerate normal run-to-run variance in exactly how much of each
   // beat's hold window the onset landed inside of.
-  const score = Number(await page.locator('.stat--score .stat__value').textContent())
+  const score = Number(
+    await page.locator('.stat--score .stat__value').textContent(),
+  )
   expect(score).toBeGreaterThan(150)
 })

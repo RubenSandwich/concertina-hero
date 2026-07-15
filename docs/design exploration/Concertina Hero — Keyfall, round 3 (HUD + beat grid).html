@@ -25,7 +25,10 @@
             let o = Promise.resolve()
             function i(f) {
               const a = new Event('vite:preloadError', { cancelable: !0 })
-              if (((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)) throw f
+              if (
+                ((a.payload = f), window.dispatchEvent(a), !a.defaultPrevented)
+              )
+                throw f
             }
             return o.then((f) => {
               for (const a of f || []) a.status === 'rejected' && i(a.reason)
@@ -46,7 +49,8 @@
           return typeof n == 'string' && D.includes(n)
         }
         function M(e) {
-          if (window === top || (e.type === 'auxclick' && e.button !== 1)) return
+          if (window === top || (e.type === 'auxclick' && e.button !== 1))
+            return
           const t = e.composedPath ? e.composedPath() : [e.target]
           let n = null
           for (let f = 0; f < t.length; f++) {
@@ -57,27 +61,34 @@
             }
           }
           if (
-            (!n && e.target && e.target.closest && (n = e.target.closest('a[href],area[href]')), !n)
+            (!n &&
+              e.target &&
+              e.target.closest &&
+              (n = e.target.closest('a[href],area[href]')),
+            !n)
           )
             return
           const u = n.getAttribute('href')
           if (!u) return
           let o, i
           try {
-            ;((o = new URL(u, document.baseURI)), (i = new URL(document.baseURI).origin))
+            ;((o = new URL(u, document.baseURI)),
+              (i = new URL(document.baseURI).origin))
           } catch {
             return
           }
           ;(o.protocol === 'http:' || o.protocol === 'https:') &&
             o.origin !== i &&
-            (e.preventDefault(), parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
+            (e.preventDefault(),
+            parent.postMessage({ __frame_nav: !0, url: o.href }, '*'))
         }
         const L = {}
         function y(e) {
           if (window === top) return
           const t = Date.now()
           t - (L[e] || 0) < 500 ||
-            ((L[e] = t), parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
+            ((L[e] = t),
+            parent.postMessage({ __frame_engaged: !0, kind: e }, '*'))
         }
         const F = 2e3,
           T = ['wheel', 'touchstart', 'touchmove', 'keydown', 'pointerdown']
@@ -86,10 +97,12 @@
           e.isTrusted && (k = Date.now())
         }
         function z() {
-          ;(addEventListener('click', M, !0), addEventListener('auxclick', M, !0))
+          ;(addEventListener('click', M, !0),
+            addEventListener('auxclick', M, !0))
         }
         function W() {
-          for (let e = 0; e < T.length; e++) addEventListener(T[e], B, { capture: !0, passive: !0 })
+          for (let e = 0; e < T.length; e++)
+            addEventListener(T[e], B, { capture: !0, passive: !0 })
           ;(addEventListener(
             'scroll',
             (e) => {
@@ -113,7 +126,9 @@
             ))
         }
         function x(e, t, n) {
-          const u = [...t.values()].filter((o) => o.targets.some((i) => i.startsWith(e + '.')))
+          const u = [...t.values()].filter((o) =>
+            o.targets.some((i) => i.startsWith(e + '.')),
+          )
           return {
             wrap(o, i) {
               const f = `${e}.${o}`,
@@ -157,7 +172,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'returns' }), c)
+                              return (
+                                n({ id: h.id, scope: e, leg: 'returns' }),
+                                c
+                              )
                             }
                         }
                         return c
@@ -170,7 +188,10 @@
                             try {
                               c = p(c)
                             } catch {
-                              return (n({ id: h.id, scope: e, leg: 'throws' }), Promise.reject(c))
+                              return (
+                                n({ id: h.id, scope: e, leg: 'throws' }),
+                                Promise.reject(c)
+                              )
                             }
                         }
                         return Promise.reject(c)
@@ -247,7 +268,9 @@
             else if (e === t) return !0
           return !1
         }
-        const w = Object.freeze({ ...(window.__FRAME_PREAMBLE?.capabilities ?? {}) }),
+        const w = Object.freeze({
+            ...(window.__FRAME_PREAMBLE?.capabilities ?? {}),
+          }),
           E = window.__FRAME_PREAMBLE?.transforms,
           C = /^[\w.-]+\.js$/,
           V = /^[a-z][a-z0-9_-]{0,63}$/
@@ -277,7 +300,8 @@
           const t = document.documentElement
           e === 'light' || e === 'dark'
             ? ((t.dataset.theme = e), (t.style.colorScheme = e), (R = !0))
-            : R && (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
+            : R &&
+              (delete t.dataset.theme, (t.style.colorScheme = ''), (R = !1))
         }
         const _ = new Map()
         function Q(e, t) {
@@ -319,7 +343,10 @@
             _.set(s, d)
             const m = new Proxy(d.impl, {
               get: (c, l) => {
-                if (typeof l == 'string' && !(l === 'then' || l === 'toJSON' || l === 'valueOf'))
+                if (
+                  typeof l == 'string' &&
+                  !(l === 'then' || l === 'toJSON' || l === 'valueOf')
+                )
                   return l === 'toString'
                     ? Object.prototype.toString
                     : (...h) => {
@@ -327,7 +354,12 @@
                         return p
                           ? p(...h)
                           : new Promise((b, S) => {
-                              d.queue.push({ method: l, args: h, resolve: b, reject: S })
+                              d.queue.push({
+                                method: l,
+                                args: h,
+                                resolve: b,
+                                reject: S,
+                              })
                             })
                       }
               },
@@ -355,7 +387,8 @@
                 clearTimeout(o),
                 u?.()))
           }
-          ;(addEventListener('message', i), parent.postMessage({ __frame_connect: !0 }, '*'))
+          ;(addEventListener('message', i),
+            parent.postMessage({ __frame_connect: !0 }, '*'))
           const f = new Promise((s) => {
               ;((u = s),
                 (o = setTimeout(() => {
@@ -365,7 +398,9 @@
             a =
               document.readyState === 'loading'
                 ? new Promise((s) =>
-                    document.addEventListener('DOMContentLoaded', () => s(), { once: !0 }),
+                    document.addEventListener('DOMContentLoaded', () => s(), {
+                      once: !0,
+                    }),
                   )
                 : Promise.resolve()
           f.then(async () => {
@@ -373,14 +408,17 @@
               for (const r of _.keys())
                 O(r, {
                   code: 'not_granted',
-                  message: 'frame initialization did not arrive - capability unavailable',
+                  message:
+                    'frame initialization did not arrive - capability unavailable',
                 })
               return
             }
             N(n.theme)
             const s = g
             addEventListener('message', (r) => {
-              r.source !== parent || r.origin !== s || (q(r.data) && N(r.data.__frame_theme.theme))
+              r.source !== parent ||
+                r.origin !== s ||
+                (q(r.data) && N(r.data.__frame_theme.theme))
             })
             const d = (r) => U(() => import('/_runtime/' + r), void 0),
               m = Object.keys(n.capabilities ?? {})
@@ -485,8 +523,8 @@
         --red-ink: #b71c1c;
         --teal-ink: #0c655c;
         --display:
-          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN', 'Quicksand', 'Trebuchet MS',
-          system-ui, sans-serif;
+          ui-rounded, 'SF Pro Rounded', 'Hiragino Maru Gothic ProN',
+          'Quicksand', 'Trebuchet MS', system-ui, sans-serif;
         --body: system-ui, -apple-system, 'Segoe UI', sans-serif;
         --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
         --shadow-sm: 3px 4px 0 rgba(58, 42, 32, 0.22);
@@ -751,7 +789,10 @@
         left: 50%;
         width: 3px;
         transform: translateX(-50%);
-        background: repeating-linear-gradient(var(--ink) 0 7px, transparent 7px 14px);
+        background: repeating-linear-gradient(
+          var(--ink) 0 7px,
+          transparent 7px 14px
+        );
         opacity: 0.4;
         z-index: 8;
       }
@@ -886,7 +927,8 @@
       }
       .btn .half.pull {
         background: color-mix(in srgb, #fff 55%, #d8d1bf);
-        border-bottom: 1.5px solid color-mix(in srgb, var(--ink) 40%, transparent);
+        border-bottom: 1.5px solid
+          color-mix(in srgb, var(--ink) 40%, transparent);
       }
       .btn .half.push {
         background: #ddd6c4;
@@ -1063,8 +1105,9 @@
         <p class="eyebrow">Concertina Hero · Keyfall · round 3</p>
         <h1>Now with a clock</h1>
         <p class="lede">
-          Your four calls are baked in. This round dresses the screen: the real HUD up top, and a
-          beat grid behind the fall so a note's height tells you exactly how long to hold it.
+          Your four calls are baked in. This round dresses the screen: the real
+          HUD up top, and a beat grid behind the fall so a note's height tells
+          you exactly how long to hold it.
         </p>
         <div class="chips">
           <span class="chip lock">Active tracks only</span>
@@ -1080,16 +1123,19 @@
         <p class="eyebrow">The screen, together</p>
         <h2>HUD, grid, strike line, keyboard</h2>
         <p>
-          Notes fall through a grid where <strong>every band is one beat</strong>. A note is as tall
-          as it is long to hold — a quick note is one band, a sustained note stretches over several.
-          Press when the head reaches the dashed strike line, then hold while the tail passes it.
-          The keyboard below lights the button to move, in the note's own colour.
+          Notes fall through a grid where
+          <strong>every band is one beat</strong>. A note is as tall as it is
+          long to hold — a quick note is one band, a sustained note stretches
+          over several. Press when the head reaches the dashed strike line, then
+          hold while the tail passes it. The keyboard below lights the button to
+          move, in the note's own colour.
         </p>
         <div class="stage">
           <div class="ghud">
             <span class="quit">‹ Quit</span>
             <div class="np">
-              <span class="np-label">Now Playing</span><span class="np-name">The Kesh Jig</span>
+              <span class="np-label">Now Playing</span
+              ><span class="np-name">The Kesh Jig</span>
             </div>
             <div class="stats">
               <div class="stat"><span>Score</span><b>4,820</b></div>
@@ -1102,7 +1148,8 @@
           </div>
         </div>
         <p class="caption">
-          Each band = one beat · a note's height = how long to hold it · illustrative note names.
+          Each band = one beat · a note's height = how long to hold it ·
+          illustrative note names.
         </p>
       </section>
 
@@ -1115,16 +1162,17 @@
           <div class="fig">
             <h3>Anatomy of a hold</h3>
             <p style="font-size: 0.9rem; color: var(--muted)">
-              The head is the moment to press; the tail is the hold. Count the bands it covers and
-              you know the length before it arrives.
+              The head is the moment to press; the tail is the hold. Count the
+              bands it covers and you know the length before it arrives.
             </p>
             <div class="anote" id="fignote"></div>
           </div>
           <div class="fig">
             <h3>How length reads at a glance</h3>
             <p style="font-size: 0.9rem; color: var(--muted)">
-              Three notes on the same button, three lengths. No numbers to read — the shape carries
-              the rhythm, which is the whole point of a falling-note game.
+              Three notes on the same button, three lengths. No numbers to read
+              — the shape carries the rhythm, which is the whole point of a
+              falling-note game.
             </p>
             <div class="anote" id="figlen"></div>
           </div>
@@ -1137,23 +1185,32 @@
         <p class="eyebrow">Decision 04, spelled out</p>
         <h2>Colour fixed by position</h2>
         <p>
-          Thirty buttons, thirty stable colours, built from three facts you already feel in your
-          hands. <strong>Hand</strong> sets the temperature, <strong>column</strong> sets the hue,
-          <strong>row</strong> sets the shade. The same button is the same colour in every song, so
-          the colour of a falling note tells you where to reach before you read a thing.
+          Thirty buttons, thirty stable colours, built from three facts you
+          already feel in your hands. <strong>Hand</strong> sets the
+          temperature, <strong>column</strong> sets the hue,
+          <strong>row</strong> sets the shade. The same button is the same
+          colour in every song, so the colour of a falling note tells you where
+          to reach before you read a thing.
         </p>
         <div class="keygrid">
           <div class="keyrow">
             <span class="lab">Left · cool</span>
-            <div id="keyLeft" style="display: flex; gap: 16px; flex-wrap: wrap"></div>
+            <div
+              id="keyLeft"
+              style="display: flex; gap: 16px; flex-wrap: wrap"
+            ></div>
           </div>
           <div class="keyrow">
             <span class="lab">Right · warm</span>
-            <div id="keyRight" style="display: flex; gap: 16px; flex-wrap: wrap"></div>
+            <div
+              id="keyRight"
+              style="display: flex; gap: 16px; flex-wrap: wrap"
+            ></div>
           </div>
         </div>
         <p class="caption">
-          Each column shows its three rows (back · middle · front) as three shades of one hue.
+          Each column shows its three rows (back · middle · front) as three
+          shades of one hue.
         </p>
       </section>
 
@@ -1164,23 +1221,26 @@
         <h2>Next questions</h2>
         <ul>
           <li>
-            <strong>How many beats tall is the screen?</strong> The grid here shows eight. Fewer
-            beats = bigger, easier-to-read notes but less warning; more beats = more runway but
-            tighter spacing. A per-song or difficulty setting could tune it.
+            <strong>How many beats tall is the screen?</strong> The grid here
+            shows eight. Fewer beats = bigger, easier-to-read notes but less
+            warning; more beats = more runway but tighter spacing. A per-song or
+            difficulty setting could tune it.
           </li>
           <li>
-            <strong>Held-note scoring is already built.</strong> The engine grades the press, then
-            scales points by the fraction of the beat you actually hold — so the tail isn't
-            decoration, it's the thing being measured. The grid just makes that visible.
+            <strong>Held-note scoring is already built.</strong> The engine
+            grades the press, then scales points by the fraction of the beat you
+            actually hold — so the tail isn't decoration, it's the thing being
+            measured. The grid just makes that visible.
           </li>
           <li>
-            <strong>Chords stack cleanly.</strong> Several notes crossing the strike line together
-            light several buttons at once — same as the toy game, just wider.
+            <strong>Chords stack cleanly.</strong> Several notes crossing the
+            strike line together light several buttons at once — same as the toy
+            game, just wider.
           </li>
           <li>
-            <strong>Staggered-track spacing</strong> is still the open visual problem: real anglo
-            columns aren't evenly spaced, so two active tracks can sit close. Worth a dedicated pass
-            next.
+            <strong>Staggered-track spacing</strong> is still the open visual
+            problem: real anglo columns aren't evenly spaced, so two active
+            tracks can sit close. Worth a dedicated pass next.
           </li>
         </ul>
       </section>
@@ -1372,8 +1432,12 @@
             { r: 2, c: 3, dir: 'pull', d: 2.1, h: 3 }, // long hold
             { r: 0, c: 0, dir: 'push', d: 6.0, h: 1 },
           ]
-          const mapL = new Map(activeL.filter((n) => n.d < 0.4).map((n) => [n.r + '-' + n.c, n]))
-          const mapR = new Map(activeR.filter((n) => n.d < 0.4).map((n) => [n.r + '-' + n.c, n]))
+          const mapL = new Map(
+            activeL.filter((n) => n.d < 0.4).map((n) => [n.r + '-' + n.c, n]),
+          )
+          const mapR = new Map(
+            activeR.filter((n) => n.d < 0.4).map((n) => [n.r + '-' + n.c, n]),
+          )
 
           const left = document.createElement('div')
           left.className = 'hand left'

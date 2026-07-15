@@ -24,7 +24,8 @@ const build = (chart: string): Song =>
   })
 
 // The lane/type/time of every note, for compact comparisons.
-const shape = (song: Song) => song.notes.map((n) => ({ lane: n.lane, type: n.type, time: n.time }))
+const shape = (song: Song) =>
+  song.notes.map((n) => ({ lane: n.lane, type: n.type, time: n.time }))
 
 test('a 7-button chart round-trips to the same notes it always did', () => {
   const song = build('+1 +1 +3 -3 X -2')
@@ -93,5 +94,8 @@ test('minInstrumentFor picks the smallest instrument that fits', () => {
   assert.equal(minInstrumentFor(20), 20)
   assert.equal(minInstrumentFor(21), 30)
   assert.equal(minInstrumentFor(30), 30)
-  assert.equal(minInstrumentFor(31), INSTRUMENT_SIZES[INSTRUMENT_SIZES.length - 1]) // clamps
+  assert.equal(
+    minInstrumentFor(31),
+    INSTRUMENT_SIZES[INSTRUMENT_SIZES.length - 1],
+  ) // clamps
 })

@@ -31,7 +31,8 @@ export interface Preset {
 // a 7-button's. (Old, size-agnostic presets under the previous keys are ignored —
 // no migration, as decided.)
 const presetsKey = () => `concertina-presets-${getActiveInstrument()}`
-const activePresetKey = () => `concertina-active-preset-${getActiveInstrument()}`
+const activePresetKey = () =>
+  `concertina-active-preset-${getActiveInstrument()}`
 export const DEFAULT_PRESET_ID = 'default'
 
 // A short, collision-resistant id for a new user preset.
@@ -41,7 +42,12 @@ function makePresetId(): string {
 
 // A fresh copy of the built-in default preset.
 function makeDefaultPreset(): Preset {
-  return { id: DEFAULT_PRESET_ID, name: 'Default', builtin: true, notes: getDefaultNotes() }
+  return {
+    id: DEFAULT_PRESET_ID,
+    name: 'Default',
+    builtin: true,
+    notes: getDefaultNotes(),
+  }
 }
 
 // Coerce arbitrary rows into a full, valid N-row map for the active instrument.
@@ -53,7 +59,8 @@ function normalizeNotes(rows: unknown): LaneNote[] {
       const src = (row && row[type]) || {}
       const f = validFreq(src.freq)
       return {
-        name: typeof src.name === 'string' && src.name ? src.name : def[type].name,
+        name:
+          typeof src.name === 'string' && src.name ? src.name : def[type].name,
         freq: f || def[type].freq,
       }
     }
@@ -70,7 +77,10 @@ function readUserPresets(): Preset[] {
       .filter((p) => p && typeof p === 'object')
       .map((p) => ({
         id: typeof p.id === 'string' && p.id ? p.id : makePresetId(),
-        name: typeof p.name === 'string' && p.name.trim() ? p.name.trim() : 'Untitled preset',
+        name:
+          typeof p.name === 'string' && p.name.trim()
+            ? p.name.trim()
+            : 'Untitled preset',
         notes: normalizeNotes(p.notes),
       }))
   } catch {
@@ -156,15 +166,19 @@ export function deletePreset(id: string): void {
 // Validate an uploaded preset JSON and store it as a new preset. Throws a
 // friendly Error if the file isn't usable.
 export function importPresetJSON(data: unknown): Preset {
-  const obj = data && typeof data === 'object' ? (data as Record<string, unknown>) : null
+  const obj =
+    data && typeof data === 'object' ? (data as Record<string, unknown>) : null
   const rows = Array.isArray(data) ? data : obj?.notes
-  if (!Array.isArray(rows)) throw new Error('Expected a JSON preset with a "notes" array.')
+  if (!Array.isArray(rows))
+    throw new Error('Expected a JSON preset with a "notes" array.')
   const hasValid = rows.some(
     (row) => row && DIRECTIONS.some((t) => row[t] && validFreq(row[t].freq)),
   )
   if (!hasValid) throw new Error('No valid note frequencies found in the file.')
   const name =
-    obj && typeof obj.name === 'string' && obj.name.trim() ? obj.name.trim() : 'Uploaded preset'
+    obj && typeof obj.name === 'string' && obj.name.trim()
+      ? obj.name.trim()
+      : 'Uploaded preset'
   return savePreset({ name, notes: rows })
 }
 

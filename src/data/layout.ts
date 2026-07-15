@@ -133,7 +133,15 @@ export const KEY_LABELS = [
 ] as const
 
 // The 7-button toy concertina keeps its bright rainbow (one hue per button).
-const RAINBOW_7 = ['#ff5d5d', '#ff924c', '#ffd23f', '#8ac926', '#2ec4b6', '#4cc9f0', '#b892ff']
+const RAINBOW_7 = [
+  '#ff5d5d',
+  '#ff924c',
+  '#ffd23f',
+  '#8ac926',
+  '#2ec4b6',
+  '#4cc9f0',
+  '#b892ff',
+]
 
 // Bigger anglos colour by column, counted from the outer edge inward, so the
 // right hand mirrors the left across the divider (button 1 and button N share the
@@ -143,7 +151,15 @@ const COLUMN_PALETTE = ['#ff5d5d', '#ff924c', '#ffd23f', '#2ec4b6', '#ff8fce']
 // A note letter (+ accidental) and its equal-tempered frequency (A4 = 440Hz),
 // parsed from a spec like "C4", "F#5" or "Bb3". The displayed name drops the
 // octave — the game shows "C", not "C4".
-const SEMITONES: Record<string, number> = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }
+const SEMITONES: Record<string, number> = {
+  C: 0,
+  D: 2,
+  E: 4,
+  F: 5,
+  G: 7,
+  A: 9,
+  B: 11,
+}
 function note(spec: string): NoteInfo {
   const m = /^([A-G])([#b]?)(-?\d+)$/.exec(spec)
   if (!m) throw new Error(`bad note spec: ${spec}`)
@@ -157,7 +173,10 @@ function note(spec: string): NoteInfo {
 }
 
 // Build a button's push/pull pair from two note specs.
-const pair = (push: string, pull: string): LaneNote => ({ push: note(push), pull: note(pull) })
+const pair = (push: string, pull: string): LaneNote => ({
+  push: note(push),
+  pull: note(pull),
+})
 
 // ---------------------------------------------------------------------------
 // Per-size note maps, listed in button-number order (index === lane).
@@ -270,7 +289,11 @@ function laneX(
 
 // Turn a geometry + note map into the flat button list. Buttons are placed, then
 // numbered by reading the screen top-to-bottom and left-to-right.
-function buildButtons(geom: HandGeom, notes: LaneNote[], palette: string[]): ButtonSpec[] {
+function buildButtons(
+  geom: HandGeom,
+  notes: LaneNote[],
+  palette: string[],
+): ButtonSpec[] {
   interface Raw {
     hand: 'left' | 'right' | 'center'
     row: number
@@ -280,7 +303,11 @@ function buildButtons(geom: HandGeom, notes: LaneNote[], palette: string[]): But
   const raws: Raw[] = []
   for (let row = 0; row < geom.rows; row++) {
     for (let h = 0; h < geom.hands; h++) {
-      const hand: 'left' | 'right' | 'center' = !geom.split ? 'center' : h === 0 ? 'left' : 'right'
+      const hand: 'left' | 'right' | 'center' = !geom.split
+        ? 'center'
+        : h === 0
+          ? 'left'
+          : 'right'
       for (let col = 0; col < geom.cols; col++) {
         raws.push({ hand, row, col, x: laneX(geom, hand, col, row) })
       }
