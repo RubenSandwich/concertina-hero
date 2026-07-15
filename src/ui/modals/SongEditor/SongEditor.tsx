@@ -226,15 +226,17 @@ export default function SongEditor({
               className="modal__field-input modal__field-textarea"
               rows={6}
               value={draft.chart}
-              placeholder={'+3 +3 +3 -3 -4\n-4 X (-4 -3) +4 -5'}
+              placeholder={'+3 +3 +3 -3 -4\n-4 X (-4 -3) +4 -5 ~'}
               spellCheck={false}
               onChange={(e) => set({ chart: e.target.value })}
             />
             <span className="modal__field-hint">
               One token per beat: <b>+N</b> push, <b>−N</b> pull (button 1–30).{' '}
-              <b>X</b> is a rest, and <b>(−4 −3)</b> plays a chord. Line breaks
-              are just for readability. A song's highest button sets the
-              smallest concertina that can play it.
+              <b>X</b> is a rest, <b>(−4 −3)</b> plays a chord, and <b>~</b> (or
+              a bare <b>−</b>) holds the previous note one beat longer — stack
+              several to hold it even longer. Line breaks are just for
+              readability. A song's highest button sets the smallest concertina
+              that can play it.
             </span>
           </label>
         </div>

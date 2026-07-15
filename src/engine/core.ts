@@ -69,6 +69,13 @@ export interface GameNote extends ChartNote {
   judgeAt: number
 }
 
+// A note's actual sustain window: the song's base beat length times however
+// many beats this particular note holds for (1, unless extended by a chart
+// hold token — see songs.ts's parseChart).
+function noteHoldMs(n: ChartNote, beatMs: number): number {
+  return beatMs * n.beats
+}
+
 interface Counts {
   perfect: number
   good: number
@@ -120,7 +127,7 @@ export type EngineEvent =
 
 export interface EngineState {
   song: Song
-  holdMs: number // every note sustains for exactly one beat
+  holdMs: number // ms per beat; a note's actual sustain is holdMs * n.beats
   clock: number // game time, ms, relative to song start (negative during the countdown)
   countdownMs: number // real ms left before the song starts, for the "3, 2, 1" display
   finished: boolean
@@ -198,7 +205,7 @@ function micPresses(
         n.lane === a.lane &&
         n.type === a.type &&
         n.state === NoteState.Active &&
-        isPlayable(now, n.time, state.holdMs),
+        isPlayable(now, n.time, noteHoldMs(n, state.holdMs)),
     ),
   )
   return wanted.length ? wanted : [{ lane, type }]
@@ -218,7 +225,7 @@ function registerPress(
   let best: GameNote | null = null
   for (const n of state.notes) {
     if (n.lane !== lane || n.state !== NoteState.Active) continue
-    if (!isPlayable(now, n.time, state.holdMs)) continue
+    if (!isPlayable(now, n.time, noteHoldMs(n, state.holdMs))) continue
     best = n
     break
   }
@@ -285,7 +292,7 @@ export function stepEngine(
   for (const n of state.notes) {
     if (
       n.state === NoteState.Active &&
-      state.clock >= missTime(n.time, holdMs)
+      state.clock >= missTime(n.time, noteHoldMs(n, holdMs))
     ) {
       n.state = NoteState.Miss
       n.rating = 'miss'
@@ -375,16 +382,17 @@ export function stepEngine(
   for (const n of state.notes) {
     if (n.state !== NoteState.Holding) continue
     const held = isSustaining(n.lane, n.type, state.activeKeys, state.micNotes)
+    const sustainMs = noteHoldMs(n, holdMs)
     if (held) {
       const from = Math.max(n.creditedTo, n.time)
-      const to = Math.min(state.clock, n.time + holdMs)
+      const to = Math.min(state.clock, n.time + sustainMs)
       if (to > from) n.heldMs += to - from
     }
     n.creditedTo = state.clock
-    if (state.clock >= n.time + holdMs) {
+    if (state.clock >= n.time + sustainMs) {
       const rating = n.rating as Rating
       state.score +=
-        holdPoints(rating, holdFraction(n.heldMs, holdMs)) + n.holdBonus
+        holdPoints(rating, holdFraction(n.heldMs, sustainMs)) + n.holdBonus
       n.state = NoteState.Hit
       n.judgeElapsed = state.clock
       n.judgeAt = noteProgress(n.time - state.clock)

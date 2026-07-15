@@ -53,6 +53,9 @@ export default function NoteCard({
           // Lifted by the hit-bar height so the beat lands at the bar's top edge and
           // the note stays on screen, sinking through the bar, for the whole hold.
           bottom: `calc(${((1 - progress) * 100).toFixed(3)}% + var(--hit-h, 0%))`,
+          // A held note (from a chart hold token) is that many beats tall, so its
+          // extra length reads as "keep holding this one" while it falls.
+          ...(note.beats > 1 && { height: `calc(var(--h) * ${note.beats})` }),
         } as React.CSSProperties
       }
     >

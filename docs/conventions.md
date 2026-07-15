@@ -35,9 +35,10 @@
   `e2e/fixtures/taps.wav`) instead of mocking `detectChord()` — it exercises
   the actual FFT/onset pipeline in `audio/pitch.ts` and the engine's mic
   debounce. `--mute-audio` (in `playwright.config.ts`) guarantees none of it
-  is ever audible on the test machine's speakers. Regenerate the fixture with
-  `node scripts/generate-test-wavs/generateTapsWav.mjs` if Taps's chart or
-  tuning changes.
+  is ever audible on the test machine's speakers. `npm run generate-test-wavs`
+  regenerates every fixture (or run
+  `node scripts/generate-test-wavs/generateTapsWav.mjs` directly for just this
+  one) if Taps's chart or tuning changes.
 - `e2e/audioTapsHeld.spec.ts` is that mic test's companion, playing Taps in
   _real time_ (no "Wait for correct note") to also exercise _held_-note credit
   (`holdFraction()`/`holdPoints()` in `scoring/scoring.ts`), which wait-for-note
@@ -52,8 +53,9 @@
   so it isn't competing for CPU with other tests' own Chromium instances at
   the moment it matters; retrying a failure was tried first and rejected —
   retrying an expensive real-time test under contention just adds more
-  contention. Regenerate its fixture with
-  `node scripts/generate-test-wavs/generateTapsHeldWav.mjs`.
+  contention. Regenerate its fixture with `npm run generate-test-wavs` (all
+  three) or `node scripts/generate-test-wavs/generateTapsHeldWav.mjs` (just
+  this one).
 - Both mic tests mock the microphone the same way, via `mockMicFromWav`:
   `page.addInitScript` overrides `navigator.mediaDevices.getUserMedia` itself
   to decode a WAV (served in-page by intercepting a fake URL with

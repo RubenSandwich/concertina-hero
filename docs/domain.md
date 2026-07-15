@@ -39,11 +39,17 @@ of one-beat tokens:
 - `+N` push button _N_, `-N` pull button _N_ (N = 1–30); a bare `N` defaults to push.
 - `X` (or `x`) is a rest — a silent beat.
 - `(+1 +3)` is a chord — several buttons on the same beat (still one beat).
+- a bare `~` or `-` holds: it extends whatever note(s) landed on the previous
+  beat by one more beat (stacking — `+3 ~ ~` holds button 3 for 3 beats). A
+  hold with no previous note (e.g. right after a rest) is just a silent beat.
 - Line breaks carry no timing; they only separate tokens. End a phrase with `X` to pause.
 
-`parseChart` turns this into timed notes plus `requiredButtons`; consecutive
+`parseChart` turns this into timed notes (each carrying a `beats` count, 1
+unless extended by a hold token) plus `requiredButtons`; consecutive
 same-direction notes are grouped into **sections** that drive the push/pull mode
 glow. `chartOutOfRange` lists button numbers outside 1–30 for the editor to flag.
+A note's actual sustain window in the engine is `holdMs * beats` (see
+`engine/core.ts`'s `noteHoldMs`), not a fixed one beat.
 
 ## Timing & motion (`scoring/timing.ts`)
 

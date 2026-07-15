@@ -22,6 +22,7 @@
     "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test",
     "test:e2e": "playwright test",
     "typecheck:e2e": "tsc -p e2e --noEmit",
+    "generate-test-wavs": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/generate-test-wavs/generateTapsWav.mjs && node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/generate-test-wavs/generateTapsHeldWav.mjs && node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/generate-test-wavs/generateChordParadeWav.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

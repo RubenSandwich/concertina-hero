@@ -141,6 +141,34 @@ test('a note nobody plays is judged a miss once its beat is gone, and resets com
   assert.equal(next.feedback?.text, 'Miss')
 })
 
+test('a chart hold token ("+1 ~") doubles the note\'s sustain window', () => {
+  let state = createInitialState(song('+1 ~')) // beats: 2, so a 1000ms sustain
+  assert.equal(state.notes[0].beats, 2)
+  state = advance(state, 3000).state // clock 0, right on the note
+
+  ;({ state } = advance(state, 0, {
+    events: [{ kind: 'press', lane: 0, pull: false, gameTime: 0 }],
+  }))
+  assert.equal(state.notes[0].state, NoteState.Holding)
+
+  // A plain one-beat note would finalize at clock 500 - this one shouldn't yet.
+  ;({ state } = advance(state, 500))
+  assert.equal(
+    state.notes[0].state,
+    NoteState.Holding,
+    'still held: its window is 2 beats, not 1',
+  )
+
+  // It finalizes at clock 1000 (2 beats in), fully held throughout.
+  ;({ state } = advance(state, 500))
+  assert.equal(state.notes[0].state, NoteState.Hit)
+  assert.equal(
+    state.score,
+    100,
+    'a fully-held perfect note scores its full 100 regardless of hold length',
+  )
+})
+
 test('waitForNote clamps the clock at the earliest unplayed note until it is hit', () => {
   let state = createInitialState(song('+1'))
   state = advance(state, 3000).state // clock 0, right at the only note

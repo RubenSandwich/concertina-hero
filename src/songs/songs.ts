@@ -12,6 +12,7 @@ export interface ChartNote {
   lane: number
   time: number
   type: Direction
+  beats: number // how many beats this note sustains for (1 = one beat; a trailing "~"/"-" hold token extends it)
 }
 
 // A run of consecutive same-direction notes (drives the look-ahead ribbon).
@@ -84,6 +85,10 @@ export const DIFF_CLASS: Record<Difficulty, string> = {
 //   - "X" (or "x") is a REST: a silent beat where nothing is played.
 //   - a CHORD is several buttons in parentheses that sound on the same beat,
 //     e.g. "(-4 -3)" plays buttons 4 and 3 together (draw). One beat is used.
+//   - a bare "~" or "-" HOLDS: it extends whatever note(s) landed on the
+//     previous beat by one more beat, rather than starting a new note. Several
+//     in a row stack, e.g. "+3 ~ ~" holds button 3 for 3 beats total. A hold
+//     with no previous note (or right after a rest) is just a silent beat.
 //   - every token is one beat. Whitespace and line breaks only separate tokens;
 //     to pause between phrases, end the phrase with an "X" rest.
 //
@@ -92,6 +97,8 @@ export const DIFF_CLASS: Record<Difficulty, string> = {
 // A signed button number 1–30 (single digit, 10–29, or exactly 30). Anything
 // outside that range — 0, 31, letters — is not a note.
 const NOTE_RE = /^([+-]?)([1-9]|[12]\d|30)$/
+// A bare "~" or "-": hold the previous beat's note(s) one beat longer.
+const HOLD_RE = /^[~-]$/
 // A token is either a "(...)" chord group or a run of non-space characters.
 const TOKEN_RE = /\([^)]*\)|\S+/g
 
@@ -116,13 +123,28 @@ function parseChart(
     const type: Direction = m[1] === '-' ? 'pull' : 'push'
     const button = Number(m[2])
     requiredButtons = Math.max(requiredButtons, button)
-    notes.push({ id: noteId++, lane: button - 1, time, type })
+    notes.push({ id: noteId++, lane: button - 1, time, type, beats: 1 })
+  }
+
+  // Extend whatever note(s) landed on the previous beat by one more beat (a
+  // bare "~"/"-" token). Several in a row each add one more. No-op (just a
+  // silent beat) if the previous beat had no note, e.g. right after a rest.
+  const holdPrevious = () => {
+    const last = notes[notes.length - 1]
+    if (!last) return
+    for (let i = notes.length - 1; i >= 0 && notes[i].time === last.time; i--)
+      notes[i].beats += 1
   }
 
   const tokens = chart.match(TOKEN_RE) || []
   tokens.forEach((tok) => {
     if (tok === 'X' || tok === 'x') {
       cursor += 1 // rest: a silent beat
+      return
+    }
+    if (HOLD_RE.test(tok)) {
+      holdPrevious()
+      cursor += 1
       return
     }
     const time = Math.round(cursor * step)

@@ -50,7 +50,11 @@ function placeNotes(
   for (const note of notes) {
     if (note.state === NoteState.Active || note.state === NoteState.Holding) {
       const progress = noteProgress(note.time - elapsed)
-      if (noteVisible(progress, beatFrac)) placed.push({ note, progress })
+      // A held note (note.beats > 1) is that many beat-heights tall, so it
+      // stays on screen — sinking through the hit bar — for its whole hold,
+      // not just one beat.
+      if (noteVisible(progress, beatFrac * note.beats))
+        placed.push({ note, progress })
     } else if (elapsed - note.judgeElapsed < 340) {
       // Recently hit/missed: freeze it at its judged spot for the pop-out.
       placed.push({ note, progress: note.judgeAt })

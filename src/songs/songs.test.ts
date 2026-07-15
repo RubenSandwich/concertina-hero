@@ -41,6 +41,36 @@ test('a 7-button chart round-trips to the same notes it always did', () => {
   ])
 })
 
+test('a bare "~" or "-" holds the previous note one more beat, and stacks', () => {
+  const song = build('+1 ~ -2 - - +3')
+  assert.deepEqual(
+    song.notes.map((n) => ({ lane: n.lane, time: n.time, beats: n.beats })),
+    [
+      { lane: 0, time: 0, beats: 2 }, // +1, held once by the "~"
+      { lane: 1, time: 1000, beats: 3 }, // -2, held twice by the two "-"s
+      { lane: 2, time: 2500, beats: 1 }, // +3, un-held
+    ],
+  )
+  // duration accounts for every beat, including the held ones
+  assert.equal(song.duration, 3000)
+})
+
+test('a hold token with nothing before it is just a silent beat', () => {
+  const song = build('X ~ +1')
+  assert.deepEqual(shape(song), [{ lane: 0, type: Direction.Push, time: 1000 }])
+})
+
+test('a hold token after a chord extends every note in that chord', () => {
+  const song = build('(+1 +2) ~')
+  assert.deepEqual(
+    song.notes.map((n) => ({ lane: n.lane, beats: n.beats })),
+    [
+      { lane: 0, beats: 2 },
+      { lane: 1, beats: 2 },
+    ],
+  )
+})
+
 test('parses two-digit buttons and multi-digit chords', () => {
   const song = build('-14 (+21 +26) 30')
   assert.deepEqual(shape(song), [
