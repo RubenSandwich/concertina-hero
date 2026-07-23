@@ -6,7 +6,7 @@
 // The number is assigned top-to-bottom, left-to-right across the screen — so the
 // same integer ties together the chart, the key map, the geometry and the notes.
 
-import type { LaneNote, NoteInfo } from './instrument'
+import type { Direction, LaneNote, NoteInfo } from './instrument'
 
 // The anglo sizes the game understands. The size a player selects drives geometry,
 // colours, key labels and tuning.
@@ -203,82 +203,97 @@ const NOTES_7: LaneNote[] = [
   { push: { name: 'B', freq: 987.77 }, pull: { name: 'A', freq: 880.0 } },
 ]
 
-// 10-button: one diatonic row per hand (a C-major run each, right hand higher).
+// 10/20/30-button note letters are transcribed from a real Wheatstone-style
+// C/G Anglo fingering chart (the user's reference image, "c_g_30_wheatstone")
+// — an authentic arpeggio-based layout (push mostly outlines the row's tonic
+// triad, pull fills in the rest of the scale), not a simple ascending run.
+// CAVEAT: that chart shows note *letters* only, never octaves — the octave on
+// every pair below is this codebase's own best-effort choice (kept in a
+// sensible ~C4-B5 register, roughly ascending per hand, continuous with the
+// 7-button's existing C4-B5 range), not something the image specifies. Two
+// cells on the reference image's right hand (30-button accidental row button
+// 10's pull side context aside, mainly this table's positions 9/10 on each
+// row) were partly obscured in the source photo; treat this whole table as a
+// best-effort draft to double-check against a real instrument, not a
+// byte-for-byte transcription the way the 7-button's tuning above is.
+
+// 10-button: one row per hand, from the reference chart's "C row".
 const NOTES_10: LaneNote[] = [
-  pair('C4', 'D4'),
-  pair('E4', 'F4'),
-  pair('G4', 'A4'),
-  pair('B4', 'C5'),
-  pair('D5', 'E5'),
-  pair('G4', 'A4'),
-  pair('B4', 'C5'),
-  pair('D5', 'E5'),
-  pair('F5', 'G5'),
-  pair('A5', 'B5'),
+  pair('C4', 'G4'),
+  pair('G4', 'B4'),
+  pair('C5', 'E5'),
+  pair('E5', 'F5'),
+  pair('G5', 'A5'),
+  pair('C4', 'B3'),
+  pair('E4', 'D4'),
+  pair('G4', 'F4'),
+  pair('C5', 'A4'),
+  pair('E5', 'G5'),
 ]
 
-// 20-button: two rows per hand — a C row on top, a G row (with F#) below.
+// 20-button: two rows per hand — the reference chart's "C row" on top, its
+// "G row" (with F#) below.
 const NOTES_20: LaneNote[] = [
   // top — C row
-  pair('C4', 'D4'),
-  pair('E4', 'F4'),
-  pair('G4', 'A4'),
-  pair('B4', 'C5'),
-  pair('D5', 'E5'),
-  pair('G4', 'A4'),
-  pair('B4', 'C5'),
-  pair('D5', 'E5'),
-  pair('F5', 'G5'),
-  pair('A5', 'B5'),
+  pair('C4', 'G4'),
+  pair('G4', 'B4'),
+  pair('C5', 'E5'),
+  pair('E5', 'F5'),
+  pair('G5', 'A5'),
+  pair('C4', 'B3'),
+  pair('E4', 'D4'),
+  pair('G4', 'F4'),
+  pair('C5', 'A4'),
+  pair('E5', 'G5'),
   // bottom — G row
-  pair('G3', 'A3'),
-  pair('B3', 'C4'),
-  pair('D4', 'E4'),
-  pair('F#4', 'G4'),
-  pair('A4', 'B4'),
-  pair('D4', 'E4'),
-  pair('F#4', 'G4'),
-  pair('A4', 'B4'),
-  pair('C5', 'D5'),
-  pair('E5', 'F#5'),
+  pair('B3', 'D4'),
+  pair('D4', 'F#4'),
+  pair('G4', 'A4'),
+  pair('B4', 'C5'),
+  pair('D5', 'E5'),
+  pair('G4', 'F#4'),
+  pair('B4', 'A4'),
+  pair('D5', 'C5'),
+  pair('F#5', 'E5'),
+  pair('B5', 'F#5'),
 ]
 
-// 30-button: an accidental row on top (as a real C/G anglo has), then the C row
-// and the G row.
+// 30-button: an accidental row on top (as a real C/G anglo has), then the same
+// C row and G row as the 20-button.
 const NOTES_30: LaneNote[] = [
   // top — accidental row
-  pair('C#4', 'D#4'),
-  pair('D#4', 'F4'),
-  pair('F#4', 'G#4'),
-  pair('G#4', 'A#4'),
-  pair('A#4', 'C5'),
-  pair('C#5', 'D#5'),
-  pair('D#5', 'F5'),
-  pair('F#5', 'G#5'),
-  pair('G#5', 'A#5'),
-  pair('A#5', 'C6'),
-  // middle — C row
-  pair('C4', 'D4'),
   pair('E4', 'F4'),
-  pair('G4', 'A4'),
-  pair('B4', 'C5'),
-  pair('D5', 'E5'),
-  pair('G4', 'A4'),
-  pair('B4', 'C5'),
-  pair('D5', 'E5'),
-  pair('F5', 'G5'),
-  pair('A5', 'B5'),
+  pair('A4', 'Bb4'),
+  pair('C#4', 'D#4'),
+  pair('A4', 'G#4'),
+  pair('G#4', 'Bb4'),
+  pair('C#5', 'D#5'),
+  pair('A5', 'G5'),
+  pair('G#5', 'Bb5'),
+  pair('C#5', 'D#5'),
+  pair('A5', 'F5'),
+  // middle — C row
+  pair('C4', 'G4'),
+  pair('G4', 'B4'),
+  pair('C5', 'E5'),
+  pair('E5', 'F5'),
+  pair('G5', 'A5'),
+  pair('C4', 'B3'),
+  pair('E4', 'D4'),
+  pair('G4', 'F4'),
+  pair('C5', 'A4'),
+  pair('E5', 'G5'),
   // bottom — G row
-  pair('G3', 'A3'),
-  pair('B3', 'C4'),
-  pair('D4', 'E4'),
-  pair('F#4', 'G4'),
-  pair('A4', 'B4'),
-  pair('D4', 'E4'),
-  pair('F#4', 'G4'),
-  pair('A4', 'B4'),
-  pair('C5', 'D5'),
-  pair('E5', 'F#5'),
+  pair('B3', 'D4'),
+  pair('D4', 'F#4'),
+  pair('G4', 'A4'),
+  pair('B4', 'C5'),
+  pair('D5', 'E5'),
+  pair('G4', 'F#4'),
+  pair('B4', 'A4'),
+  pair('D5', 'C5'),
+  pair('F#5', 'E5'),
+  pair('B5', 'F#5'),
 ]
 
 // The horizontal lane centre of a button, 0 (left edge) … 1 (right edge). The
@@ -377,4 +392,51 @@ export const LAYOUTS: Record<InstrumentSize, InstrumentLayout> = {
     NOTES_30,
     COLUMN_PALETTE,
   ),
+}
+
+// ---------------------------------------------------------------------------
+// Chart note-letter tokens: resolving "E4" / "F#3" / "Bb4" (a standard note
+// name + octave, as sung/written) to whichever button/direction actually
+// plays that exact pitch — the chart alternative to a plain button number.
+// ---------------------------------------------------------------------------
+
+// A note-letter chart token: a bare note name (case-insensitive), optional
+// accidental, then a signed octave. No leading +/- (unlike a button-number
+// token) — the button and its push/pull direction are both implied by which
+// one physically sounds that pitch, not chosen by the chart author.
+const CHART_NOTE_RE = /^([A-Ga-g])([#b]?)(-?\d+)$/
+
+// The exact equal-tempered frequency a chart note-letter token names, or null
+// if the token isn't one. Same maths as `note()` above (rounded the same way),
+// so the result compares equal to a table entry's own `freq`.
+function chartNoteFreq(spec: string): number | null {
+  const m = CHART_NOTE_RE.exec(spec)
+  if (!m) return null
+  const [, letter, accidental, octaveStr] = m
+  let semis = SEMITONES[letter.toUpperCase()]
+  if (accidental === '#') semis += 1
+  else if (accidental === 'b') semis -= 1
+  const midi = (Number(octaveStr) + 1) * 12 + semis
+  return Math.round(440 * Math.pow(2, (midi - 69) / 12) * 100) / 100
+}
+
+// Resolve a chart note-letter token to the button/direction that plays it, on
+// the smallest instrument that has it. Sizes are searched in ascending order
+// (7 -> 10 -> 20 -> 30), then ascending button number, push before pull — a
+// few pitches intentionally repeat across more than one button on the bigger
+// layouts (a real anglo often lets you play the same note two ways), so the
+// first match in that order wins. Returns null for a malformed token, or a
+// pitch no instrument has (e.g. an accidental below the 30-button's range).
+export function resolveChartNote(
+  spec: string,
+): { size: InstrumentSize; lane: number; type: Direction } | null {
+  const freq = chartNoteFreq(spec)
+  if (freq === null) return null
+  for (const size of INSTRUMENT_SIZES) {
+    for (const b of LAYOUTS[size].buttons) {
+      if (b.push.freq === freq) return { size, lane: b.lane, type: 'push' }
+      if (b.pull.freq === freq) return { size, lane: b.lane, type: 'pull' }
+    }
+  }
+  return null
 }

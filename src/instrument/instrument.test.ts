@@ -69,14 +69,14 @@ test('switching instrument rebuilds the note map and the key map in place', () =
 
 test('a pitch the 30-button repeats aliases to every button that sounds it', () => {
   withInstrument(30, () => {
-    // Buttons 13 and 16 (lanes 12 and 15) both push G4 in the C row.
-    assert.equal(LANE_NOTES[12].push.name, 'G')
-    assert.equal(LANE_NOTES[15].push.name, 'G')
-    assert.equal(LANE_NOTES[12].push.freq, LANE_NOTES[15].push.freq)
+    // Buttons 11 and 16 (lanes 10 and 15) both push C4 in the C row.
+    assert.equal(LANE_NOTES[10].push.name, 'C')
+    assert.equal(LANE_NOTES[15].push.name, 'C')
+    assert.equal(LANE_NOTES[10].push.freq, LANE_NOTES[15].push.freq)
 
-    const aliases = aliasesOf(12, Direction.Push)
+    const aliases = aliasesOf(10, Direction.Push)
     assert.ok(
-      aliases.some((a) => a.lane === 12 && a.type === Direction.Push),
+      aliases.some((a) => a.lane === 10 && a.type === Direction.Push),
       'a note is always its own alias',
     )
     assert.ok(

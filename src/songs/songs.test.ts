@@ -81,6 +81,41 @@ test('parses two-digit buttons and multi-digit chords', () => {
   ])
 })
 
+test('a note-letter token resolves to whichever button/direction plays that pitch', () => {
+  const song = build('E4 e4 F4')
+  assert.deepEqual(shape(song), [
+    // E4/F4 are button 2's push/pull on the 7-button — the smallest layout
+    // that has them. Case doesn't matter ("E4" and "e4" are the same token).
+    { lane: 1, type: Direction.Push, time: 0 },
+    { lane: 1, type: Direction.Push, time: 500 },
+    { lane: 1, type: Direction.Pull, time: 1000 },
+  ])
+  assert.equal(song.requiredButtons, 7)
+})
+
+test('a note-letter token only found on a bigger layout gates on that size, not its lane', () => {
+  // C#4 only exists on the 30-button's accidental row, at button 3 — but a
+  // low lane number on a bigger layout must still force the bigger minimum,
+  // since button 3 plays G4 (not C#4) on the 7-button.
+  const song = build('C#4')
+  assert.deepEqual(shape(song), [{ lane: 2, type: Direction.Push, time: 0 }])
+  assert.equal(song.requiredButtons, 30)
+})
+
+test('an unresolvable note-letter token (bad pitch, or one no instrument has) is dropped like any other junk token', () => {
+  assert.equal(chartNoteCount('H4 C99 F#3'), 0) // H isn't a note; C99/F#3 exist nowhere
+  assert.equal(chartNoteCount('E4 H4 F4'), 2) // the junk token is just skipped, not a rest
+})
+
+test('note-letter and button-number tokens can mix freely, including inside a chord', () => {
+  const song = build('(+1 G4) E4')
+  assert.deepEqual(shape(song), [
+    { lane: 0, type: Direction.Push, time: 0 }, // +1
+    { lane: 2, type: Direction.Push, time: 0 }, // G4 -> button 3 push, same beat
+    { lane: 1, type: Direction.Push, time: 500 }, // E4 -> button 2 push
+  ])
+})
+
 test('button numbers outside 1–30 are not notes', () => {
   // 0, 31 and 99 never match; only the two valid buttons count.
   assert.equal(chartNoteCount('+0 +31 +99 +5 -12'), 2)

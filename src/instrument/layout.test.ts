@@ -8,6 +8,7 @@ import {
   INSTRUMENT_SIZES,
   KEY_ORDER,
   Hand,
+  resolveChartNote,
   type InstrumentSize,
 } from './layout.ts'
 import { Direction } from './instrument.ts'
@@ -186,4 +187,44 @@ test('the 7-button keeps its exact original tuning', () => {
       ['B', 987.77],
     ],
   )
+})
+
+test('resolveChartNote finds a pitch on the smallest layout that has it, case-insensitively', () => {
+  assert.deepEqual(resolveChartNote('E4'), {
+    size: 7,
+    lane: 1,
+    type: Direction.Push,
+  })
+  assert.deepEqual(resolveChartNote('e4'), {
+    size: 7,
+    lane: 1,
+    type: Direction.Push,
+  })
+  assert.deepEqual(resolveChartNote('F4'), {
+    size: 7,
+    lane: 1,
+    type: Direction.Pull,
+  })
+})
+
+test('resolveChartNote escalates to a bigger layout for a pitch only it has', () => {
+  // F#4 first appears on the 20-button's G row (button 12, pull); the
+  // 7/10-button layouts don't have any sharps/flats at all.
+  assert.deepEqual(resolveChartNote('F#4'), {
+    size: 20,
+    lane: 11,
+    type: Direction.Pull,
+  })
+  // C#4 only exists on the 30-button's accidental row.
+  assert.deepEqual(resolveChartNote('C#4'), {
+    size: 30,
+    lane: 2,
+    type: Direction.Push,
+  })
+})
+
+test('resolveChartNote returns null for a malformed token or a pitch nothing plays', () => {
+  assert.equal(resolveChartNote('H4'), null) // not a note letter
+  assert.equal(resolveChartNote('C99'), null) // absurd octave, no table has it
+  assert.equal(resolveChartNote('+3'), null) // a button-number token, not a note letter
 })

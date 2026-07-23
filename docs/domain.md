@@ -37,8 +37,16 @@ buttons than the selected instrument has. A `chart` is a whitespace/newline list
 of one-beat tokens:
 
 - `+N` push button _N_, `-N` pull button _N_ (N = 1–30); a bare `N` defaults to push.
+- a note letter like `E4` or `F#3` (name + optional accidental + octave,
+  case-insensitive) also works in place of a button number: `resolveChartNote`
+  (`instrument/layout.ts`) resolves it to whichever button/direction plays
+  that exact pitch, on the smallest instrument that has it — no `+`/`-`, since
+  the direction is whichever one actually sounds that note, not chosen by the
+  chart. A malformed token or a pitch no instrument has is silently dropped,
+  same as any other junk token.
 - `X` (or `x`) is a rest — a silent beat.
 - `(+1 +3)` is a chord — several buttons on the same beat (still one beat).
+  Note letters and button numbers can mix freely, including inside a chord.
 - a bare `~` or `-` holds: it extends whatever note(s) landed on the previous
   beat by one more beat (stacking — `+3 ~ ~` holds button 3 for 3 beats). A
   hold with no previous note (e.g. right after a rest) is just a silent beat.
@@ -48,6 +56,11 @@ of one-beat tokens:
 unless extended by a hold token) plus `requiredButtons`; consecutive
 same-direction notes are grouped into **sections** that drive the push/pull mode
 glow. `chartOutOfRange` lists button numbers outside 1–30 for the editor to flag.
+A note-letter token's `requiredButtons` contribution is the _instrument size_
+`resolveChartNote` resolved it on, not its lane — button numbering isn't
+pitch-stable across sizes (button 1 is C#4 on the 30-button's accidental row,
+but plain C4 on every smaller one), so a low lane on a bigger layout must still
+force that bigger minimum.
 A note's actual sustain window in the engine is `holdMs * beats` (see
 `engine/core.ts`'s `noteHoldMs`), not a fixed one beat.
 

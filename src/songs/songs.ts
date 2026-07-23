@@ -4,7 +4,7 @@
 
 import { LEAD_IN } from '../scoring/timing.ts'
 import type { Direction } from '../instrument/instrument'
-import { MAX_BUTTONS } from '../instrument/layout.ts'
+import { MAX_BUTTONS, resolveChartNote } from '../instrument/layout.ts'
 
 // A single playable note parsed from a chart.
 export interface ChartNote {
@@ -82,6 +82,11 @@ export const DIFF_CLASS: Record<Difficulty, string> = {
 //     needs (see `requiredButtons`), and the song list gates on that.
 //   - "+" means PUSH (squeeze the bellows in); "-" means PULL (draw them out).
 //     A bare number (e.g. "3") defaults to push.
+//   - a NOTE LETTER like "E4" or "F#3" (name + optional accidental + octave,
+//     case-insensitive) also works in place of a button number: it resolves
+//     to whichever button/direction plays that exact pitch on the smallest
+//     instrument that has it (no +/- — the direction is whichever one
+//     actually sounds that note, not chosen by the chart).
 //   - "X" (or "x") is a REST: a silent beat where nothing is played.
 //   - a CHORD is several buttons in parentheses that sound on the same beat,
 //     e.g. "(-4 -3)" plays buttons 4 and 3 together (draw). One beat is used.
@@ -119,11 +124,28 @@ function parseChart(
 
   const addNote = (tok: string, time: number) => {
     const m = NOTE_RE.exec(tok)
-    if (!m) return
-    const type: Direction = m[1] === '-' ? 'pull' : 'push'
-    const button = Number(m[2])
-    requiredButtons = Math.max(requiredButtons, button)
-    notes.push({ id: noteId++, lane: button - 1, time, type, beats: 1 })
+    if (m) {
+      const type: Direction = m[1] === '-' ? 'pull' : 'push'
+      const button = Number(m[2])
+      requiredButtons = Math.max(requiredButtons, button)
+      notes.push({ id: noteId++, lane: button - 1, time, type, beats: 1 })
+      return
+    }
+    // Not a button number — try a note-letter token like "E4" or "F#3".
+    const resolved = resolveChartNote(tok)
+    if (!resolved) return
+    // requiredButtons must gate on `resolved.size`, not `resolved.lane + 1`:
+    // button numbering isn't pitch-stable across sizes (e.g. button 1 is C#4
+    // on the 30-button's accidental row, but plain C4 on every smaller size),
+    // so a low lane on a bigger layout must still force that bigger minimum.
+    requiredButtons = Math.max(requiredButtons, resolved.size)
+    notes.push({
+      id: noteId++,
+      lane: resolved.lane,
+      time,
+      type: resolved.type,
+      beats: 1,
+    })
   }
 
   // Extend whatever note(s) landed on the previous beat by one more beat (a
