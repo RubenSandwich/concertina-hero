@@ -2,23 +2,18 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"]
+    branches-ignore: ['gh-pages']
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: "pages"
+  group: 'pages-${{ github.ref_name }}'
   cancel-in-progress: false
 
 jobs:
   build-deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,17 +27,27 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Determine deploy path
+        id: path
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "base=/" >> "$GITHUB_OUTPUT"
+            echo "destination_dir=." >> "$GITHUB_OUTPUT"
+          else
+            echo "base=/branch/${{ github.ref_name }}/" >> "$GITHUB_OUTPUT"
+            echo "destination_dir=branch/${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      # main deploys to the domain root; every other branch deploys to
+      # concertinahero.com/branch/<branch-name>/ so branches can be previewed
+      # side by side without clobbering each other or main.
       - name: Build
-        run: npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+        run: npm run build -- --base=${{ steps.path.outputs.base }}
 
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: ${{ steps.path.outputs.destination_dir }}
+          keep_files: true
